@@ -125,6 +125,12 @@
             font-size: 12px;
             font-weight: bold;
         }
+
+        .player-image {
+            width: 100%;
+            border-radius: 12px;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
@@ -143,26 +149,26 @@
             <option value="price-asc">Price: Low to High</option>
         </select>
         
-<select id="position-filter">
-    <!-- General categories first -->
-    <option value="all">All Positions</option>
-    <option value="GK">Goalkeeper</option>
-    <option value="DEF">Defender</option>
-    <option value="MID">Midfielder</option>
-    <option value="ATT">Attacker</option>
+        <select id="position-filter">
+            <!-- General categories first -->
+            <option value="all">All Positions</option>
+            <option value="GK">Goalkeeper</option>
+            <option value="DEF">Defender</option>
+            <option value="MID">Midfielder</option>
+            <option value="ATT">Attacker</option>
 
-    <!-- Specific positions after -->
-    <option value="CB">Center Back</option>
-    <option value="RB">Right Back</option>
-    <option value="LB">Left Back</option>
-    <option value="CDM">Defensive Mid</option>
-    <option value="CM">Center Mid</option>
-    <option value="CAM">Attacking Mid</option>
-    <option value="RW">Right Wing</option>
-    <option value="LW">Left Wing</option>
-    <option value="ST">Striker</option>
-    <option value="CF">Center Forward</option>
-</select>
+            <!-- Specific positions after -->
+            <option value="CB">Center Back</option>
+            <option value="RB">Right Back</option>
+            <option value="LB">Left Back</option>
+            <option value="CDM">Defensive Mid</option>
+            <option value="CM">Center Mid</option>
+            <option value="CAM">Attacking Mid</option>
+            <option value="RW">Right Wing</option>
+            <option value="LW">Left Wing</option>
+            <option value="ST">Striker</option>
+            <option value="CF">Center Forward</option>
+        </select>
         
         <select id="rating-filter">
             <option value="all">All Ratings</option>
@@ -183,108 +189,41 @@
     </div>
 
     <script>
-        // OVR to Price mapping based on your data
-        const ovrPriceMap = {
-            47: 300, 48: 300, 49: 360, 50: 360, 51: 360, 52: 360, 53: 360, 54: 360, 55: 360, 56: 360,
-            57: 360, 58: 360, 59: 360, 60: 360, 61: 792, 62: 864, 63: 936, 64: 1092, 65: 1170, 66: 1326,
-            67: 1482, 68: 1638, 69: 1794, 70: 2250, 71: 2700, 72: 3150, 73: 3600, 74: 4050, 75: 4500,
-            76: 6975, 77: 9450, 78: 11925, 79: 14400, 80: 16875, 81: 46875, 82: 76875, 83: 106875,
-            84: 136875, 85: 168750, 86: 270000, 87: 371250, 88: 472500, 89: 573750, 90: 675000,
-            91: 990000, 92: 1305000, 93: 1620000, 94: 1935000, 95: 2250000, 96: 2700000, 97: 3150000,
-            98: 3600000, 99: 4050000
-        };
+        const allPlayers = [
+            {id:1,name:"Marcus Rashford",rating:85,position:"ST",nation:"England",buy_price:168750,sell_price:113062,img:"cards/rashford.png"},
+            {id:2,name:"Bukayo Saka",rating:83,position:"RW",nation:"England",buy_price:106875,sell_price:71606,img:"cards/saka.png"},
+            {id:3,name:"Phil Foden",rating:84,position:"CAM",nation:"England",buy_price:136875,sell_price:91706,img:"cards/foden.png"},
+            {id:4,name:"Cristiano Ronaldo",rating:90,position:"ST",nation:"Portugal",buy_price:675000,sell_price:452250,img:"cards/ronaldo.png"},
+            {id:5,name:"Lionel Messi",rating:91,position:"RW",nation:"Argentina",buy_price:990000,sell_price:663300,img:"cards/messi.png"},
+            {id:6,name:"Kylian Mbappé",rating:88,position:"ST",nation:"France",buy_price:472500,sell_price:316575,img:"cards/mbappe.png"},
+            {id:7,name:"Kevin De Bruyne",rating:87,position:"CAM",nation:"Belgium",buy_price:371250,sell_price:248512,img:"cards/debruyne.png"},
+            {id:8,name:"Virgil van Dijk",rating:86,position:"CB",nation:"Netherlands",buy_price:270000,sell_price:180900,img:"cards/vandijk.png"},
+            {id:9,name:"Neymar Jr",rating:85,position:"LW",nation:"Brazil",buy_price:168750,sell_price:113062,img:"cards/neymar.png"},
+            {id:10,name:"Robert Lewandowski",rating:89,position:"ST",nation:"Poland",buy_price:573750,sell_price:384188,img:"cards/lewandowski.png"}
+        ];
 
-        // Position categories for filtering
         const positionCategories = {
             'DEF': ['CB', 'RB', 'LB'],
             'MID': ['CDM', 'CM', 'CAM'],
             'ATT': ['RW', 'LW', 'ST', 'CF']
         };
 
-        // Predefined list of names
-        const playerNames = [
-            "Alex Turner", "Marcus Rashford", "Jude Bellingham", "Phil Foden", "Bukayo Saka",
-            "Declan Rice", "Trent Alexander", "Jack Grealish", "Mason Mount", "Jordan Henderson",
-            "Harry Kane", "Raheem Sterling", "John Stones", "Kyle Walker", "Luke Shaw",
-            "Ben Chilwell", "Reece James", "Conor Gallagher", "James Maddison", "Aaron Ramsdale",
-            "Kieran Trippier", "Kalvin Phillips", "Nick Pope", "Eric Dier", "Harry Maguire",
-            "Tyrone Mings", "Ollie Watkins", "Callum Wilson", "Ivan Toney", "Jarrod Bowen",
-            "Harvey Barnes", "James Ward-Prowse", "Ben White", "Marc Guehi", "Dean Henderson",
-            "Sam Johnstone", "Fraser Forster", "James Justin", "Max Kilman", "Adam Webster",
-            "Lewis Dunk", "Dan Burn", "Matt Targett", "Joe Gomez", "Nat Phillips",
-            "Rhys Williams", "Neco Williams", "Brandon Williams", "Anthony Gordon", "Elliot Anderson",
-            "Curtis Jones", "Harvey Elliott", "Fabio Carvalho", "Morgan Gibbs-White", "Brennan Johnson",
-            "Djed Spence", "Ryan Sessegnon", "Tino Livramento", "Valentino Livramento", "Armando Broja",
-            "Conor Gallagher", "Emile Smith Rowe", "Edward Nketiah", "Gabriel Martinelli", "William Saliba",
-            "Gabriel Jesus", "Oleksandr Zinchenko", "Takehiro Tomiyasu", "Thomas Partey", "Martin Odegaard",
-            "Granit Xhaka", "Kieran Tierney", "Ben White", "Aaron Ramsdale", "Rob Holding",
-            "Cedric Soares", "Nuno Tavares", "Albert Sambi", "Mohamed Elneny", "Nicolas Pepe",
-            "Reiss Nelson", "Marquinhos", "Matt Turner", "Fabio Vieira", "Yves Bissouma",
-            "Richarlison", "Clement Lenglet", "Ivan Perisic", "Fraser Forster", "Djed Spence",
-            "Yves Bissouma", "Richarlison", "Clement Lenglet", "Ivan Perisic", "Fraser Forster"
-        ];
-
-        const nations = ["England", "Brazil", "France", "Germany", "Spain", "Italy", "Portugal", 
-                        "Netherlands", "Belgium", "Argentina", "Croatia", "Uruguay", "Colombia"];
-
-        // Generate players based on OVR range
-        function generatePlayers() {
-            const players = [];
-            let nameIndex = 0;
-            
-            for (let ovr = 47; ovr <= 99; ovr++) {
-                if (ovrPriceMap[ovr]) {
-                    // Create multiple players for each OVR
-                    const playerCount = ovr <= 70 ? 3 : ovr <= 80 ? 2 : 1;
-                    
-                    for (let i = 0; i < playerCount; i++) {
-                        // Assign positions based on OVR range
-                        let position;
-                        if (ovr >= 85) {
-                            // High-rated players get special positions
-                            position = ["ST", "CAM", "CM", "CB", "GK"][Math.floor(Math.random() * 5)];
-                        } else {
-                            // Regular distribution
-                            const positions = ["CB", "RB", "LB", "CDM", "CM", "CAM", "RW", "LW", "ST", "GK"];
-                            position = positions[Math.floor(Math.random() * positions.length)];
-                        }
-                        
-                        const nation = nations[Math.floor(Math.random() * nations.length)];
-                        const name = playerNames[nameIndex % playerNames.length];
-                        nameIndex++;
-
-                        const player = {
-                            id: players.length + 1,
-                            name: name,
-                            rating: ovr,
-                            position: position,
-                            nation: nation,
-                            buy_price: ovrPriceMap[ovr],
-                            sell_price: Math.floor(ovrPriceMap[ovr] * 0.67)
-                        };
-                        players.push(player);
-                    }
-                }
-            }
-            return players;
-        }
-
-        const allPlayers = generatePlayers();
         let filteredPlayers = [...allPlayers];
 
         function displayPlayers(playersToDisplay) {
             const container = document.getElementById('players-container');
             container.innerHTML = '';
-            
+
             if (playersToDisplay.length === 0) {
-                container.innerHTML = '<p style="text-align: center; grid-column: 1 / -1; color: #a0a0a0;">No players found matching your filters.</p>';
+                container.innerHTML = '<p style="text-align:center;grid-column:1/-1;color:#a0a0a0;">No players found matching your filters.</p>';
                 return;
             }
-            
+
             playersToDisplay.forEach(player => {
                 const card = document.createElement('div');
                 card.className = 'player-card';
                 card.innerHTML = `
+                    <img src="${player.img}" alt="${player.name}" class="player-image">
                     <div class="player-header">
                         <div class="player-rating">⭐ ${player.rating}</div>
                         <h3 class="player-name">${player.name}</h3>
@@ -307,7 +246,7 @@
                             <span>💵 ${player.sell_price.toLocaleString()} coins</span>
                         </div>
                     </div>
-                    <p style="margin-top: 15px; text-align: center; font-size: 12px; color: #a0a0a0;">
+                    <p style="margin-top:15px;text-align:center;font-size:12px;color:#a0a0a0;">
                         Use <code>/buyplayer ${player.name}</code> in Discord
                     </p>
                 `;
@@ -320,70 +259,51 @@
             const positionFilter = document.getElementById('position-filter').value;
             const ratingFilter = document.getElementById('rating-filter').value;
             const searchTerm = document.getElementById('search-box').value.toLowerCase();
-            
-            // Filter players
+
             filteredPlayers = allPlayers.filter(player => {
-                // Position filtering with categories
                 let matchesPosition = true;
-                if (positionFilter !== 'all') {
-                    if (['DEF', 'MID', 'ATT'].includes(positionFilter)) {
-                        // Check if player's position is in the category
+                if(positionFilter !== 'all'){
+                    if(['DEF','MID','ATT'].includes(positionFilter)){
                         matchesPosition = positionCategories[positionFilter].includes(player.position);
                     } else {
-                        // Exact position match
                         matchesPosition = player.position === positionFilter;
                     }
                 }
-                
-                const matchesSearch = searchTerm === '' || 
+
+                const matchesSearch = searchTerm === '' ||
                     player.name.toLowerCase().includes(searchTerm) ||
                     player.nation.toLowerCase().includes(searchTerm);
-                
+
                 let matchesRating = true;
-                if (ratingFilter !== 'all') {
-                    if (ratingFilter === '90+') {
+                if(ratingFilter !== 'all'){
+                    if(ratingFilter === '90+'){
                         matchesRating = player.rating >= 90;
                     } else {
-                        const [min, max] = ratingFilter.split('-').map(Number);
+                        const [min,max] = ratingFilter.split('-').map(Number);
                         matchesRating = player.rating >= min && player.rating <= max;
                     }
                 }
-                
+
                 return matchesPosition && matchesSearch && matchesRating;
             });
-            
-            // Sort players
-            switch(sortValue) {
-                case 'rating-desc':
-                    filteredPlayers.sort((a, b) => b.rating - a.rating);
-                    break;
-                case 'rating-asc':
-                    filteredPlayers.sort((a, b) => a.rating - b.rating);
-                    break;
-                case 'name-asc':
-                    filteredPlayers.sort((a, b) => a.name.localeCompare(b.name));
-                    break;
-                case 'name-desc':
-                    filteredPlayers.sort((a, b) => b.name.localeCompare(a.name));
-                    break;
-                case 'price-desc':
-                    filteredPlayers.sort((a, b) => b.buy_price - a.buy_price);
-                    break;
-                case 'price-asc':
-                    filteredPlayers.sort((a, b) => a.buy_price - b.buy_price);
-                    break;
+
+            switch(sortValue){
+                case'rating-desc': filteredPlayers.sort((a,b)=>b.rating-a.rating); break;
+                case'rating-asc': filteredPlayers.sort((a,b)=>a.rating-b.rating); break;
+                case'name-asc': filteredPlayers.sort((a,b)=>a.name.localeCompare(b.name)); break;
+                case'name-desc': filteredPlayers.sort((a,b)=>b.name.localeCompare(a.name)); break;
+                case'price-desc': filteredPlayers.sort((a,b)=>b.buy_price-a.buy_price); break;
+                case'price-asc': filteredPlayers.sort((a,b)=>a.buy_price-b.buy_price); break;
             }
-            
+
             displayPlayers(filteredPlayers);
         }
 
-        // Event listeners
         document.getElementById('sort-select').addEventListener('change', filterAndSortPlayers);
         document.getElementById('position-filter').addEventListener('change', filterAndSortPlayers);
         document.getElementById('rating-filter').addEventListener('change', filterAndSortPlayers);
         document.getElementById('search-box').addEventListener('input', filterAndSortPlayers);
 
-        // Initial display
         filterAndSortPlayers();
     </script>
 </body>
