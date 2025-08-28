@@ -129,7 +129,7 @@
 </head>
 <body>
     <div class="header">
-        <h1>Player Catalog</h1>
+        <h1>🎯 Player Catalog</h1>
         <p>Browse all available players. Use <code>/buyplayer [name]</code> in Discord to purchase!</p>
     </div>
 
@@ -147,14 +147,18 @@
             <option value="all">All Positions</option>
             <option value="GK">Goalkeeper</option>
             <option value="DEF">Defender</option>
-            <option value="MID">Midfielder</option>
-            <option value="ATT">Attacker</option>
-            <option value="ST">Striker</option>
             <option value="CB">Center Back</option>
-            <option value="CAM">Attacking Mid</option>
+            <option value="RB">Right Back</option>
+            <option value="LB">Left Back</option>
+            <option value="MID">Midfielder</option>
             <option value="CDM">Defensive Mid</option>
-            <option value="LW">Left Wing</option>
+            <option value="CM">Center Mid</option>
+            <option value="CAM">Attacking Mid</option>
+            <option value="ATT">Attacker</option>
             <option value="RW">Right Wing</option>
+            <option value="LW">Left Wing</option>
+            <option value="ST">Striker</option>
+            <option value="CF">Center Forward</option>
         </select>
         
         <select id="rating-filter">
@@ -187,36 +191,73 @@
             98: 3600000, 99: 4050000
         };
 
-        // Positions and nations for random generation
-        const positions = ["GK", "CB", "RB", "LB", "CDM", "CM", "CAM", "RW", "LW", "ST", "CF"];
-        const nations = ["Brazil", "Argentina", "France", "Germany", "Spain", "Italy", "England", "Portugal", 
-                        "Netherlands", "Belgium", "Croatia", "Uruguay", "Colombia", "Mexico", "USA", "Egypt",
-                        "Nigeria", "Senegal", "Morocco", "Japan", "South Korea", "Australia"];
+        // Position categories for filtering
+        const positionCategories = {
+            'DEF': ['CB', 'RB', 'LB'],
+            'MID': ['CDM', 'CM', 'CAM'],
+            'ATT': ['RW', 'LW', 'ST', 'CF']
+        };
+
+        // Predefined list of names
+        const playerNames = [
+            "Alex Turner", "Marcus Rashford", "Jude Bellingham", "Phil Foden", "Bukayo Saka",
+            "Declan Rice", "Trent Alexander", "Jack Grealish", "Mason Mount", "Jordan Henderson",
+            "Harry Kane", "Raheem Sterling", "John Stones", "Kyle Walker", "Luke Shaw",
+            "Ben Chilwell", "Reece James", "Conor Gallagher", "James Maddison", "Aaron Ramsdale",
+            "Kieran Trippier", "Kalvin Phillips", "Nick Pope", "Eric Dier", "Harry Maguire",
+            "Tyrone Mings", "Ollie Watkins", "Callum Wilson", "Ivan Toney", "Jarrod Bowen",
+            "Harvey Barnes", "James Ward-Prowse", "Ben White", "Marc Guehi", "Dean Henderson",
+            "Sam Johnstone", "Fraser Forster", "James Justin", "Max Kilman", "Adam Webster",
+            "Lewis Dunk", "Dan Burn", "Matt Targett", "Joe Gomez", "Nat Phillips",
+            "Rhys Williams", "Neco Williams", "Brandon Williams", "Anthony Gordon", "Elliot Anderson",
+            "Curtis Jones", "Harvey Elliott", "Fabio Carvalho", "Morgan Gibbs-White", "Brennan Johnson",
+            "Djed Spence", "Ryan Sessegnon", "Tino Livramento", "Valentino Livramento", "Armando Broja",
+            "Conor Gallagher", "Emile Smith Rowe", "Edward Nketiah", "Gabriel Martinelli", "William Saliba",
+            "Gabriel Jesus", "Oleksandr Zinchenko", "Takehiro Tomiyasu", "Thomas Partey", "Martin Odegaard",
+            "Granit Xhaka", "Kieran Tierney", "Ben White", "Aaron Ramsdale", "Rob Holding",
+            "Cedric Soares", "Nuno Tavares", "Albert Sambi", "Mohamed Elneny", "Nicolas Pepe",
+            "Reiss Nelson", "Marquinhos", "Matt Turner", "Fabio Vieira", "Yves Bissouma",
+            "Richarlison", "Clement Lenglet", "Ivan Perisic", "Fraser Forster", "Djed Spence",
+            "Yves Bissouma", "Richarlison", "Clement Lenglet", "Ivan Perisic", "Fraser Forster"
+        ];
+
+        const nations = ["England", "Brazil", "France", "Germany", "Spain", "Italy", "Portugal", 
+                        "Netherlands", "Belgium", "Argentina", "Croatia", "Uruguay", "Colombia"];
 
         // Generate players based on OVR range
         function generatePlayers() {
             const players = [];
-            let playerId = 1;
+            let nameIndex = 0;
             
             for (let ovr = 47; ovr <= 99; ovr++) {
                 if (ovrPriceMap[ovr]) {
-                    // Create multiple players for each OVR (more common at lower ratings)
+                    // Create multiple players for each OVR
                     const playerCount = ovr <= 70 ? 3 : ovr <= 80 ? 2 : 1;
                     
                     for (let i = 0; i < playerCount; i++) {
-                        const position = positions[Math.floor(Math.random() * positions.length)];
-                        const nation = nations[Math.floor(Math.random() * nations.length)];
-                        const firstName = ["Lionel", "Cristiano", "Kylian", "Kevin", "Virgil", "Robert", "Mohamed", "Karim", "Harry", "Neymar", "Luka", "Sergio", "Toni", "Manuel", "Thibaut", "Jan", "Marco", "Paul", "Antoine", "Eden", "Raheem", "Son", "Sadio", "Joshua", "Alisson", "Ederson", "Bernardo", "Riyad", "Serge", "Romelu", "Lautaro", "Federico", "Dušan", "Erling", "Jude", "Vinícius", "Rodrygo", "Frenkie", "Matthijs", "Ansu", "Pedri", "Gavi", "Jamal", "Bukayo", "Phil", "Declan", "Mason", "Jack", "Marcus", "Bruno"];
-                        const lastName = ["Messi", "Ronaldo", "Mbappé", "De Bruyne", "van Dijk", "Lewandowski", "Salah", "Benzema", "Kane", "Jr.", "Modrić", "Ramos", "Kroos", "Neuer", "Courtois", "Oblak", "Reus", "Pogba", "Griezmann", "Hazard", "Sterling", "Heung-min", "Mané", "Kimmich", "Becker", "Moraes", "Silva", "Mahrez", "Gnabry", "Lukaku", "Martínez", "Valverde", "Vlahović", "Haaland", "Bellingham", "Júnior", "Goes", "de Jong", "de Ligt", "Fati", "González", "Musiala", "Sancho", "Foden", "Rice", "Mount", "Grealish", "Rashford", "Fernandes"];
+                        // Assign positions based on OVR range
+                        let position;
+                        if (ovr >= 85) {
+                            // High-rated players get special positions
+                            position = ["ST", "CAM", "CM", "CB", "GK"][Math.floor(Math.random() * 5)];
+                        } else {
+                            // Regular distribution
+                            const positions = ["CB", "RB", "LB", "CDM", "CM", "CAM", "RW", "LW", "ST", "GK"];
+                            position = positions[Math.floor(Math.random() * positions.length)];
+                        }
                         
+                        const nation = nations[Math.floor(Math.random() * nations.length)];
+                        const name = playerNames[nameIndex % playerNames.length];
+                        nameIndex++;
+
                         const player = {
-                            id: playerId++,
-                            name: `${firstName[Math.floor(Math.random() * firstName.length)]} ${lastName[Math.floor(Math.random() * lastName.length)]}`,
+                            id: players.length + 1,
+                            name: name,
                             rating: ovr,
                             position: position,
                             nation: nation,
                             buy_price: ovrPriceMap[ovr],
-                            sell_price: Math.floor(ovrPriceMap[ovr] * 0.67) // 67% of buy price
+                            sell_price: Math.floor(ovrPriceMap[ovr] * 0.67)
                         };
                         players.push(player);
                     }
@@ -231,6 +272,11 @@
         function displayPlayers(playersToDisplay) {
             const container = document.getElementById('players-container');
             container.innerHTML = '';
+            
+            if (playersToDisplay.length === 0) {
+                container.innerHTML = '<p style="text-align: center; grid-column: 1 / -1; color: #a0a0a0;">No players found matching your filters.</p>';
+                return;
+            }
             
             playersToDisplay.forEach(player => {
                 const card = document.createElement('div');
@@ -274,17 +320,28 @@
             
             // Filter players
             filteredPlayers = allPlayers.filter(player => {
-                const matchesPosition = positionFilter === 'all' || player.position === positionFilter;
+                // Position filtering with categories
+                let matchesPosition = true;
+                if (positionFilter !== 'all') {
+                    if (['DEF', 'MID', 'ATT'].includes(positionFilter)) {
+                        // Check if player's position is in the category
+                        matchesPosition = positionCategories[positionFilter].includes(player.position);
+                    } else {
+                        // Exact position match
+                        matchesPosition = player.position === positionFilter;
+                    }
+                }
+                
                 const matchesSearch = searchTerm === '' || 
                     player.name.toLowerCase().includes(searchTerm) ||
                     player.nation.toLowerCase().includes(searchTerm);
                 
                 let matchesRating = true;
                 if (ratingFilter !== 'all') {
-                    const [min, max] = ratingFilter.split('-').map(Number);
                     if (ratingFilter === '90+') {
                         matchesRating = player.rating >= 90;
                     } else {
+                        const [min, max] = ratingFilter.split('-').map(Number);
                         matchesRating = player.rating >= min && player.rating <= max;
                     }
                 }
