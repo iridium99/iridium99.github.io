@@ -1,1 +1,330 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Player Catalog - HaxBall Sim</title>
+    <style>
+        :root {
+            --primary: #5865f2;
+            --background: #1e1e2e;
+            --card-bg: #2b2d3e;
+            --text: #ffffff;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: var(--background);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .filters {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        select, input {
+            padding: 10px;
+            border: 2px solid var(--primary);
+            border-radius: 8px;
+            background: var(--card-bg);
+            color: var(--text);
+            font-size: 14px;
+        }
+        
+        .players-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .player-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 15px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .player-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+        
+        .player-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .player-rating {
+            background: var(--primary);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .player-name {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 0;
+            flex-grow: 1;
+            text-align: center;
+        }
+        
+        .player-details {
+            margin-top: 10px;
+        }
+        
+        .player-detail {
+            display: flex;
+            justify-content: space-between;
+            margin: 5px 0;
+        }
+        
+        .detail-label {
+            color: #a0a0a0;
+        }
+        
+        .search-box {
+            padding: 10px;
+            width: 250px;
+            border: 2px solid var(--primary);
+            border-radius: 8px;
+            background: var(--card-bg);
+            color: var(--text);
+        }
+        
+        .player-position {
+            background: #ff6b6b;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .player-nation {
+            background: #4ecdc4;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🎯 Player Catalog</h1>
+        <p>Browse all available players. Use <code>/buyplayer [name]</code> in Discord to purchase!</p>
+    </div>
 
+    <div class="filters">
+        <select id="sort-select">
+            <option value="rating-desc">Rating: High to Low</option>
+            <option value="rating-asc">Rating: Low to High</option>
+            <option value="name-asc">Name: A to Z</option>
+            <option value="name-desc">Name: Z to A</option>
+            <option value="price-desc">Price: High to Low</option>
+            <option value="price-asc">Price: Low to High</option>
+        </select>
+        
+        <select id="position-filter">
+            <option value="all">All Positions</option>
+            <option value="GK">Goalkeeper</option>
+            <option value="DEF">Defender</option>
+            <option value="MID">Midfielder</option>
+            <option value="ATT">Attacker</option>
+            <option value="ST">Striker</option>
+            <option value="CB">Center Back</option>
+            <option value="CAM">Attacking Mid</option>
+            <option value="CDM">Defensive Mid</option>
+            <option value="LW">Left Wing</option>
+            <option value="RW">Right Wing</option>
+        </select>
+        
+        <select id="rating-filter">
+            <option value="all">All Ratings</option>
+            <option value="90+">90+ OVR</option>
+            <option value="85-89">85-89 OVR</option>
+            <option value="80-84">80-84 OVR</option>
+            <option value="75-79">75-79 OVR</option>
+            <option value="70-74">70-74 OVR</option>
+            <option value="60-69">60-69 OVR</option>
+            <option value="40-59">40-59 OVR</option>
+        </select>
+        
+        <input type="text" id="search-box" placeholder="Search players..." class="search-box">
+    </div>
+
+    <div class="players-grid" id="players-container">
+        <!-- Players will be loaded here -->
+    </div>
+
+    <script>
+        // OVR to Price mapping based on your data
+        const ovrPriceMap = {
+            47: 300, 48: 300, 49: 360, 50: 360, 51: 360, 52: 360, 53: 360, 54: 360, 55: 360, 56: 360,
+            57: 360, 58: 360, 59: 360, 60: 360, 61: 792, 62: 864, 63: 936, 64: 1092, 65: 1170, 66: 1326,
+            67: 1482, 68: 1638, 69: 1794, 70: 2250, 71: 2700, 72: 3150, 73: 3600, 74: 4050, 75: 4500,
+            76: 6975, 77: 9450, 78: 11925, 79: 14400, 80: 16875, 81: 46875, 82: 76875, 83: 106875,
+            84: 136875, 85: 168750, 86: 270000, 87: 371250, 88: 472500, 89: 573750, 90: 675000,
+            91: 990000, 92: 1305000, 93: 1620000, 94: 1935000, 95: 2250000, 96: 2700000, 97: 3150000,
+            98: 3600000, 99: 4050000
+        };
+
+        // Positions and nations for random generation
+        const positions = ["GK", "CB", "RB", "LB", "CDM", "CM", "CAM", "RW", "LW", "ST", "CF"];
+        const nations = ["Brazil", "Argentina", "France", "Germany", "Spain", "Italy", "England", "Portugal", 
+                        "Netherlands", "Belgium", "Croatia", "Uruguay", "Colombia", "Mexico", "USA", "Egypt",
+                        "Nigeria", "Senegal", "Morocco", "Japan", "South Korea", "Australia"];
+
+        // Generate players based on OVR range
+        function generatePlayers() {
+            const players = [];
+            let playerId = 1;
+            
+            for (let ovr = 47; ovr <= 99; ovr++) {
+                if (ovrPriceMap[ovr]) {
+                    // Create multiple players for each OVR (more common at lower ratings)
+                    const playerCount = ovr <= 70 ? 3 : ovr <= 80 ? 2 : 1;
+                    
+                    for (let i = 0; i < playerCount; i++) {
+                        const position = positions[Math.floor(Math.random() * positions.length)];
+                        const nation = nations[Math.floor(Math.random() * nations.length)];
+                        const firstName = ["Lionel", "Cristiano", "Kylian", "Kevin", "Virgil", "Robert", "Mohamed", "Karim", "Harry", "Neymar", "Luka", "Sergio", "Toni", "Manuel", "Thibaut", "Jan", "Marco", "Paul", "Antoine", "Eden", "Raheem", "Son", "Sadio", "Joshua", "Alisson", "Ederson", "Bernardo", "Riyad", "Serge", "Romelu", "Lautaro", "Federico", "Dušan", "Erling", "Jude", "Vinícius", "Rodrygo", "Frenkie", "Matthijs", "Ansu", "Pedri", "Gavi", "Jamal", "Bukayo", "Phil", "Declan", "Mason", "Jack", "Marcus", "Bruno"];
+                        const lastName = ["Messi", "Ronaldo", "Mbappé", "De Bruyne", "van Dijk", "Lewandowski", "Salah", "Benzema", "Kane", "Jr.", "Modrić", "Ramos", "Kroos", "Neuer", "Courtois", "Oblak", "Reus", "Pogba", "Griezmann", "Hazard", "Sterling", "Heung-min", "Mané", "Kimmich", "Becker", "Moraes", "Silva", "Mahrez", "Gnabry", "Lukaku", "Martínez", "Valverde", "Vlahović", "Haaland", "Bellingham", "Júnior", "Goes", "de Jong", "de Ligt", "Fati", "González", "Musiala", "Sancho", "Foden", "Rice", "Mount", "Grealish", "Rashford", "Fernandes"];
+                        
+                        const player = {
+                            id: playerId++,
+                            name: `${firstName[Math.floor(Math.random() * firstName.length)]} ${lastName[Math.floor(Math.random() * lastName.length)]}`,
+                            rating: ovr,
+                            position: position,
+                            nation: nation,
+                            buy_price: ovrPriceMap[ovr],
+                            sell_price: Math.floor(ovrPriceMap[ovr] * 0.67) // 67% of buy price
+                        };
+                        players.push(player);
+                    }
+                }
+            }
+            return players;
+        }
+
+        const allPlayers = generatePlayers();
+        let filteredPlayers = [...allPlayers];
+
+        function displayPlayers(playersToDisplay) {
+            const container = document.getElementById('players-container');
+            container.innerHTML = '';
+            
+            playersToDisplay.forEach(player => {
+                const card = document.createElement('div');
+                card.className = 'player-card';
+                card.innerHTML = `
+                    <div class="player-header">
+                        <div class="player-rating">⭐ ${player.rating}</div>
+                        <h3 class="player-name">${player.name}</h3>
+                    </div>
+                    <div class="player-details">
+                        <div class="player-detail">
+                            <span class="detail-label">Position:</span>
+                            <span class="player-position">${player.position}</span>
+                        </div>
+                        <div class="player-detail">
+                            <span class="detail-label">Nation:</span>
+                            <span class="player-nation">${player.nation}</span>
+                        </div>
+                        <div class="player-detail">
+                            <span class="detail-label">Buy Price:</span>
+                            <span>💰 ${player.buy_price.toLocaleString()} coins</span>
+                        </div>
+                        <div class="player-detail">
+                            <span class="detail-label">Sell Price:</span>
+                            <span>💵 ${player.sell_price.toLocaleString()} coins</span>
+                        </div>
+                    </div>
+                    <p style="margin-top: 15px; text-align: center; font-size: 12px; color: #a0a0a0;">
+                        Use <code>/buyplayer ${player.name}</code> in Discord
+                    </p>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function filterAndSortPlayers() {
+            const sortValue = document.getElementById('sort-select').value;
+            const positionFilter = document.getElementById('position-filter').value;
+            const ratingFilter = document.getElementById('rating-filter').value;
+            const searchTerm = document.getElementById('search-box').value.toLowerCase();
+            
+            // Filter players
+            filteredPlayers = allPlayers.filter(player => {
+                const matchesPosition = positionFilter === 'all' || player.position === positionFilter;
+                const matchesSearch = searchTerm === '' || 
+                    player.name.toLowerCase().includes(searchTerm) ||
+                    player.nation.toLowerCase().includes(searchTerm);
+                
+                let matchesRating = true;
+                if (ratingFilter !== 'all') {
+                    const [min, max] = ratingFilter.split('-').map(Number);
+                    if (ratingFilter === '90+') {
+                        matchesRating = player.rating >= 90;
+                    } else {
+                        matchesRating = player.rating >= min && player.rating <= max;
+                    }
+                }
+                
+                return matchesPosition && matchesSearch && matchesRating;
+            });
+            
+            // Sort players
+            switch(sortValue) {
+                case 'rating-desc':
+                    filteredPlayers.sort((a, b) => b.rating - a.rating);
+                    break;
+                case 'rating-asc':
+                    filteredPlayers.sort((a, b) => a.rating - b.rating);
+                    break;
+                case 'name-asc':
+                    filteredPlayers.sort((a, b) => a.name.localeCompare(b.name));
+                    break;
+                case 'name-desc':
+                    filteredPlayers.sort((a, b) => b.name.localeCompare(a.name));
+                    break;
+                case 'price-desc':
+                    filteredPlayers.sort((a, b) => b.buy_price - a.buy_price);
+                    break;
+                case 'price-asc':
+                    filteredPlayers.sort((a, b) => a.buy_price - b.buy_price);
+                    break;
+            }
+            
+            displayPlayers(filteredPlayers);
+        }
+
+        // Event listeners
+        document.getElementById('sort-select').addEventListener('change', filterAndSortPlayers);
+        document.getElementById('position-filter').addEventListener('change', filterAndSortPlayers);
+        document.getElementById('rating-filter').addEventListener('change', filterAndSortPlayers);
+        document.getElementById('search-box').addEventListener('input', filterAndSortPlayers);
+
+        // Initial display
+        filterAndSortPlayers();
+    </script>
+</body>
+</html>
