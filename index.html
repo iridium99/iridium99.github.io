@@ -23,6 +23,37 @@
             margin-bottom: 30px;
         }
         
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 10px;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background: var(--card-bg);
+            margin: 0 5px;
+            border-radius: 8px 8px 0 0;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .tab.active {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
         .filters {
             display: flex;
             gap: 15px;
@@ -154,6 +185,61 @@
             border-radius: 12px;
             margin-bottom: 10px;
         }
+        
+        .help-content {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+        }
+        
+        .help-section {
+            margin-bottom: 30px;
+        }
+        
+        .help-section h3 {
+            color: var(--primary);
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 8px;
+        }
+        
+        .command-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        
+        .command-list li {
+            background: rgba(88, 101, 242, 0.1);
+            margin-bottom: 10px;
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .command-name {
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .feature-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        
+        .feature-list li {
+            margin-bottom: 15px;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .feature-list li:before {
+            content: "✓";
+            color: var(--primary);
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -162,71 +248,125 @@
         <p>Browse all available players. Use <code>/buyplayer [name]</code> in Discord to purchase!</p>
     </div>
 
-    <div class="filters">
-        <select id="sort-select">
-            <option value="rating-desc">Rating: High to Low</option>
-            <option value="rating-asc">Rating: Low to High</option>
-            <option value="name-asc">Name: A to Z</option>
-            <option value="name-desc">Name: Z to A</option>
-            <option value="price-desc">Price: High to Low</option>
-            <option value="price-asc">Price: Low to High</option>
-        </select>
-        
-        <select id="position-filter">
-            <!-- General categories first -->
-            <option value="all">All Positions</option>
-            <option value="GK">Goalkeeper</option>
-            <option value="DEF">Defender</option>
-            <option value="MID">Midfielder</option>
-            <option value="ATT">Attacker</option>
-
-            <!-- Specific positions after -->
-            <option value="CB">Center Back</option>
-            <option value="RB">Right Back</option>
-            <option value="LB">Left Back</option>
-            <option value="CDM">Defensive Mid</option>
-            <option value="CM">Center Mid</option>
-            <option value="CAM">Attacking Mid</option>
-            <option value="RW">Right Wing</option>
-            <option value="LW">Left Wing</option>
-            <option value="ST">Striker</option>
-        </select>
-        
-        <select id="rating-filter">
-            <option value="all">All Ratings</option>
-            <option value="90+">90+ OVR</option>
-            <option value="85-89">85-89 OVR</option>
-            <option value="80-84">80-84 OVR</option>
-            <option value="75-79">75-79 OVR</option>
-            <option value="70-74">70-74 OVR</option>
-            <option value="60-69">60-69 OVR</option>
-            <option value="40-59">40-59 OVR</option>
-        </select>
-        
-        <input type="text" id="search-box" placeholder="Search players..." class="search-box">
+    <div class="tabs">
+        <div class="tab active" data-tab="players">Players</div>
+        <div class="tab" data-tab="help">Help & Commands</div>
     </div>
 
-    <div class="range-filters">
-        <div class="range-filter">
-            <label for="min-price">Min Price:</label>
-            <input type="number" id="min-price" placeholder="0" min="0">
+    <div class="tab-content active" id="players-tab">
+        <div class="filters">
+            <select id="sort-select">
+                <option value="rating-desc">Rating: High to Low</option>
+                <option value="rating-asc">Rating: Low to High</option>
+                <option value="name-asc">Name: A to Z</option>
+                <option value="name-desc">Name: Z to A</option>
+                <option value="price-desc">Price: High to Low</option>
+                <option value="price-asc">Price: Low to High</option>
+            </select>
+            
+            <select id="position-filter">
+                <!-- General categories first -->
+                <option value="all">All Positions</option>
+                <option value="GK">Goalkeeper</option>
+                <option value="DEF">Defender</option>
+                <option value="MID">Midfielder</option>
+                <option value="ATT">Attacker</option>
+
+                <!-- Specific positions after -->
+                <option value="CB">Center Back</option>
+                <option value="RB">Right Back</option>
+                <option value="LB">Left Back</option>
+                <option value="CDM">Defensive Mid</option>
+                <option value="CM">Center Mid</option>
+                <option value="CAM">Attacking Mid</option>
+                <option value="RW">Right Wing</option>
+                <option value="LW">Left Wing</option>
+                <option value="ST">Striker</option>
+            </select>
+            
+            <select id="rating-filter">
+                <option value="all">All Ratings</option>
+                <option value="90+">90+ OVR</option>
+                <option value="85-89">85-89 OVR</option>
+                <option value="80-84">80-84 OVR</option>
+                <option value="75-79">75-79 OVR</option>
+                <option value="70-74">70-74 OVR</option>
+                <option value="60-69">60-69 OVR</option>
+                <option value="40-59">40-59 OVR</option>
+            </select>
+            
+            <input type="text" id="search-box" placeholder="Search players..." class="search-box">
         </div>
-        <div class="range-filter">
-            <label for="max-price">Max Price:</label>
-            <input type="number" id="max-price" placeholder="Max">
+
+        <div class="range-filters">
+            <div class="range-filter">
+                <label for="min-price">Min Price:</label>
+                <input type="number" id="min-price" placeholder="0" min="0">
+            </div>
+            <div class="range-filter">
+                <label for="max-price">Max Price:</label>
+                <input type="number" id="max-price" placeholder="Max">
+            </div>
+            <div class="range-filter">
+                <label for="min-ovr">Min OVR:</label>
+                <input type="number" id="min-ovr" placeholder="0" min="0" max="99">
+            </div>
+            <div class="range-filter">
+                <label for="max-ovr">Max OVR:</label>
+                <input type="number" id="max-ovr" placeholder="99" min="0" max="99">
+            </div>
         </div>
-        <div class="range-filter">
-            <label for="min-ovr">Min OVR:</label>
-            <input type="number" id="min-ovr" placeholder="0" min="0" max="99">
-        </div>
-        <div class="range-filter">
-            <label for="max-ovr">Max OVR:</label>
-            <input type="number" id="max-ovr" placeholder="99" min="0" max="99">
+
+        <div class="players-grid" id="players-container">
+            <!-- Players will be loaded here -->
         </div>
     </div>
 
-    <div class="players-grid" id="players-container">
-        <!-- Players will be loaded here -->
+    <div class="tab-content" id="help-tab">
+        <div class="help-content">
+            <div class="help-section">
+                <h3>Website Features</h3>
+                <ul class="feature-list">
+                    <li><strong>Player Catalog:</strong> Browse all available players with detailed information including ratings, positions, and prices.</li>
+                    <li><strong>Advanced Filtering:</strong> Filter players by position, rating range, and price range to find exactly what you're looking for.</li>
+                    <li><strong>Search Functionality:</strong> Search for players by name or nationality.</li>
+                    <li><strong>Sorting Options:</strong> Sort players by rating, name, or price in ascending or descending order.</li>
+                    <li><strong>Responsive Design:</strong> The website works well on both desktop and mobile devices.</li>
+                </ul>
+            </div>
+            
+            <div class="help-section">
+                <h3>Discord Commands</h3>
+                <ul class="command-list">
+                    <li><span class="command-name">/buyplayer [name]</span> - Purchase a player from the catalog</li>
+                    <li><span class="command-name">/sellplayer [name]</span> - Sell a player from your collection</li>
+                    <li><span class="command-name">/myteam</span> - View your current team lineup</li>
+                    <li><span class="command-name">/balance</span> - Check your current coin balance</li>
+                    <li><span class="command-name">/market</span> - View the transfer market</li>
+                    <li><span class="command-name">/openpack</span> - Open a player pack (if available)</li>
+                    <li><span class="command-name">/training [player]</span> - Train a player to improve their stats</li>
+                    <li><span class="command-name">/formation [formation]</span> - Change your team formation</li>
+                    <li><span class="command-name">/lineup</span> - Manage your starting lineup</li>
+                    <li><span class="command-name">/stats [player]</span> - View detailed stats of a player</li>
+                </ul>
+            </div>
+            
+            <div class="help-section">
+                <h3>How to Get Started</h3>
+                <ol>
+                    <li>Browse the player catalog to find players you're interested in</li>
+                    <li>Use the filters to narrow down your search</li>
+                    <li>Note the player names you want to purchase</li>
+                    <li>Join our Discord server and use the /buyplayer command to make purchases</li>
+                    <li>Build your ultimate team and compete against other players!</li>
+                </ol>
+            </div>
+            
+            <div class="help-section">
+                <h3>Need More Help?</h3>
+                <p>If you have any questions or need assistance, DM atrocity exhibition (the1n1ly)</p>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -348,6 +488,22 @@
 
             displayPlayers(filteredPlayers);
         }
+
+        // Tab switching functionality
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remove active class from all tabs and content
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                // Add active class to clicked tab
+                tab.classList.add('active');
+                
+                // Show corresponding content
+                const tabName = tab.getAttribute('data-tab');
+                document.getElementById(`${tabName}-tab`).classList.add('active');
+            });
+        });
 
         // Add event listeners to all filter elements
         document.getElementById('sort-select').addEventListener('change', filterAndSortPlayers);
