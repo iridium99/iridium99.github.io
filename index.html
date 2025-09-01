@@ -167,7 +167,6 @@
             <option value="RW">Right Wing</option>
             <option value="LW">Left Wing</option>
             <option value="ST">Striker</option>
-            <option value="CF">Center Forward</option>
         </select>
         
         <select id="rating-filter">
@@ -199,13 +198,14 @@
             {id:7,name:"Kevin De Bruyne",rating:87,position:"CAM",nation:"Belgium",buy_price:371250,sell_price:248512,img:"cards/debruyne.png"},
             {id:8,name:"Virgil van Dijk",rating:86,position:"CB",nation:"Netherlands",buy_price:270000,sell_price:180900,img:"cards/vandijk.png"},
             {id:9,name:"Neymar Jr",rating:85,position:"LW",nation:"Brazil",buy_price:168750,sell_price:113062,img:"cards/neymar.png"},
-            {id:10,name:"shit guy",rating:55,position:"ST",nation:"Poland",buy_price:540,sell_price:384188,img:"cards/shit_guy.png"}
+            {id:10,name:"shit guy",rating:55,position:"ST",nation:"Poland",buy_price:540,sell_price:384188,img:"cards/shit_guy.png"},
+            {id:11,name:"atrocity exhibition creator",rating:99,position:"ST",nation:"England",buy_price:9999999,sell_price:1,img:"cards/atrocity_exhibition_creator.png"}
         ];
 
         const positionCategories = {
             'DEF': ['CB', 'RB', 'LB'],
             'MID': ['CDM', 'CM', 'CAM'],
-            'ATT': ['RW', 'LW', 'ST', 'CF']
+            'ATT': ['RW', 'LW', 'ST']
         };
 
         let filteredPlayers = [...allPlayers];
