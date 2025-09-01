@@ -40,6 +40,29 @@
             font-size: 14px;
         }
         
+        .range-filters {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .range-filter {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .range-filter label {
+            font-size: 14px;
+            color: #a0a0a0;
+        }
+        
+        .range-filter input {
+            width: 80px;
+        }
+        
         .players-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -183,6 +206,25 @@
         <input type="text" id="search-box" placeholder="Search players..." class="search-box">
     </div>
 
+    <div class="range-filters">
+        <div class="range-filter">
+            <label for="min-price">Min Price:</label>
+            <input type="number" id="min-price" placeholder="0" min="0">
+        </div>
+        <div class="range-filter">
+            <label for="max-price">Max Price:</label>
+            <input type="number" id="max-price" placeholder="Max">
+        </div>
+        <div class="range-filter">
+            <label for="min-ovr">Min OVR:</label>
+            <input type="number" id="min-ovr" placeholder="0" min="0" max="99">
+        </div>
+        <div class="range-filter">
+            <label for="max-ovr">Max OVR:</label>
+            <input type="number" id="max-ovr" placeholder="99" min="0" max="99">
+        </div>
+    </div>
+
     <div class="players-grid" id="players-container">
         <!-- Players will be loaded here -->
     </div>
@@ -259,6 +301,11 @@
             const positionFilter = document.getElementById('position-filter').value;
             const ratingFilter = document.getElementById('rating-filter').value;
             const searchTerm = document.getElementById('search-box').value.toLowerCase();
+            
+            const minPrice = document.getElementById('min-price').value ? parseInt(document.getElementById('min-price').value) : 0;
+            const maxPrice = document.getElementById('max-price').value ? parseInt(document.getElementById('max-price').value) : Number.MAX_SAFE_INTEGER;
+            const minOvr = document.getElementById('min-ovr').value ? parseInt(document.getElementById('min-ovr').value) : 0;
+            const maxOvr = document.getElementById('max-ovr').value ? parseInt(document.getElementById('max-ovr').value) : 99;
 
             filteredPlayers = allPlayers.filter(player => {
                 let matchesPosition = true;
@@ -283,8 +330,11 @@
                         matchesRating = player.rating >= min && player.rating <= max;
                     }
                 }
+                
+                const matchesPriceRange = player.buy_price >= minPrice && player.buy_price <= maxPrice;
+                const matchesOvrRange = player.rating >= minOvr && player.rating <= maxOvr;
 
-                return matchesPosition && matchesSearch && matchesRating;
+                return matchesPosition && matchesSearch && matchesRating && matchesPriceRange && matchesOvrRange;
             });
 
             switch(sortValue){
@@ -299,10 +349,15 @@
             displayPlayers(filteredPlayers);
         }
 
+        // Add event listeners to all filter elements
         document.getElementById('sort-select').addEventListener('change', filterAndSortPlayers);
         document.getElementById('position-filter').addEventListener('change', filterAndSortPlayers);
         document.getElementById('rating-filter').addEventListener('change', filterAndSortPlayers);
         document.getElementById('search-box').addEventListener('input', filterAndSortPlayers);
+        document.getElementById('min-price').addEventListener('input', filterAndSortPlayers);
+        document.getElementById('max-price').addEventListener('input', filterAndSortPlayers);
+        document.getElementById('min-ovr').addEventListener('input', filterAndSortPlayers);
+        document.getElementById('max-ovr').addEventListener('input', filterAndSortPlayers);
 
         filterAndSortPlayers();
     </script>
