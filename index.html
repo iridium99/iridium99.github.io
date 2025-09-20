@@ -23,7 +23,7 @@
             margin-bottom: 30px;
         }
         
-        /* ONLY CHANGED THE TAB BUTTONS - Everything else is the same */
+        /* Tab buttons styling - Using your UIverse button style */
         .tabs {
             display: flex;
             justify-content: center;
@@ -305,6 +305,85 @@
             left: 0;
             font-weight: bold;
         }
+        
+        /* Leaderboards specific styles */
+        .leaderboard-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+        }
+        
+        .leaderboard-filters {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .leaderboard-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        .leaderboard-table th {
+            background-color: var(--primary);
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        .leaderboard-table tr:nth-child(even) {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        
+        .leaderboard-table td {
+            padding: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .leaderboard-table tr:hover {
+            background-color: rgba(88, 101, 242, 0.2);
+        }
+        
+        .rank {
+            font-weight: bold;
+            text-align: center;
+            width: 60px;
+        }
+        
+        .top-3 {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 215, 0, 0.05));
+        }
+        
+        .medal {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 24px;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+        
+        .gold {
+            background-color: gold;
+            color: black;
+        }
+        
+        .silver {
+            background-color: silver;
+            color: black;
+        }
+        
+        .bronze {
+            background-color: #cd7f32;
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -315,8 +394,10 @@
 
     <div class="tabs">
         <div class="tab active" data-tab="players">Players</div>
+        <div class="tab" data-tab="leaderboards">Leaderboards</div>
         <div class="tab" data-tab="help">Help & Commands</div>
     </div>
+
     <div class="tab-content active" id="players-tab">
         <div class="filters">
             <select id="sort-select">
