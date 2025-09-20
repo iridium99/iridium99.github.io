@@ -306,83 +306,82 @@
             font-weight: bold;
         }
         
-        /* Leaderboards specific styles */
-        .leaderboard-content {
+        /* What's New specific styles */
+        .updates-content {
             max-width: 1000px;
             margin: 0 auto;
+        }
+        
+        .update-card {
             background: var(--card-bg);
-            padding: 20px;
             border-radius: 12px;
-        }
-        
-        .leaderboard-filters {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
+            padding: 20px;
             margin-bottom: 20px;
-            flex-wrap: wrap;
+            border-left: 4px solid var(--primary);
         }
         
-        .leaderboard-table {
+        .update-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .update-title {
+            font-size: 20px;
+            color: var(--primary);
+            margin: 0;
+        }
+        
+        .update-date {
+            color: #a0a0a0;
+            font-size: 14px;
+        }
+        
+        .update-badge {
+            background: #ff6b6b;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        
+        .new-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+        
+        .new-card {
+            background: rgba(88, 101, 242, 0.1);
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .new-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .card-image {
             width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
+            border-radius: 8px;
+            margin-bottom: 8px;
         }
         
-        .leaderboard-table th {
-            background-color: var(--primary);
-            color: white;
-            padding: 12px;
-            text-align: left;
-        }
-        
-        .leaderboard-table tr:nth-child(even) {
-            background-color: rgba(255, 255, 255, 0.05);
-        }
-        
-        .leaderboard-table td {
-            padding: 12px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .leaderboard-table tr:hover {
-            background-color: rgba(88, 101, 242, 0.2);
-        }
-        
-        .rank {
+        .card-name {
             font-weight: bold;
-            text-align: center;
-            width: 60px;
+            margin: 5px 0;
         }
         
-        .top-3 {
-            background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 215, 0, 0.05));
-        }
-        
-        .medal {
-            display: inline-block;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            text-align: center;
-            line-height: 24px;
+        .card-rating {
+            color: var(--primary);
             font-weight: bold;
-            margin-right: 8px;
-        }
-        
-        .gold {
-            background-color: gold;
-            color: black;
-        }
-        
-        .silver {
-            background-color: silver;
-            color: black;
-        }
-        
-        .bronze {
-            background-color: #cd7f32;
-            color: white;
         }
     </style>
 </head>
@@ -393,7 +392,8 @@
     </div>
 
     <div class="tabs">
-        <div class="tab active" data-tab="players">Players</div>
+        <div class="tab active" data-tab="whats-new">What's New</div>
+        <div class="tab" data-tab="players">Players</div>
         <div class="tab" data-tab="leaderboards">Leaderboards</div>
         <div class="tab" data-tab="help">Help & Commands</div>
     </div>
