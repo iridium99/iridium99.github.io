@@ -753,7 +753,13 @@
             
             let html = '<div style="max-width:900px;margin:0 auto;">';
             data.slice(0, 20).forEach((item, idx) => {
-                const stat = item.stat !== undefined ? item.stat.toFixed(2) : item.value;
+                let stat;
+                if (item.stat !== undefined) {
+                    const decimals = item.decimals !== undefined ? item.decimals : 2;
+                    stat = typeof item.stat === 'number' ? item.stat.toFixed(decimals) : item.stat;
+                } else {
+                    stat = item.value;
+                }
                 const unit = item.unit || '';
                 html += `
                     <div style="background:var(--card-bg);padding:12px;margin-bottom:10px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;border-left:4px solid var(--primary);">
