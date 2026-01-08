@@ -678,21 +678,21 @@
                 return '<p style="text-align:center;color:#a0a0a0;">No data available</p>';
             }
             let html = '<pre style="background:var(--card-bg);padding:20px;border-radius:12px;overflow-x:auto;">';
-            html += 'Pos | Team          | P  | W  | D  | L  | Pts | GF | GA | GD | User\n';
-            html += '-'.repeat(75) + '\n';
+            html += 'Pos | User           | Team                          | P  | W  | D  | L  | GF | GA | GD  | Pts\n';
+            html += '-'.repeat(95) + '\n';
             rows.forEach((team, idx) => {
                 const pos = String(idx + 1).padStart(2, ' ');
-                const teamName = (team.team_name || 'N/A').substring(0, 13).padEnd(13, ' ');
+                const user = (team.user || 'Unknown').padEnd(14, ' ').substring(0, 14);
+                const teamName = (team.team_name || 'N/A').substring(0, 30).padEnd(30, ' ');
                 const played = String(team.played || 0).padStart(2, ' ');
                 const wins = String(team.wins || 0).padStart(2, ' ');
                 const draws = String(team.draws || 0).padStart(2, ' ');
                 const losses = String(team.losses || 0).padStart(2, ' ');
-                const points = String(team.points || 0).padStart(3, ' ');
                 const gf = String(team.gf || 0).padStart(2, ' ');
                 const ga = String(team.ga || 0).padStart(2, ' ');
                 const gd = String(team.gd || 0).padStart(3, ' ');
-                const user = (team.user || 'Unknown').substring(0, 8);
-                html += `${pos}  | ${teamName} | ${played} | ${wins} | ${draws} | ${losses} | ${points} | ${gf} | ${ga} | ${gd} | ${user}\n`;
+                const points = String(team.points || 0).padStart(3, ' ');
+                html += `${pos}  | ${user} | ${teamName} | ${played} | ${wins} | ${draws} | ${losses} | ${gf} | ${ga} | ${gd} | ${points}\n`;
             });
             html += '</pre>';
             return html;
@@ -781,7 +781,6 @@
                     { key: 'richestUsers', label: '💰 Richest Users' },
                     { key: 'biggestCollection', label: '🎴 Biggest Collection' },
                     { key: 'mostValuableTeam', label: '💎 Most Valuable Team' },
-                    { key: 'bestWinRate', label: '🏆 Best Win Rate' },
                     { key: 'highestAvgRating', label: '⭐ Highest Avg Rating' }
                 ];
                 
