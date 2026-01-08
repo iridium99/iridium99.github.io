@@ -837,17 +837,39 @@
             const container = document.getElementById('league-standings-container');
             container.innerHTML = '<p style="text-align:center;color:#a0a0a0;">Loading all leagues...</p>';
             try {
-                const leagues = await fetch('/api/leaderboard?type=all').then(r => r.json());
-                if(!Array.isArray(leagues) || leagues.length === 0) {
+                // Fetch list of league files by trying common league IDs
+                const leagueIds = [];
+                for (let i = 1; i <= 50; i++) {
+                    try {
+                        const response = await fetch(`/leaderboards/league_${i}.json`);
+                        if (response.ok) {
+                            leagueIds.push(i);
+                        }
+                    } catch (e) {
+                        // continue
+                    }
+                }
+                
+                if (leagueIds.length === 0) {
                     container.innerHTML = '<p style="text-align:center;color:#a0a0a0;">No league standings available yet.</p>';
                     return;
                 }
-                const sections = leagues.map(league => {
-                    const leagueId = league.leagueId || 'N/A';
-                    const entries = league.entries || [];
-                    return `<div style="margin-bottom:20px;"><h3 style="margin:0 0 10px;color:var(--primary);">League ${leagueId}</h3>${renderLeaderboardTable(entries)}</div>`;
-                });
-                container.innerHTML = sections.join('');
+                
+                let html = '';
+                for (const leagueId of leagueIds) {
+                    try {
+                        const data = await fetch(`/leaderboards/league_${leagueId}.json`).then(r => r.json());
+                        html += `<div style="margin-bottom:30px;"><h3 style="margin:0 0 15px;color:var(--primary);font-size:18px;">League ${leagueId}</h3>${renderLeaderboardTable(data)}</div>`;
+                    } catch (e) {
+                        // skip unreadable league
+                    }
+                }
+                
+                if (html === '') {
+                    container.innerHTML = '<p style="text-align:center;color:#a0a0a0;">No league data available.</p>';
+                } else {
+                    container.innerHTML = html;
+                }
             } catch (e) {
                 container.innerHTML = `<p style="color:red;">Error loading leagues: ${e.message}</p>`;
             }
