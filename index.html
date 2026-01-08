@@ -399,7 +399,21 @@
         <div class="tab" data-tab="players">Players</div>
         <div class="tab" data-tab="leaderboards">Leaderboards</div>
         <div class="tab" data-tab="help">Help & Commands</div>
+        <div class="tab-content" id="leaderboards-tab">
+    <div class="filters">
+        <select id="leaderboard-type">
+            <option value="league">League Standings</option>
+            <option value="global">Global Stats</option>
+        </select>
+        <input type="number" id="league-id-input" placeholder="Enter League ID" min="1">
+        <button id="load-leaderboard-btn" style="padding:10px 20px;background:var(--primary);border:none;border-radius:8px;color:white;cursor:pointer;">Load</button>
     </div>
+    <div id="leaderboard-container" style="max-width:1000px;margin:0 auto;">
+        <!-- Leaderboard will load here -->
+    </div>
+</div>
+    </div>
+    
 
     <div class="tab-content active" id="players-tab">
         <div class="filters">
@@ -661,6 +675,58 @@
         document.getElementById('max-ovr').addEventListener('input', filterAndSortPlayers);
 
         filterAndSortPlayers();
+        // Leaderboard functionality
+document.getElementById('load-leaderboard-btn').addEventListener('click', async () => {
+    const type = document.getElementById('leaderboard-type').value;
+    const leagueId = document.getElementById('league-id-input').value;
+    
+    if(type === 'league' && !leagueId) {
+        alert('Please enter a League ID');
+        return;
+    }
+    
+    try {
+        let data;
+        if(type === 'league') {
+            data = await fetch(`/api/leaderboard?league_id=${leagueId}`).then(r => r.json());
+        } else {
+            data = await fetch(`/api/leaderboard?type=global`).then(r => r.json());
+        }
+        
+        displayLeaderboard(data, type);
+    } catch(e) {
+        document.getElementById('leaderboard-container').innerHTML = `<p style="color:red;">Error loading leaderboard: ${e.message}</p>`;
+    }
+});
+
+function displayLeaderboard(data, type) {
+    const container = document.getElementById('leaderboard-container');
+    
+    if(!data || data.length === 0) {
+        container.innerHTML = '<p style="text-align:center;color:#a0a0a0;">No data available</p>';
+        return;
+    }
+    
+    let html = '<pre style="background:var(--card-bg);padding:20px;border-radius:12px;overflow-x:auto;">';
+    html += 'Pos | Team          | P  | W  | D  | L  | Pts | User\n';
+    html += '-'.repeat(60) + '\n';
+    
+    data.forEach((team, idx) => {
+        const pos = String(idx + 1).padStart(2, ' ');
+        const teamName = (team.team_name || 'N/A').substring(0, 13).padEnd(13, ' ');
+        const played = String(team.played || 0).padStart(2, ' ');
+        const wins = String(team.wins || 0).padStart(2, ' ');
+        const draws = String(team.draws || 0).padStart(2, ' ');
+        const losses = String(team.losses || 0).padStart(2, ' ');
+        const points = String(team.points || 0).padStart(3, ' ');
+        const user = (team.user || 'Unknown').substring(0, 8);
+        
+        html += `${pos}  | ${teamName} | ${played} | ${wins} | ${draws} | ${losses} | ${points} | ${user}\n`;
+    });
+    
+    html += '</pre>';
+    container.innerHTML = html;
+}
     </script>
 </body>
 </html>
