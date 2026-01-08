@@ -1,0 +1,5 @@
+[
+  {"team_name":"North Stars","played":10,"wins":6,"draws":2,"losses":2,"points":20,"user":"North"},
+  {"team_name":"Coastal FC","played":10,"wins":5,"draws":3,"losses":2,"points":18,"user":"Coast"},
+  {"team_name":"River City","played":10,"wins":4,"draws":4,"losses":2,"points":16,"user":"River"}
+]

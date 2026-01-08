@@ -395,25 +395,16 @@
     </div>
 
     <div class="tabs">
-        <div class="tab active" data-tab="whats-new">What's New</div>
-        <div class="tab" data-tab="players">Players</div>
-        <div class="tab" data-tab="leaderboards">Leaderboards</div>
+        <div class="tab" data-tab="whats-new">What's New</div>
+        <div class="tab active" data-tab="players">Players</div>
+        <div class="tab" data-tab="player-stats">Player Stats Leaderboard</div>
+        <div class="tab" data-tab="league-standings">League Standings</div>
         <div class="tab" data-tab="help">Help & Commands</div>
-        <div class="tab-content" id="leaderboards-tab">
-    <div class="filters">
-        <select id="leaderboard-type">
-            <option value="league">League Standings</option>
-            <option value="global">Global Stats</option>
-        </select>
-        <input type="number" id="league-id-input" placeholder="Enter League ID" min="1">
-        <button id="load-leaderboard-btn" style="padding:10px 20px;background:var(--primary);border:none;border-radius:8px;color:white;cursor:pointer;">Load</button>
     </div>
-    <div id="leaderboard-container" style="max-width:1000px;margin:0 auto;">
-        <!-- Leaderboard will load here -->
+
+    <div class="tab-content" id="whats-new-tab">
+        <p style="text-align:center;color:#a0a0a0;">Latest updates coming soon.</p>
     </div>
-</div>
-    </div>
-    
 
     <div class="tab-content active" id="players-tab">
         <div class="filters">
@@ -482,6 +473,20 @@
         <div class="players-grid" id="players-container">
             <!-- Players will be loaded here -->
         </div>
+    </div>
+
+    <div class="tab-content" id="player-stats-tab">
+        <div class="filters">
+            <button id="load-player-stats-btn" style="padding:10px 20px;background:var(--primary);border:none;border-radius:8px;color:white;cursor:pointer;">Load Player Stats</button>
+        </div>
+        <div id="player-stats-container" style="max-width:1000px;margin:0 auto;"></div>
+    </div>
+
+    <div class="tab-content" id="league-standings-tab">
+        <div class="filters">
+            <button id="load-all-leagues-btn" style="padding:10px 20px;background:var(--primary);border:none;border-radius:8px;color:white;cursor:pointer;">Show All Leagues</button>
+        </div>
+        <div id="league-standings-container" style="max-width:1000px;margin:0 auto;"></div>
     </div>
 
     <div class="tab-content" id="help-tab">
@@ -648,22 +653,6 @@
             displayPlayers(filteredPlayers);
         }
 
-        // Tab switching functionality
-        document.querySelectorAll('.tab').forEach(tab => {
-            tab.addEventListener('click', () => {
-                // Remove active class from all tabs and content
-                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-                
-                // Add active class to clicked tab
-                tab.classList.add('active');
-                
-                // Show corresponding content
-                const tabName = tab.getAttribute('data-tab');
-                document.getElementById(`${tabName}-tab`).classList.add('active');
-            });
-        });
-
         // Add event listeners to all filter elements
         document.getElementById('sort-select').addEventListener('change', filterAndSortPlayers);
         document.getElementById('position-filter').addEventListener('change', filterAndSortPlayers);
@@ -675,58 +664,83 @@
         document.getElementById('max-ovr').addEventListener('input', filterAndSortPlayers);
 
         filterAndSortPlayers();
-        // Leaderboard functionality
-document.getElementById('load-leaderboard-btn').addEventListener('click', async () => {
-    const type = document.getElementById('leaderboard-type').value;
-    const leagueId = document.getElementById('league-id-input').value;
-    
-    if(type === 'league' && !leagueId) {
-        alert('Please enter a League ID');
-        return;
-    }
-    
-    try {
-        let data;
-        if(type === 'league') {
-            data = await fetch(`/api/leaderboard?league_id=${leagueId}`).then(r => r.json());
-        } else {
-            data = await fetch(`/api/leaderboard?type=global`).then(r => r.json());
-        }
-        
-        displayLeaderboard(data, type);
-    } catch(e) {
-        document.getElementById('leaderboard-container').innerHTML = `<p style="color:red;">Error loading leaderboard: ${e.message}</p>`;
-    }
-});
 
-function displayLeaderboard(data, type) {
-    const container = document.getElementById('leaderboard-container');
-    
-    if(!data || data.length === 0) {
-        container.innerHTML = '<p style="text-align:center;color:#a0a0a0;">No data available</p>';
-        return;
-    }
-    
-    let html = '<pre style="background:var(--card-bg);padding:20px;border-radius:12px;overflow-x:auto;">';
-    html += 'Pos | Team          | P  | W  | D  | L  | Pts | User\n';
-    html += '-'.repeat(60) + '\n';
-    
-    data.forEach((team, idx) => {
-        const pos = String(idx + 1).padStart(2, ' ');
-        const teamName = (team.team_name || 'N/A').substring(0, 13).padEnd(13, ' ');
-        const played = String(team.played || 0).padStart(2, ' ');
-        const wins = String(team.wins || 0).padStart(2, ' ');
-        const draws = String(team.draws || 0).padStart(2, ' ');
-        const losses = String(team.losses || 0).padStart(2, ' ');
-        const points = String(team.points || 0).padStart(3, ' ');
-        const user = (team.user || 'Unknown').substring(0, 8);
-        
-        html += `${pos}  | ${teamName} | ${played} | ${wins} | ${draws} | ${losses} | ${points} | ${user}\n`;
-    });
-    
-    html += '</pre>';
-    container.innerHTML = html;
-}
+        function renderLeaderboardTable(rows) {
+            if(!rows || rows.length === 0) {
+                return '<p style="text-align:center;color:#a0a0a0;">No data available</p>';
+            }
+            let html = '<pre style="background:var(--card-bg);padding:20px;border-radius:12px;overflow-x:auto;">';
+            html += 'Pos | Team          | P  | W  | D  | L  | Pts | User\n';
+            html += '-'.repeat(60) + '\n';
+            rows.forEach((team, idx) => {
+                const pos = String(idx + 1).padStart(2, ' ');
+                const teamName = (team.team_name || 'N/A').substring(0, 13).padEnd(13, ' ');
+                const played = String(team.played || 0).padStart(2, ' ');
+                const wins = String(team.wins || 0).padStart(2, ' ');
+                const draws = String(team.draws || 0).padStart(2, ' ');
+                const losses = String(team.losses || 0).padStart(2, ' ');
+                const points = String(team.points || 0).padStart(3, ' ');
+                const user = (team.user || 'Unknown').substring(0, 8);
+                html += `${pos}  | ${teamName} | ${played} | ${wins} | ${draws} | ${losses} | ${points} | ${user}\n`;
+            });
+            html += '</pre>';
+            return html;
+        }
+
+        async function loadPlayerStats() {
+            const container = document.getElementById('player-stats-container');
+            container.innerHTML = '<p style="text-align:center;color:#a0a0a0;">Loading...</p>';
+            try {
+                const data = await fetch('/api/leaderboard?type=global').then(r => r.json());
+                container.innerHTML = renderLeaderboardTable(data);
+            } catch (e) {
+                container.innerHTML = `<p style="color:red;">Error loading player stats: ${e.message}</p>`;
+            }
+        }
+
+        async function loadAllLeagueStandings() {
+            const container = document.getElementById('league-standings-container');
+            container.innerHTML = '<p style="text-align:center;color:#a0a0a0;">Loading all leagues...</p>';
+            try {
+                const leagues = await fetch('/api/leaderboard?type=all').then(r => r.json());
+                if(!Array.isArray(leagues) || leagues.length === 0) {
+                    container.innerHTML = '<p style="text-align:center;color:#a0a0a0;">No league standings available yet.</p>';
+                    return;
+                }
+                const sections = leagues.map(league => {
+                    const leagueId = league.leagueId || 'N/A';
+                    const entries = league.entries || [];
+                    return `<div style="margin-bottom:20px;"><h3 style="margin:0 0 10px;color:var(--primary);">League ${leagueId}</h3>${renderLeaderboardTable(entries)}</div>`;
+                });
+                container.innerHTML = sections.join('');
+            } catch (e) {
+                container.innerHTML = `<p style="color:red;">Error loading leagues: ${e.message}</p>`;
+            }
+        }
+
+        document.getElementById('load-player-stats-btn').addEventListener('click', loadPlayerStats);
+        document.getElementById('load-all-leagues-btn').addEventListener('click', loadAllLeagueStandings);
+
+        let playerStatsLoaded = false;
+        let leaguesLoaded = false;
+
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                tab.classList.add('active');
+                const tabName = tab.getAttribute('data-tab');
+                document.getElementById(`${tabName}-tab`).classList.add('active');
+                if(tabName === 'player-stats' && !playerStatsLoaded) {
+                    playerStatsLoaded = true;
+                    loadPlayerStats();
+                }
+                if(tabName === 'league-standings' && !leaguesLoaded) {
+                    leaguesLoaded = true;
+                    loadAllLeagueStandings();
+                }
+            });
+        });
     </script>
 </body>
 </html>
