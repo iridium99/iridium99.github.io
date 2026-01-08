@@ -398,6 +398,7 @@
         <div class="tab" data-tab="whats-new">What's New</div>
         <div class="tab active" data-tab="players">Players</div>
         <div class="tab" data-tab="player-stats">Player Stats Leaderboard</div>
+        <div class="tab" data-tab="user-stats">User Stats Leaderboard</div>
         <div class="tab" data-tab="league-standings">League Standings</div>
         <div class="tab" data-tab="help">Help & Commands</div>
     </div>
@@ -480,6 +481,13 @@
             <button id="load-player-stats-btn" style="padding:10px 20px;background:var(--primary);border:none;border-radius:8px;color:white;cursor:pointer;">Load Player Stats</button>
         </div>
         <div id="player-stats-container" style="max-width:1000px;margin:0 auto;"></div>
+    </div>
+
+    <div class="tab-content" id="user-stats-tab">
+        <div class="filters">
+            <button id="load-user-stats-btn" style="padding:10px 20px;background:var(--primary);border:none;border-radius:8px;color:white;cursor:pointer;">Load User Stats</button>
+        </div>
+        <div id="user-stats-container" style="max-width:1000px;margin:0 auto;"></div>
     </div>
 
     <div class="tab-content" id="league-standings-tab">
@@ -691,11 +699,138 @@
             const container = document.getElementById('player-stats-container');
             container.innerHTML = '<p style="text-align:center;color:#a0a0a0;">Loading...</p>';
             try {
-                const data = await fetch('/api/leaderboard?type=global').then(r => r.json());
-                container.innerHTML = renderLeaderboardTable(data);
+                const data = await fetch('/api/leaderboard?type=players').then(r => r.json());
+                
+                // Create stat category tabs
+                let html = '<div style="margin-bottom:20px;">';
+                html += '<div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;">';
+                const categories = [
+                    { key: 'topGoalScorers', label: '🔥 Top Goal Scorers' },
+                    { key: 'topAssists', label: '🎯 Top Assists' },
+                    { key: 'mostAppearances', label: '👥 Most Appearances' },
+                    { key: 'mostMotms', label: '⭐ Most MOTMs' },
+                    { key: 'goalsPerGame', label: '📊 Goals/Game' },
+                    { key: 'assistsPerGame', label: '📈 Assists/Game' },
+                    { key: 'cleanSheets', label: '🧤 Clean Sheets' },
+                    { key: 'cleanSheetsPerGame', label: '🛡️ CS/Game' },
+                    { key: 'hatTricks', label: '🎩 Hat Tricks' },
+                    { key: 'penaltiesScored', label: '⚽ Penalties Scored' },
+                    { key: 'shotAccuracy', label: '🎯 Shot Accuracy' },
+                    { key: 'passAccuracy', label: '📍 Pass Accuracy' }
+                ];
+                
+                categories.forEach((cat, idx) => {
+                    html += `<button onclick="showPlayerStatCategory('${cat.key}')" style="padding:8px 12px;background:var(--primary);border:none;border-radius:6px;color:white;cursor:pointer;font-size:12px;">${cat.label}</button>`;
+                });
+                html += '</div></div>';
+                
+                // Store data globally for category switching
+                window.playerStatsData = data;
+                window.playerStatsCategories = categories;
+                
+                // Show first category by default
+                html += `<div id="stat-category-display"></div>`;
+                container.innerHTML = html;
+                
+                // Display first category
+                showPlayerStatCategory('topGoalScorers');
             } catch (e) {
                 container.innerHTML = `<p style="color:red;">Error loading player stats: ${e.message}</p>`;
             }
+        }
+
+        function showPlayerStatCategory(category) {
+            const data = window.playerStatsData[category] || [];
+            const display = document.getElementById('stat-category-display');
+            
+            if(!data || data.length === 0) {
+                display.innerHTML = '<p style="text-align:center;color:#a0a0a0;">No data available</p>';
+                return;
+            }
+            
+            let html = '<div style="max-width:900px;margin:0 auto;">';
+            data.slice(0, 20).forEach((item, idx) => {
+                const stat = item.stat !== undefined ? item.stat.toFixed(2) : item.value;
+                const unit = item.unit || '';
+                html += `
+                    <div style="background:var(--card-bg);padding:12px;margin-bottom:10px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;border-left:4px solid var(--primary);">
+                        <div style="flex:1;">
+                            <span style="color:var(--primary);font-weight:bold;margin-right:8px;">#${idx + 1}</span>
+                            <span style="font-weight:bold;">${item.playerName}</span>
+                            <span style="color:#a0a0a0;font-size:12px;margin-left:10px;">(${item.teamName})</span>
+                        </div>
+                        <div style="font-weight:bold;color:var(--primary);font-size:16px;">${stat} ${unit}</div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            display.innerHTML = html;
+        }
+
+        async function loadUserStats() {
+            const container = document.getElementById('user-stats-container');
+            container.innerHTML = '<p style="text-align:center;color:#a0a0a0;">Loading...</p>';
+            try {
+                const data = await fetch('/api/leaderboard?type=users').then(r => r.json());
+                
+                // Create stat category tabs
+                let html = '<div style="margin-bottom:20px;">';
+                html += '<div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;">';
+                const categories = [
+                    { key: 'richestUsers', label: '💰 Richest Users' },
+                    { key: 'biggestCollection', label: '🎴 Biggest Collection' },
+                    { key: 'mostValuableTeam', label: '💎 Most Valuable Team' },
+                    { key: 'bestWinRate', label: '🏆 Best Win Rate' },
+                    { key: 'highestAvgRating', label: '⭐ Highest Avg Rating' },
+                    { key: 'mostGoalsInGame', label: '🔥 Most Goals/Game' }
+                ];
+                
+                categories.forEach((cat, idx) => {
+                    html += `<button onclick="showUserStatCategory('${cat.key}')" style="padding:8px 12px;background:var(--primary);border:none;border-radius:6px;color:white;cursor:pointer;font-size:12px;">${cat.label}</button>`;
+                });
+                html += '</div></div>';
+                
+                // Store data globally for category switching
+                window.userStatsData = data;
+                window.userStatsCategories = categories;
+                
+                // Show first category by default
+                html += `<div id="user-stat-category-display"></div>`;
+                container.innerHTML = html;
+                
+                // Display first category
+                showUserStatCategory('richestUsers');
+            } catch (e) {
+                container.innerHTML = `<p style="color:red;">Error loading user stats: ${e.message}</p>`;
+            }
+        }
+
+        function showUserStatCategory(category) {
+            const data = window.userStatsData[category] || [];
+            const display = document.getElementById('user-stat-category-display');
+            
+            if(!data || data.length === 0) {
+                display.innerHTML = '<p style="text-align:center;color:#a0a0a0;">No data available</p>';
+                return;
+            }
+            
+            let html = '<div style="max-width:900px;margin:0 auto;">';
+            data.slice(0, 20).forEach((item, idx) => {
+                const stat = item.stat !== undefined ? (typeof item.stat === 'number' && item.stat % 1 !== 0 ? item.stat.toFixed(2) : item.stat) : item.value;
+                const unit = item.unit || '';
+                html += `
+                    <div style="background:var(--card-bg);padding:12px;margin-bottom:10px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;border-left:4px solid var(--primary);">
+                        <div style="flex:1;">
+                            <span style="color:var(--primary);font-weight:bold;margin-right:8px;">#${idx + 1}</span>
+                            <span style="font-weight:bold;">${item.username || item.teamName}</span>
+                            <span style="color:#a0a0a0;font-size:12px;margin-left:10px;">${item.teamName ? '(' + item.teamName + ')' : ''}</span>
+                        </div>
+                        <div style="font-weight:bold;color:var(--primary);font-size:16px;">${stat} ${unit}</div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            display.innerHTML = html;
         }
 
         async function loadAllLeagueStandings() {
@@ -719,9 +854,11 @@
         }
 
         document.getElementById('load-player-stats-btn').addEventListener('click', loadPlayerStats);
+        document.getElementById('load-user-stats-btn').addEventListener('click', loadUserStats);
         document.getElementById('load-all-leagues-btn').addEventListener('click', loadAllLeagueStandings);
 
         let playerStatsLoaded = false;
+        let userStatsLoaded = false;
         let leaguesLoaded = false;
 
         document.querySelectorAll('.tab').forEach(tab => {
@@ -734,6 +871,10 @@
                 if(tabName === 'player-stats' && !playerStatsLoaded) {
                     playerStatsLoaded = true;
                     loadPlayerStats();
+                }
+                if(tabName === 'user-stats' && !userStatsLoaded) {
+                    userStatsLoaded = true;
+                    loadUserStats();
                 }
                 if(tabName === 'league-standings' && !leaguesLoaded) {
                     leaguesLoaded = true;
