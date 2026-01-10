@@ -677,12 +677,14 @@
             if(!rows || rows.length === 0) {
                 return '<p style="text-align:center;color:#a0a0a0;">No data available</p>';
             }
-            let html = '<pre style="background:var(--card-bg);padding:20px;border-radius:12px;overflow-x:auto;">';
+            let html = '<div style="background:var(--card-bg);padding:20px;border-radius:12px;overflow-x:auto;font-family:monospace;white-space:pre;">';
             html += 'Pos | User           | Team                          | P  | W  | D  | L  | GF | GA | GD  | Pts\n';
             html += '-'.repeat(95) + '\n';
             rows.forEach((team, idx) => {
                 const pos = String(idx + 1).padStart(2, ' ');
-                const user = (team.user || 'Unknown').padEnd(14, ' ').substring(0, 14);
+                const userName = team.user || 'Unknown';
+                const userPadded = userName.substring(0, 14).padEnd(14, ' ');
+                const color = team.color || '';
                 const teamName = (team.team_name || 'N/A').substring(0, 30).padEnd(30, ' ');
                 const played = String(team.played || 0).padStart(2, ' ');
                 const wins = String(team.wins || 0).padStart(2, ' ');
@@ -692,9 +694,11 @@
                 const ga = String(team.ga || 0).padStart(2, ' ');
                 const gd = String(team.gd || 0).padStart(3, ' ');
                 const points = String(team.points || 0).padStart(3, ' ');
-                html += `${pos}  | ${user} | ${teamName} | ${played} | ${wins} | ${draws} | ${losses} | ${gf} | ${ga} | ${gd} | ${points}\n`;
+                
+                const userDisplay = color ? `<span style="color:${color}">${userPadded}</span>` : userPadded;
+                html += `${pos}  | ${userDisplay} | ${teamName} | ${played} | ${wins} | ${draws} | ${losses} | ${gf} | ${ga} | ${gd} | ${points}\n`;
             });
-            html += '</pre>';
+            html += '</div>';
             return html;
         }
 
@@ -817,11 +821,13 @@
             data.slice(0, 20).forEach((item, idx) => {
                 const stat = item.stat !== undefined ? (typeof item.stat === 'number' && item.stat % 1 !== 0 ? item.stat.toFixed(2) : item.stat) : item.value;
                 const unit = item.unit || '';
+                const color = item.color || '';
+                const usernameStyle = color ? `color:${color};font-weight:bold;` : 'font-weight:bold;';
                 html += `
                     <div style="background:var(--card-bg);padding:12px;margin-bottom:10px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;border-left:4px solid var(--primary);">
                         <div style="flex:1;">
                             <span style="color:var(--primary);font-weight:bold;margin-right:8px;">#${idx + 1}</span>
-                            <span style="font-weight:bold;">${item.username || item.teamName}</span>
+                            <span style="${usernameStyle}">${item.username || item.teamName}</span>
                             <span style="color:#a0a0a0;font-size:12px;margin-left:10px;">${item.teamName ? '(' + item.teamName + ')' : ''}</span>
                         </div>
                         <div style="font-weight:bold;color:var(--primary);font-size:16px;">${stat} ${unit}</div>
