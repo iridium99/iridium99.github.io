@@ -717,7 +717,7 @@
             const container = document.getElementById('player-stats-container');
             container.innerHTML = '<p style="text-align:center;color:#a0a0a0;">Loading...</p>';
             try {
-                const data = await fetch('/leaderboards/player_stats.json').then(r => r.json());
+                const data = await fetch('./leaderboards/player_stats.json').then(r => r.json());
                 
                 // Create stat category tabs
                 let html = '<div style="margin-bottom:20px;">';
@@ -787,7 +787,7 @@
             const container = document.getElementById('user-stats-container');
             container.innerHTML = '<p style="text-align:center;color:#a0a0a0;">Loading...</p>';
             try {
-                const data = await fetch('/leaderboards/user_stats.json').then(r => r.json());
+                const data = await fetch('./leaderboards/user_stats.json').then(r => r.json());
                 
                 // Create stat category tabs
                 let html = '<div style="margin-bottom:20px;">';
@@ -822,7 +822,9 @@
         }
 
         function showUserStatCategory(category) {
+            console.log(`📊 Showing category: ${category}`);
             const data = window.userStatsData[category] || [];
+            console.log(`📊 Category data:`, data);
             const display = document.getElementById('user-stat-category-display');
             
             if(!data || data.length === 0) {
@@ -906,7 +908,7 @@
                 const leagueIds = [];
                 for (let i = 1; i <= 50; i++) {
                     try {
-                        const response = await fetch(`/leaderboards/league_${i}.json`);
+                        const response = await fetch(`./leaderboards/league_${i}.json`);
                         if (response.ok) {
                             leagueIds.push(i);
                         }
@@ -923,7 +925,7 @@
                 let html = '';
                 for (const leagueId of leagueIds) {
                     try {
-                        const data = await fetch(`/leaderboards/league_${leagueId}.json`).then(r => r.json());
+                        const data = await fetch(`./leaderboards/league_${leagueId}.json`).then(r => r.json());
                         const viewDetailsLink = `<a href="leagues/league.html?id=${leagueId}" style="margin-left:15px;color:#5865f2;text-decoration:none;font-weight:bold;">View Full Details →</a>`;
                         html += `<div style="margin-bottom:30px;"><h3 style="margin:0 0 15px;color:var(--primary);font-size:18px;display:flex;align-items:center;justify-content:space-between;"><div>League ${leagueId}</div><div style="font-size:0.7em;margin-right:10px;">${viewDetailsLink}</div></h3>${renderLeaderboardTable(data.standings || data)}</div>`;
                     } catch (e) {
