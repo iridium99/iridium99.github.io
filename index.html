@@ -908,7 +908,8 @@
                 for (const leagueId of leagueIds) {
                     try {
                         const data = await fetch(`/leaderboards/league_${leagueId}.json`).then(r => r.json());
-                        html += `<div style="margin-bottom:30px;"><h3 style="margin:0 0 15px;color:var(--primary);font-size:18px;">League ${leagueId}</h3>${renderLeaderboardTable(data)}</div>`;
+                        const viewDetailsLink = `<a href="leagues/league.html?id=${leagueId}" style="margin-left:15px;color:#5865f2;text-decoration:none;font-weight:bold;">View Full Details →</a>`;
+                        html += `<div style="margin-bottom:30px;"><h3 style="margin:0 0 15px;color:var(--primary);font-size:18px;display:flex;align-items:center;justify-content:space-between;"><div>League ${leagueId}</div><div style="font-size:0.7em;margin-right:10px;">${viewDetailsLink}</div></h3>${renderLeaderboardTable(data.standings || data)}</div>`;
                     } catch (e) {
                         // skip unreadable league
                     }

@@ -279,6 +279,64 @@
             background: rgba(255, 215, 0, 0.2);
         }
 
+        .stat-category-btn {
+            background: rgba(50, 50, 100, 0.5);
+            color: #aaa;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .stat-category-btn.active {
+            background: #ffd700;
+            color: #1a1a2e;
+            border-color: #ffd700;
+        }
+
+        .stat-category-btn:hover {
+            border-color: #ffd700;
+            color: #ffd700;
+        }
+
+        .player-stat-card {
+            background: rgba(50, 50, 100, 0.5);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .player-stat-info {
+            flex: 1;
+        }
+
+        .player-stat-name {
+            font-weight: bold;
+            color: #ffd700;
+            font-size: 1.1em;
+        }
+
+        .player-stat-team {
+            color: #aaa;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        .player-stat-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #fff;
+            text-align: right;
+        }
+
         .loading {
             text-align: center;
             padding: 40px;
@@ -349,6 +407,7 @@
             <button class="tab-button active" onclick="switchTab('standings')">📊 Standings</button>
             <button class="tab-button" onclick="switchTab('fixtures')">📅 Fixtures</button>
             <button class="tab-button" onclick="switchTab('participants')">👥 Participants</button>
+            <button class="tab-button" onclick="switchTab('player-stats')">⚽ Player Stats</button>
         </div>
 
         <div id="error-container"></div>
@@ -392,6 +451,18 @@
         <div id="participants" class="tab-content">
             <div id="participants-container" class="participants-grid">
                 <div class="loading">Loading participants...</div>
+            </div>
+        </div>
+
+        <!-- Player Stats Tab -->
+        <div id="player-stats" class="tab-content">
+            <div style="margin-bottom: 20px;">
+                <button class="stat-category-btn active" onclick="switchPlayerStatCategory('goals')">⚽ Top Goal Scorers</button>
+                <button class="stat-category-btn" onclick="switchPlayerStatCategory('assists')">🎯 Top Assists</button>
+                <button class="stat-category-btn" onclick="switchPlayerStatCategory('cleansheets')">🛡️ Most Clean Sheets</button>
+            </div>
+            <div id="player-stats-container">
+                <div class="loading">Loading player stats...</div>
             </div>
         </div>
     </div>
@@ -553,6 +624,72 @@
             });
         }
 
+        let currentPlayerStatCategory = 'goals';
+
+        function displayPlayerStats() {
+            if (!leagueData.player_stats) {
+                document.getElementById('player-stats-container').innerHTML = '<div class="loading">No player stats available</div>';
+                return;
+            }
+
+            switchPlayerStatCategory('goals');
+        }
+
+        function switchPlayerStatCategory(category) {
+            currentPlayerStatCategory = category;
+
+            // Update button states
+            document.querySelectorAll('.stat-category-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            let data = [];
+            let label = '';
+
+            if (category === 'goals') {
+                data = leagueData.player_stats.topGoalScorers || [];
+                label = 'Goals';
+            } else if (category === 'assists') {
+                data = leagueData.player_stats.topAssists || [];
+                label = 'Assists';
+            } else if (category === 'cleansheets') {
+                data = leagueData.player_stats.mostCleanSheets || [];
+                label = 'Clean Sheets';
+            }
+
+            const container = document.getElementById('player-stats-container');
+            
+            if (!data || data.length === 0) {
+                container.innerHTML = '<div class="loading">No stats available</div>';
+                return;
+            }
+
+            container.innerHTML = '';
+            data.forEach((player, idx) => {
+                const card = document.createElement('div');
+                card.className = 'player-stat-card';
+                
+                let value = 0;
+                if (category === 'goals') {
+                    value = player.goals;
+                } else if (category === 'assists') {
+                    value = player.assists;
+                } else if (category === 'cleansheets') {
+                    value = player.clean_sheets;
+                }
+
+                card.innerHTML = `
+                    <div class="player-stat-info">
+                        <div class="player-stat-name">#${idx + 1} ${player.player_name}</div>
+                        <div class="player-stat-team">${player.team_name}</div>
+                    </div>
+                    <div class="player-stat-value">${value} ${label}</div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
         function switchTab(tabName) {
             // Hide all tabs
             document.querySelectorAll('.tab-content').forEach(tab => {
@@ -569,6 +706,11 @@
 
             // Activate selected button
             event.target.classList.add('active');
+
+            // Display player stats if switching to that tab
+            if (tabName === 'player-stats') {
+                displayPlayerStats();
+            }
         }
 
         function filterFixtures(filter) {
