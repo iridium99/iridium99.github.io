@@ -787,7 +787,7 @@
             const container = document.getElementById('user-stats-container');
             container.innerHTML = '<p style="text-align:center;color:#a0a0a0;">Loading...</p>';
             try {
-                const data = await fetch('./leaderboards/user_stats.json').then(r => r.json());
+                const data = await fetch('./leaderboards/user_stats.json?v=' + Date.now()).then(r => r.json());
                 
                 // Create stat category tabs
                 let html = '<div style="margin-bottom:20px;">';
