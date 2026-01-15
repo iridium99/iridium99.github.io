@@ -397,6 +397,47 @@
             color: var(--primary);
             font-weight: bold;
         }
+        
+        .badge-admin {
+            display: inline-block;
+            background: linear-gradient(90deg, #ffd700, #ffed4e);
+            color: #000;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+            margin-left: 8px;
+        }
+        
+        .badge-plus {
+            display: inline-block;
+            background: linear-gradient(90deg, #ff6b9d, #c44569);
+            color: #fff;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+            margin-left: 8px;
+            animation: gradient-shift 3s ease infinite;
+        }
+        
+        .badge-vip {
+            display: inline-block;
+            background: linear-gradient(90deg, #9d4edd, #5a189a);
+            color: #fff;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+            margin-left: 8px;
+            animation: gradient-shift 3s ease infinite;
+        }
+        
+        @keyframes gradient-shift {
+            0% { background: linear-gradient(90deg, #ff6b9d, #c44569); }
+            50% { background: linear-gradient(90deg, #c44569, #ff6b9d); }
+            100% { background: linear-gradient(90deg, #ff6b9d, #c44569); }
+        }
     </style>
 </head>
 <body>
@@ -524,24 +565,44 @@
             <div class="help-section">
                 <h3>Discord Commands</h3>
                 <ul class="command-list">
-                    <li><span class="command-name">/buyplayer [name]</span> - Purchase a player from the catalog</li>
-                    <li><span class="command-name">/sellplayer [name]</span> - Sell a player from your collection</li>
-                    <li><span class="command-name">/myteam</span> - View your current team lineup</li>
+                    <li><span class="command-name">/addplayer [name] [position]</span> - Add a player to your team</li>
                     <li><span class="command-name">/balance</span> - Check your current coin balance</li>
-                    <li><span class="command-name">/market</span> - View the transfer market (takes you to this website)</li>
-                    <li><span class="command-name">/packs</span> - Open different types of packs</li>
-                    <li><span class="command-name">/changeteamname</span> - Change your team's name</li>
-                    <li><span class="command-name">/setlineup </span> - Change your team formation</li>
-                    <li><span class="command-name">/duplicates</span> - View the duplicate cards in your collection</li>
-                    <li><span class="command-name">/quickselldupes</span> - Sell all of your duplicate cards</li>
-                    <li><span class="command-name">/ping</span> - Check the bot's response time</li>
-                    <li><span class="command-name">/daily</span> - Claim your daily rewards</li>
-                    <li><span class="command-name">/addplayer [name]</span> - Add a player to your team</li>
-                    <li><span class="command-name">/removeplayer [name]</span> - Remove a player from your team</li>
+                    <li><span class="command-name">/buyplayer [name]</span> - Purchase a player from the catalog</li>
+                    <li><span class="command-name">/changeteamname [name]</span> - Change your team's name</li>
                     <li><span class="command-name">/claim</span> - Claim a free player</li>
                     <li><span class="command-name">/collection</span> - View all of the players in your collection</li>
-                    <li><span class="command-name">/friendly</span> - Play against another user in a friendly match</li>
-                    <li><span class="command-name">/leaderboard</span> - View the leaderboard for: coins, collection</li>
+                    <li><span class="command-name">/daily</span> - Claim your daily rewards</li>
+                    <li><span class="command-name">/duplicates</span> - View the duplicate cards in your collection</li>
+                    <li><span class="command-name">/export</span> - Export user data <span class="badge-admin">Admin Only</span></li>
+                    <li><span class="command-name">/form rating</span> - Set player form rating <span class="badge-plus">Plus Only</span></li>
+                    <li><span class="command-name">/friendly [user]</span> - Play against another user in a friendly match</li>
+                    <li><span class="command-name">/generate_all_cards</span> - Generate all card images <span class="badge-admin">Admin Only</span></li>
+                    <li><span class="command-name">/get_plus</span> - Purchase Plus membership</li>
+                    <li><span class="command-name">/givecoins [user] [amount]</span> - Give coins to a user <span class="badge-admin">Admin Only</span></li>
+                    <li><span class="command-name">/leaderboards</span> - View the leaderboards for: coins, collection</li>
+                    <li><span class="command-name">/league create</span> - Create a new league <span class="badge-admin">Admin Only</span></li>
+                    <li><span class="command-name">/league create_test</span> - Create a test league <span class="badge-admin">Admin Only</span></li>
+                    <li><span class="command-name">/league ranking</span> - View league rankings <span class="badge-admin">Admin Only</span></li>
+                    <li><span class="command-name">/market</span> - View the transfer market (takes you to this website)</li>
+                    <li><span class="command-name">/myteam</span> - View your current team lineup</li>
+                    <li><span class="command-name">/myupgrades</span> - View your active upgrades</li>
+                    <li><span class="command-name">/packs [type]</span> - Open different types of packs</li>
+                    <li><span class="command-name">/ping</span> - Check the bot's response time</li>
+                    <li><span class="command-name">/player stats [name]</span> - View detailed stats for a player</li>
+                    <li><span class="command-name">/playerinfo [name]</span> - Get information about a specific player</li>
+                    <li><span class="command-name">/preview_card [name]</span> - Preview a card design</li>
+                    <li><span class="command-name">/quickselldupes</span> - Sell all of your duplicate cards</li>
+                    <li><span class="command-name">/removeplayer [position]</span> - Remove a player from your team</li>
+                    <li><span class="command-name">/resetteam</span> - Reset your team to default lineup</li>
+                    <li><span class="command-name">/sellplayer [name]</span> - Sell a player from your collection</li>
+                    <li><span class="command-name">/setlineup [formation]</span> - Change your team formation</li>
+                    <li><span class="command-name">/setpieces</span> - Configure set piece takers</li>
+                    <li><span class="command-name">/sim [user]</span> - Simulate a match against another user <span class="badge-plus">Plus Only</span></li>
+                    <li><span class="command-name">/team analysis</span> - Analyze your team's strengths and weaknesses <span class="badge-plus">Plus Only</span></li>
+                    <li><span class="command-name">/upgrade [name]</span> - Upgrade a player card</li>
+                    <li><span class="command-name">/vip add [user]</span> - Add VIP status to a user <span class="badge-admin">Admin Only</span></li>
+                    <li><span class="command-name">/vip remove [user]</span> - Remove VIP status from a user <span class="badge-admin">Admin Only</span></li>
+                    <li><span class="command-name">/vip color [color1] [color2]</span> - Set your VIP username gradient <span class="badge-plus">Plus Only</span></li>
                 </ul>
             </div>
             
