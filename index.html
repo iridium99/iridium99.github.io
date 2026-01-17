@@ -481,61 +481,9 @@
             50%  { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
-
-        /* Visitor widget */
-        .visitor-widget {
-            position: fixed;
-            top: 12px;
-            right: 12px;
-            z-index: 1000;
-            background: var(--card-bg);
-            border: 1px solid rgba(88, 101, 242, 0.4);
-            border-radius: 10px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.35);
-            padding: 10px 12px;
-            min-width: 200px;
-        }
-        .visitor-widget .vw-title {
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 6px;
-            font-size: 13px;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-        }
-        .visitor-widget .vw-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-            font-size: 13px;
-            padding: 6px 0;
-        }
-        .visitor-widget .vw-item + .vw-item {
-            border-top: 1px dashed rgba(255,255,255,0.08);
-        }
-        .visitor-widget .vw-label {
-            color: #a0a0a0;
-        }
-        .visitor-widget .vw-value {
-            font-weight: 700;
-            color: #fff;
-        }
     </style>
 </head>
 <body>
-    <!-- Visitors widget (top-right) -->
-    <div id="visitor-widget" class="visitor-widget" aria-live="polite">
-        <div class="vw-title">Visitors</div>
-        <div class="vw-item">
-            <span class="vw-label">Online Now</span>
-            <span id="vw-online" class="vw-value">—</span>
-        </div>
-        <div class="vw-item">
-            <span class="vw-label">All-Time</span>
-            <span id="vw-total" class="vw-value">—</span>
-        </div>
-    </div>
     <div class="header">
         <h1>Welcome to LDC RS Legends</h1>
         <p>View all available players, commands, global stats, leaderboards</p>
@@ -1128,7 +1076,5 @@
             });
         });
     </script>
-    <!-- Visitor widget logic -->
-    <script src="api/visitorWidget.js"></script>
 </body>
 </html>
