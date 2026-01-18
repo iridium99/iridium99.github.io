@@ -691,6 +691,15 @@
             'ATT': ['RW', 'LW', 'ST']
         };
 
+        // Map Discord usernames to custom display names on leaderboards
+        const usernameAliases = {
+            "the1n1ly": "atrocity exhibition",
+        };
+
+        function mapUsername(name) {
+            return usernameAliases[name] || name || "Unknown";
+        }
+
         let filteredPlayers = [...allPlayers];
 
         function displayPlayers(playersToDisplay) {
@@ -956,10 +965,13 @@
                 const unit = item.unit || '';
                 const color1 = item.color || '';
                 const color2 = item.color2 || color1;  // If no second color, use first color (solid)
+
+                const rawUsername = item.username || item.teamName;
+                const displayUsername = mapUsername(rawUsername);
                 
                 // Debug: Log if colors exist
                 if (color1) {
-                    console.log(`[${item.username}] Colors found: ${color1} / ${color2}`);
+                    console.log(`[${rawUsername}] Colors found: ${color1} / ${color2}`);
                 }
                 
                 // Create gradient style
@@ -1000,7 +1012,7 @@
                                     drop-shadow(0 0 4px rgba(${glowR}, ${glowG}, ${glowB}, 0.4));
                         `;
                     } catch (e) {
-                        console.warn(`Invalid color format for user ${item.username}: ${color1}, ${color2}`, e);
+                        console.warn(`Invalid color format for user ${rawUsername}: ${color1}, ${color2}`, e);
                         usernameStyle = `font-weight:bold;color:var(--primary);`;
                     }
                 }
@@ -1009,7 +1021,7 @@
                     <div style="background:var(--card-bg);padding:12px;margin-bottom:10px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;border-left:4px solid var(--primary);">
                         <div style="flex:1;">
                             <span style="color:var(--primary);font-weight:bold;margin-right:8px;">#${idx + 1}</span>
-                            <span style="${usernameStyle}">${item.username || item.teamName}</span>
+                            <span style="${usernameStyle}">${displayUsername}</span>
                             <span style="color:#a0a0a0;font-size:12px;margin-left:10px;">${item.teamName ? '(' + item.teamName + ')' : ''}</span>
                         </div>
                         <div style="font-weight:bold;color:var(--primary);font-size:16px;">${stat} ${unit}</div>
