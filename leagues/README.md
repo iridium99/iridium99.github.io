@@ -1,133 +1,155 @@
 # leagues
 
 
-### Backend (Bot)
-1. **Export League Data Function** - `export_league_data_to_json()`
-   - Exports all league fixtures, standings, and participants to `leagues.json`
-   - Includes complete fixture data with scores and dates
-   - Includes current standings with all statistics
+## what i did
 
-2. **Auto-Update Task** - Updated `auto_update_leaderboards_task()`
-   - Now runs every 30 minutes
-   - Exports league data automatically to the website
-   - No manual intervention needed
+league system for my website. bot auto exports data. here's what i got:
 
-3. **Automatic Match Simulation** - `auto_league_simulate_task()`
-   - Runs every 30 minutes
-   - Simulates all matches scheduled for the current day or earlier
-   - Automatically updates standings when matches complete
+### bot.py changes
 
-### Frontend (Website)
-1. **Leagues Index Page** (`/leagues/index.html`)
-   - Shows all active and pending leagues
-   - Displays league stats (participants, fixtures, completed matches)
-   - Links to individual league pages
-   - Beautiful card layout with hover effects
+1. `export_league_data_to_json()` - exports league data to leaderboards/leagues.json. has fixtures, standings, participants. runs every 30 min
 
-2. **League Detail Page** (`/leagues/league.html`)
-   - **Standings Tab**: Full league table with rankings
-   - **Fixtures Tab**: All matches with filters (upcoming/completed)
-   - **Participants Tab**: List of all teams in the league
-   - Shows match scores, dates, times, and status
+2. `auto_update_leaderboards_task()` - exports league data + player/user stats. runs every 30 min. dont need to do anything
 
-## Data Flow
+3. `auto_league_simulate_task()` - simulates matches based on dates. runs every 30 min. updates standings
+
+### website files i made
+
+#### /leagues/index.html - shows all leagues
+- league cards with status (active/pending/completed)
+- quick stats (participants, fixtures, completed matches)
+- click cards to see details
+- responsive grid
+
+#### /leagues/league.html - individual league page
+- standings tab: full league table with ranks, medals for top 3, all stats (played, wins, draws, losses, goals, points), color coded goal difference
+- fixtures tab: all matches with dates, times, teams, scores. can filter by all/upcoming/completed
+- participants tab: list of teams with names and user ids
+
+#### /leagues/README.md - docs
+- how everything works
+- data structure
+- usage instructions
+
+## how data flows
 
 ```
-Bot Database
+bot (every 30 min)
     ↓
-export_league_data_to_json() (Every 30 mins)
+export_league_data_to_json()
     ↓
 leaderboards/leagues.json
     ↓
-Website (HTML/JavaScript)
+website pages (index.html, league.html)
     ↓
-Display to Users
+auto loads when i visit
 ```
 
-## data being exported
+## how it works
 
-The `leagues.json` file contains:
-```json
-[
-  {
-    "league_id": 1,
-    "league_name": "Premier League",
-    "tier": 1,
-    "status": "active",
-    "start_date": "2026-01-10T00:00:00",
-    "end_date": "2026-03-31T23:59:59",
-    "participants": [
-      {
-        "user_id": "123456789",
-        "team_name": "Team Name"
-      }
-    ],
-    "fixtures": [
-      {
-        "fixture_id": 1,
-        "match_week": 1,
-        "home_user_id": "123456789",
-        "away_user_id": "987654321",
-        "scheduled_date": "2026-01-15T14:30:00",
-        "status": "scheduled",
-        "home_score": null,
-        "away_score": null
-      }
-    ],
-    "standings": [
-      {
-        "rank": 1,
-        "user_id": "123456789",
-        "team_name": "Team Name",
-        "played": 10,
-        "wins": 8,
-        "draws": 1,
-        "losses": 1,
-        "goals_for": 25,
-        "goals_against": 5,
-        "goal_difference": 20,
-        "points": 25
-      }
-    ]
-  }
-]
-```
+### auto updates
+1. bot checks every 30 min
+2. exports league data from db
+3. updates leagues.json on website
+4. website loads latest data when i visit
+5. dont need to manually export
 
-## usage
+### league lifecycle
+1. create league with /league create
+2. add teams with /league join
+3. generate fixtures with /league generate
+4. matches auto-simulate
+5. view on website at /leagues/ (auto updates)
 
-### For Users
-1. Navigate to `/leagues/` on the website
-2. See all available leagues at a glance
-3. Click "View Details →" to see:
-   - Full standings table
-   - All fixtures with scores and times
-   - Participant list
+## urls
 
-### for me
-1. Create leagues with `/league create`
-2. Add participants with `/league join`
-3. Generate fixtures with `/league generate`
-4. Watch as matches auto-simulate daily!
-5. Everything updates automatically every 30 minutes
+| page | url |
+|------|-----|
+| league list | /leagues/ or /leagues/index.html |
+| league details | /leagues/league.html?id=1 (replace 1 with league id) |
+| raw data | /leaderboards/leagues.json |
 
 ## features
 
--  Auto-updates every 30 minutes
--  Shows upcoming and completed matches
--  Displays match times (not just dates)
--  Full standings with all statistics
--  Filter fixtures by status
--  Responsive design (mobile-friendly)
--  Real-time league statistics
-- ✅ Professional styling with gradients
+- responsive (mobile, tablet, desktop)
+- gradient styling with gold theme
+- auto-updates every 30 min
+- shows match times (not just dates)
+- filter fixtures by status
+- rank badges with medals for top teams
+- color-coded stats
+- real-time standings updates
+- no page refresh needed
 
-## how to access
+## what i need to do
 
-- **Leagues List**: `/leagues/index.html`
-- **Individual League**: `/leagues/league.html?id=1` (replace 1 with league ID)
-- **Data Source**: `/leaderboards/leagues.json`
+1. test it:
+   - create test league with /league create
+   - add participants with /league join
+   - generate fixtures with /league generate
+   - wait 30 min for bot to auto-update or manually export
 
-## stuff
+2. manual export if needed:
+   - run await export_league_data_to_json() in discord command
+   - or just wait 30 min for auto update
+
+3. view pages:
+   - go to https://iridium99.github.io/leagues/
+   - see all leagues
+   - click to view details
+
+## technical stuff
+
+### bot functions
+- export_league_data_to_json() - exports league data
+- auto_league_simulate_task() - simulates matches
+- auto_update_leaderboards_task() - runs export every 30 min
+
+### website javascript
+- loads data from leagues.json
+- no build process
+- pure javascript (no frameworks)
+- works in all modern browsers
+
+### data format
+leagues.json has:
+- league metadata (name, tier, status, dates)
+- fixtures with scores and dates/times
+- standings with all stats
+- participant list with team names
+
+## styling
+
+- dark theme with gold accents
+- smooth transitions and hover effects
+- card-based layout
+- responsive grid
+- mobile optimized
+
+## troubleshooting
+
+leagues not showing?
+- wait 30 min for auto export
+- check if leaderboards/leagues.json file exists
+- check browser console for errors (f12)
+
+data not updating?
+- bot auto-updates every 30 min
+- make sure bot is running
+- check bot console for export messages
+
+times wrong?
+- times show in my browser's local timezone
+- automatic based on device settings
+
+## done
+
+everything works and runs automatically. just:
+1. create leagues with /league create
+2. add teams with /league join
+3. generate fixtures with /league generate
+4. let it run
+5. view results at /leagues/
 
 - Matches are simulated automatically based on scheduled dates
 - Scores are calculated based on team average ratings
