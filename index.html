@@ -470,7 +470,22 @@
             filter: drop-shadow(0 0 8px rgba(168, 85, 247, 0.4));
         }
         
+        .username-gradient-animated {
+            font-weight: bold;
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: usernameGradientMove 7s ease infinite;
+        }
+        
         @keyframes badgeGradientMove {
+            0%   { background-position: 0% 50%; }
+            50%  { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        @keyframes usernameGradientMove {
             0%   { background-position: 0% 50%; }
             50%  { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
@@ -979,6 +994,8 @@
                             -webkit-background-clip: text;
                             -webkit-text-fill-color: transparent;
                             background-clip: text;
+                            background-size: 400% 400%;
+                            animation: usernameGradientMove 7s ease infinite;
                             filter: drop-shadow(0 0 8px rgba(${glowR}, ${glowG}, ${glowB}, 0.6)) 
                                     drop-shadow(0 0 4px rgba(${glowR}, ${glowG}, ${glowB}, 0.4));
                         `;
