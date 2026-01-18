@@ -1,6 +1,5 @@
-# League System - Implementation Guide
+# leagues
 
-## ✅ What's Been Implemented
 
 ### Backend (Bot)
 1. **Export League Data Function** - `export_league_data_to_json()`
@@ -31,7 +30,7 @@
    - **Participants Tab**: List of all teams in the league
    - Shows match scores, dates, times, and status
 
-## 🔄 Data Flow
+## Data Flow
 
 ```
 Bot Database
@@ -45,7 +44,7 @@ Website (HTML/JavaScript)
 Display to Users
 ```
 
-## 📊 What Data is Exported
+## data being exported
 
 The `leagues.json` file contains:
 ```json
@@ -94,7 +93,7 @@ The `leagues.json` file contains:
 ]
 ```
 
-## 🎯 Usage
+## usage
 
 ### For Users
 1. Navigate to `/leagues/` on the website
@@ -104,31 +103,31 @@ The `leagues.json` file contains:
    - All fixtures with scores and times
    - Participant list
 
-### For Admin
+### for me
 1. Create leagues with `/league create`
 2. Add participants with `/league join`
 3. Generate fixtures with `/league generate`
 4. Watch as matches auto-simulate daily!
 5. Everything updates automatically every 30 minutes
 
-## 🚀 Features
+## features
 
-- ✅ Auto-updates every 30 minutes
-- ✅ Shows upcoming and completed matches
-- ✅ Displays match times (not just dates)
-- ✅ Full standings with all statistics
-- ✅ Filter fixtures by status
-- ✅ Responsive design (mobile-friendly)
-- ✅ Real-time league statistics
+-  Auto-updates every 30 minutes
+-  Shows upcoming and completed matches
+-  Displays match times (not just dates)
+-  Full standings with all statistics
+-  Filter fixtures by status
+-  Responsive design (mobile-friendly)
+-  Real-time league statistics
 - ✅ Professional styling with gradients
 
-## 🔧 How to Access
+## how to access
 
 - **Leagues List**: `/leagues/index.html`
 - **Individual League**: `/leagues/league.html?id=1` (replace 1 with league ID)
 - **Data Source**: `/leaderboards/leagues.json`
 
-## 📝 Notes
+## stuff
 
 - Matches are simulated automatically based on scheduled dates
 - Scores are calculated based on team average ratings
