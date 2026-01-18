@@ -13,7 +13,7 @@
             --text: #ffffff;
         }
         
-        /* Gradient glow username style */
+        /* Username glows */
         .username-gradient {
             font-weight: bold;
             background: linear-gradient(90deg, var(--color1), var(--color2));
@@ -37,7 +37,7 @@
             margin-bottom: 30px;
         }
         
-        /* Tab buttons styling - Using your UIverse button style */
+        /* UIverse button */
         .tabs {
             display: flex;
             justify-content: center;
@@ -320,7 +320,7 @@
             font-weight: bold;
         }
         
-        /* What's New specific styles */
+        /* whats new */
         .updates-content {
             max-width: 1000px;
             margin: 0 auto;
@@ -408,10 +408,10 @@
             font-weight: bold;
             background: linear-gradient(
                 270deg,
-                #ef4444,  /* vibrant red */
-                #f97316,  /* orange */
-                #eab308,  /* golden amber */
-                #dc2626,  /* deep red */
+                #ef4444,
+                #f97316,
+                #eab308,
+                #dc2626,
                 #ef4444
             );
             background-size: 400% 400%;
@@ -432,10 +432,10 @@
             font-weight: bold;
             background: linear-gradient(
                 270deg,
-                #60a5fa,  /* blue */
-                #818cf8,  /* indigo */
-                #67e8f9,  /* cyan */
-                #60a5fa,  /* blue */
+                #60a5fa,
+                #818cf8,
+                #67e8f9,
+                #60a5fa,
                 #818cf8
             );
             background-size: 400% 400%;
@@ -456,10 +456,10 @@
             font-weight: bold;
             background: linear-gradient(
                 270deg,
-                #a855f7,  /* purple */
-                #7c3aed,  /* violet */
-                #d946ef,  /* magenta */
-                #a855f7,  /* purple */
+                #a855f7,
+                #7c3aed,
+                #d946ef,
+                #a855f7,
                 #7c3aed
             );
             background-size: 400% 400%;
@@ -671,19 +671,133 @@
     </div>
 
     <script>
+        const PRICE_TABLE = {
+            60: [150, 60, [50, 90, 130, 180, 220]],
+            61: [180, 72, [55, 100, 145, 200, 250]],
+            62: [210, 84, [60, 110, 160, 220, 270]],
+            63: [250, 100, [70, 125, 180, 250, 300]],
+            64: [300, 120, [80, 150, 220, 300, 360]],
+            65: [360, 144, [100, 190, 280, 380, 450]],
+            66: [480, 192, [120, 240, 360, 480, 570]],
+            67: [650, 260, [160, 320, 480, 640, 760]],
+            68: [900, 360, [250, 500, 750, 1000, 1200]],
+            69: [1400, 560, [400, 800, 1200, 1600, 1900]],
+            70: [2200, 880, [650, 1300, 1950, 2600, 3100]],
+            71: [3000, 1200, [900, 1800, 2700, 3600, 4300]],
+            72: [4000, 1600, [1200, 2400, 3600, 4800, 5700]],
+            73: [5500, 2200, [1700, 3400, 5100, 6800, 8100]],
+            74: [7500, 3000, [2200, 4400, 6600, 8800, 10500]],
+            75: [10000, 4000, [3000, 6000, 9000, 12000, 14500]],
+            76: [15000, 6000, [4500, 9000, 13500, 18000, 21500]],
+            77: [22000, 8800, [6500, 13000, 19500, 26000, 31000]],
+            78: [32000, 12800, [9500, 19000, 28500, 38000, 45500]],
+            79: [48000, 19200, [14000, 28000, 42000, 56000, 67000]],
+            80: [70000, 28000, [20000, 40000, 60000, 80000, 95000]],
+            81: [100000, 40000, [30000, 60000, 90000, 120000, 145000]],
+            82: [150000, 60000, [45000, 90000, 135000, 180000, 220000]],
+            83: [220000, 88000, [70000, 140000, 210000, 280000, 350000]],
+            84: [320000, 128000, [100000, 200000, 300000, 400000, 500000]],
+            85: [480000, 192000, [150000, 300000, 450000, 600000, 750000]],
+            86: [750000, 300000, [230000, 460000, 690000, 920000, 1150000]],
+            87: [1100000, 440000, [340000, 680000, 1020000, 1360000, 1700000]],
+            88: [1600000, 640000, [500000, 1000000, 1500000, 2000000, 2500000]],
+            89: [2300000, 920000, [750000, 1500000, 2250000, 3000000, 3750000]],
+            90: [3300000, 1320000, [1100000, 2200000, 3300000, 4400000, 5500000]],
+            91: [5000000, 2000000, [1700000, 3400000, 5100000, 6800000, 8500000]],
+            92: [7500000, 3000000, [2500000, 5000000, 7500000, 10000000, 12500000]],
+            93: [11000000, 4400000, [3800000, 7600000, 11400000, 15200000, 19000000]],
+            94: [16000000, 6400000, [5500000, 11000000, 16500000, 22000000, 27500000]],
+            95: [25000000, 10000000, [8500000, 17000000, 25500000, 34000000, 42500000]]
+        };
+
         const allPlayers = [
-            {id:1,name:"Marcus Rashford",rating:85,position:"ST",nation:"England",buy_price:168750,sell_price:113062,img:"cards/rashford.png"},
-            {id:2,name:"Bukayo Saka",rating:83,position:"RW",nation:"England",buy_price:106875,sell_price:71606,img:"cards/saka.png"},
-            {id:3,name:"Phil Foden",rating:84,position:"CAM",nation:"England",buy_price:136875,sell_price:91706,img:"cards/foden.png"},
-            {id:4,name:"Cristiano Ronaldo",rating:90,position:"ST",nation:"Portugal",buy_price:675000,sell_price:452250,img:"cards/ronaldo.png"},
-            {id:5,name:"Lionel Messi",rating:91,position:"RW",nation:"Argentina",buy_price:990000,sell_price:663300,img:"cards/messi.png"},
-            {id:6,name:"Kylian Mbappé",rating:88,position:"ST",nation:"France",buy_price:472500,sell_price:316575,img:"cards/mbappe.png"},
-            {id:7,name:"Kevin De Bruyne",rating:87,position:"CAM",nation:"Belgium",buy_price:371250,sell_price:248512,img:"cards/debruyne.png"},
-            {id:8,name:"Virgil van Dijk",rating:86,position:"CB",nation:"Netherlands",buy_price:270000,sell_price:180900,img:"cards/vandijk.png"},
-            {id:9,name:"Neymar Jr",rating:85,position:"LW",nation:"Brazil",buy_price:168750,sell_price:113062,img:"cards/neymar.png"},
-            {id:10,name:"shit guy",rating:55,position:"ST",nation:"Poland",buy_price:540,sell_price:384188,img:"cards/shit_guy.png"},
-            {id:11,name:"atrocity exhibition creator",rating:99,position:"ST",nation:"England",buy_price:9999999,sell_price:1,img:"cards/atrocity_exhibition_creator.png"}
+            {id: 1, name: "Perkz", display_name: "Perkz", rating: 92, position: "CAM", nation: "Turkey", stats: {sho: 91, pas: 93, pos: 92, def: 87}, traits: ["playmakerplus", "clinical finisher"], card_type: "base"},
+            {id: 2, name: "W-pi", display_name: "W-pi", rating: 92, position: "RW", nation: "SL", stats: {sho: 92, pas: 92, pos: 90, def: 85}, traits: ["playmakerplus", "clinical finisherplus"], card_type: "base"},
+            {id: 3, name: "alors", display_name: "alors", rating: 90, position: "ST", nation: "Algeria", stats: {sho: 91, pas: 91, pos: 89, def: 79}, traits: ["playmakerplus", "clinical finisherplus"], card_type: "base"},
+            {id: 4, name: "tsukuyomi", display_name: "tsukuyomi.", rating: 91, position: "CDM", nation: "Netherlands", stats: {sho: 87, pas: 91, pos: 90, def: 90}, traits: ["playmakerplus", "composed"], card_type: "base"},
+            {id: 5, name: "Lena", display_name: "Lena", rating: 90, position: "CDM", nation: "Turkey", stats: {sho: 87, pas: 91, pos: 88, def: 90}, traits: ["penalty specialist", "aggressive"], card_type: "base"},
+            {id: 6, name: "Vaks", display_name: "Vaks", rating: 90, position: "CB", nation: "Poland", stats: {sho: 86, pas: 90, pos: 89, def: 89}, traits: ["playmakerplus", "composed"], card_type: "base"},
+            {id: 7, name: "Pedri", display_name: "Pedri", rating: 89, position: "CM", nation: "Spain", stats: {sho: 86, pas: 90, pos: 90, def: 85}, traits: ["playmakerplus"], card_type: "base"},
+            {id: 8, name: "cytro", display_name: "cytro", rating: 87, position: "LW", nation: "England", stats: {sho: 89, pas: 87, pos: 86, def: 78}, traits: ["playmakerplus"], card_type: "base"},
+            {id: 9, name: "atrocity exhibition", display_name: "atrocity exhibition", rating: 89, position: "GK", nation: "England", stats: {dec: 88, ref: 91, pos: 90, pas: 84}, traits: ["shotstopperplus"], card_type: "base"},
+            {id: 10, name: "drkuu", display_name: "drkuu", rating: 87, position: "CDM", nation: "Germany", stats: {sho: 84, pas: 87, pos: 87, def: 86}, traits: ["playmaker"], card_type: "base"},
+            {id: 11, name: "zenix", display_name: "zen!x", rating: 87, position: "RW", nation: "Poland", stats: {sho: 88, pas: 85, pos: 84, def: 80}, traits: ["clinical finisherplus"], card_type: "base"},
+            {id: 12, name: "Ibrahim", display_name: "Ibrahim", rating: 87, position: "CB", nation: "Egypt", stats: {sho: 85, pas: 85, pos: 88, def: 86}, traits: ["penalty specialistplus"], card_type: "base"},
+            {id: 13, name: "cYn", display_name: "cYn", rating: 85, position: "CM", nation: "England", stats: {sho: 83, pas: 85, pos: 85, def: 79}, traits: ["clinical finisherplus"], card_type: "base"},
+            {id: 14, name: "ToughBaby", display_name: "ToughBaby", rating: 84, position: "CM", nation: "PS", stats: {sho: 80, pas: 86, pos: 82, def: 82}, traits: ["penalty specialistplus"], card_type: "base"},
+            {id: 15, name: "m1dnam", display_name: "m1dnam", rating: 84, position: "CM", nation: "Portugal", stats: {sho: 82, pas: 83, pos: 84, def: 79}, traits: ["clinical finisher"], card_type: "base"},
+            {id: 16, name: "Razor", display_name: "Razor", rating: 84, position: "ST", nation: "Romania", stats: {sho: 84, pas: 82, pos: 82, def: 76}, traits: ["aggressiveplus"], card_type: "base"},
+            {id: 17, name: "Arshavin", display_name: "Arshavin", rating: 83, position: "ST", nation: "Wales", stats: {sho: 84, pas: 80, pos: 82, def: 77}, traits: ["clinical finisher"], card_type: "base"},
+            {id: 18, name: "luur", display_name: "luur", rating: 89, position: "GK", nation: "Serbia", stats: {dec: 89, pas: 86, pos: 88, ref: 90}, traits: ["shotstopperplus"], card_type: "base"},
+            {id: 19, name: "A7mdBibo", display_name: "A7mdBibo", rating: 82, position: "RW", nation: "Egypt", stats: {sho: 82, pas: 83, pos: 80, def: 77}, traits: ["playmaker"], card_type: "base"},
+            {id: 20, name: "Lony", display_name: "Lony", rating: 82, position: "CM", nation: "Tunisia", stats: {sho: 80, pas: 83, pos: 79, def: 78}, traits: ["playmaker"], card_type: "base"},
+            {id: 21, name: "Slimani", display_name: "$limani", rating: 82, position: "CB", nation: "Portugal", stats: {sho: 78, pas: 83, pos: 84, def: 83}, traits: ["aggressive"], card_type: "base"},
+            {id: 22, name: "ShadiOzz", display_name: "ShadiOzz", rating: 82, position: "ST", nation: "Egypt", stats: {sho: 84, pas: 82, pos: 82, def: 75}, traits: ["clinical finisher"], card_type: "base"},
+            {id: 23, name: "Tjay", display_name: "Tjay", rating: 82, position: "CAM", nation: "England", stats: {sho: 80, pas: 82, pos: 81, def: 76}, traits: ["playmaker"], card_type: "base"},
+            {id: 24, name: "Berbatov", display_name: "Berbatov", rating: 82, position: "CAM", nation: "GB", stats: {sho: 81, pas: 81, pos: 81, def: 74}, traits: ["clinical finisher"], card_type: "base"},
+            {id: 25, name: "Luisdiaz", display_name: "Luisdiaz", rating: 81, position: "LW", nation: "England", stats: {sho: 82, pas: 81, pos: 80, def: 75}, traits: ["clinical finisher"], card_type: "base"},
+            {id: 26, name: "Monk", display_name: "Monk", rating: 80, position: "CM", nation: "Croatia", stats: {sho: 77, pas: 82, pos: 79, def: 81}, traits: [], card_type: "base"},
+            {id: 27, name: "Maks Luburic", display_name: "Maks Luburic", rating: 80, position: "LW", nation: "NE", stats: {sho: 78, pas: 81, pos: 79, def: 79}, traits: ["aggressive"], card_type: "base"},
+            {id: 28, name: "Faya lev", display_name: "Faya lev", rating: 80, position: "CM", nation: "Germany", stats: {sho: 77, pas: 81, pos: 78, def: 77}, traits: ["composed"], card_type: "base"},
+            {id: 29, name: "Timber", display_name: "Timber", rating: 80, position: "CB", nation: "Netherlands", stats: {sho: 76, pas: 80, pos: 81, def: 82}, traits: [], card_type: "base"},
+            {id: 30, name: "valotii", display_name: "valotii", rating: 80, position: "CAM", nation: "Italy", stats: {sho: 77, pas: 79, pos: 82, def: 80}, traits: ["aggressive"], card_type: "base"},
+            {id: 31, name: "EmKo", display_name: "EmKo", rating: 79, position: "ST", nation: "BA", stats: {sho: 80, pas: 81, pos: 77, def: 73}, traits: [], card_type: "base"},
+            {id: 32, name: "Van Nistelrooy", display_name: "Van Nistelrooy", rating: 79, position: "RW", nation: "France", stats: {sho: 79, pas: 80, pos: 79, def: 75}, traits: [], card_type: "base"},
+            {id: 33, name: "Cat", display_name: "Cat", rating: 79, position: "CDM", nation: "England", stats: {sho: 75, pas: 80, pos: 80, def: 81}, traits: [], card_type: "base"},
+            {id: 34, name: "blimpus", display_name: "blimpus", rating: 79, position: "CB", nation: "GB", stats: {sho: 76, pas: 79, pos: 79, def: 79}, traits: [], card_type: "base"},
+            {id: 35, name: "Kepa", display_name: "Kepa", rating: 79, position: "CB", nation: "Greece", stats: {sho: 74, pas: 77, pos: 83, def: 82}, traits: [], card_type: "base"},
+            {id: 36, name: "ShIeLd", display_name: "ShIeLd", rating: 85, position: "GK", nation: "Italy", stats: {dec: 85, pas: 82, pos: 86, ref: 86}, traits: ["shotstopperplus"], card_type: "base"},
+            {id: 37, name: "Mbappe", display_name: "Mbappe", rating: 79, position: "ST", nation: "Spain", stats: {sho: 79, pas: 76, pos: 81, def: 72}, traits: [], card_type: "base"},
+            {id: 38, name: "santi", display_name: "santi", rating: 79, position: "CB", nation: "Italy", stats: {sho: 67, pas: 74, pos: 79, def: 82}, traits: [], card_type: "base"},
+            {id: 39, name: "Van Basten", display_name: "Van Basten", rating: 78, position: "ST", nation: "NE", stats: {sho: 79, pas: 80, pos: 72, def: 71}, traits: [], card_type: "base"},
+            {id: 40, name: "BRUTUS", display_name: "BRUTUS", rating: 78, position: "CB", nation: "Italy", stats: {sho: 77, pas: 80, pos: 77, def: 79}, traits: [], card_type: "base"},
+            {id: 41, name: "DOOM", display_name: "DOOM", rating: 78, position: "LW", nation: "Czech Republic", stats: {sho: 78, pas: 79, pos: 78, def: 74}, traits: [], card_type: "base"},
+            {id: 42, name: "YaYa", display_name: "YaYa", rating: 78, position: "CAM", nation: "Egypt", stats: {sho: 75, pas: 79, pos: 79, def: 73}, traits: [], card_type: "base"},
+            {id: 43, name: "Misimaro", display_name: "Misimaro", rating: 78, position: "RW", nation: "Germany", stats: {sho: 76, pas: 78, pos: 77, def: 75}, traits: [], card_type: "base"},
+            {id: 44, name: "YEET", display_name: "YEET", rating: 78, position: "LW", nation: "CC", stats: {sho: 77, pas: 78, pos: 76, def: 71}, traits: [], card_type: "base"},
+            {id: 45, name: "Himothy", display_name: "Himothy", rating: 77, position: "CDM", nation: "Tunisia", stats: {sho: 76, pas: 76, pos: 76, def: 69}, traits: [], card_type: "base"},
+            {id: 46, name: "Spero", display_name: "Spero", rating: 76, position: "ST", nation: "KP", stats: {sho: 79, pas: 76, pos: 78, def: 73}, traits: [], card_type: "base"},
+            {id: 47, name: "evil.pro", display_name: "evil.pro", rating: 76, position: "CDM", nation: "Spain", stats: {sho: 74, pas: 76, pos: 77, def: 73}, traits: [], card_type: "base"},
+            {id: 48, name: "Dynaxz", display_name: "Dynaxz", rating: 75, position: "LW", nation: "JP", stats: {sho: 73, pas: 77, pos: 74, def: 72}, traits: [], card_type: "base"},
+            {id: 49, name: "Limpo", display_name: "Limpo", rating: 75, position: "CDM", nation: "France", stats: {sho: 73, pas: 77, pos: 78, def: 80}, traits: [], card_type: "base"},
+            {id: 50, name: "MRN", display_name: "MRN", rating: 75, position: "CAM", nation: "Egypt", stats: {sho: 71, pas: 77, pos: 71, def: 77}, traits: [], card_type: "base"},
+            {id: 51, name: "sergicanos", display_name: "sergicanos", rating: 74, position: "LW", nation: "Spain", stats: {sho: 75, pas: 74, pos: 73, def: 69}, traits: [], card_type: "base"},
+            {id: 52, name: "McHamm", display_name: "McHamm", rating: 74, position: "CB", nation: "Ireland", stats: {sho: 68, pas: 74, pos: 74, def: 77}, traits: [], card_type: "base"},
+            {id: 53, name: "Cubarsí", display_name: "Cubarsí", rating: 72, position: "CB", nation: "Spain", stats: {sho: 68, pas: 70, pos: 72, def: 74}, traits: [], card_type: "base"},
+            {id: 54, name: "saygex", display_name: "saygex", rating: 70, position: "CB", nation: "Germany", stats: {sho: 68, pas: 67, pos: 70, def: 65}, traits: [], card_type: "base"},
+            {id: 55, name: "Calafiori", display_name: "Calafiori", rating: 69, position: "CB", nation: "Italy", stats: {sho: 68, pas: 70, pos: 70, def: 71}, traits: [], card_type: "base"},
+            {id: 56, name: "Vonstassin", display_name: "Vonstassin", rating: 69, position: "RW", nation: "France", stats: {sho: 72, pas: 69, pos: 70, def: 66}, traits: [], card_type: "base"},
+            {id: 57, name: "DontThugM3", display_name: "DontThugM3", rating: 68, position: "ST", nation: "GB", stats: {sho: 72, pas: 69, pos: 67, def: 65}, traits: [], card_type: "base"},
+            {id: 58, name: "dff", display_name: "dff", rating: 68, position: "CDM", nation: "GB", stats: {sho: 64, pas: 69, pos: 70, def: 69}, traits: [], card_type: "base"},
+            {id: 59, name: "Tallinn", display_name: "Tallinn", rating: 68, position: "ST", nation: "EE", stats: {sho: 69, pas: 67, pos: 71, def: 62}, traits: [], card_type: "base"},
+            {id: 60, name: "Gullit_PC", display_name: "Gullit_PC", rating: 64, position: "ST", nation: "MA", stats: {sho: 66, pas: 64, pos: 66, def: 53}, traits: [], card_type: "base"},
+            {id: 61, name: "UrLocalFrenchGuy", display_name: "UrLocalFrenchGuy", rating: 61, position: "CAM", nation: "France", stats: {sho: 66, pas: 67, pos: 63, def: 64}, traits: [], card_type: "base"},
+            {id: 62, name: "GK", display_name: "GK", rating: 81, position: "GK", nation: "Spain", stats: {dec: 79, pas: 78, pos: 81, ref: 83}, traits: ["shotstopper"], card_type: "base"},
+            {id: 63, name: "Gol", display_name: "Gol", rating: 83, position: "GK", nation: "Romania", stats: {dec: 82, pas: 79, pos: 86, ref: 82}, traits: ["shotstopperplus"], card_type: "base"},
+            {id: 64, name: "7ooby", display_name: "7ooby", rating: 81, position: "GK", nation: "Brazil", stats: {dec: 80, pas: 84, pos: 83, ref: 82}, traits: [], card_type: "base"},
+            {id: 65, name: "Fad", display_name: "Fad", rating: 80, position: "GK", nation: "Italy", stats: {dec: 79, pas: 78, pos: 82, ref: 78}, traits: [], card_type: "base"},
+            {id: 66, name: "GGGheddafi", display_name: "GGGheddafi", rating: 78, position: "GK", nation: "Italy", stats: {dec: 73, pas: 75, pos: 76, ref: 78}, traits: ["shotstopper"], card_type: "base"},
+            {id: 67, name: "Foderingham", display_name: "Foderingham", rating: 73, position: "GK", nation: "England", stats: {dec: 74, pas: 72, pos: 72, ref: 75}, traits: [], card_type: "base"},
+            {id: 68, name: "Austin", display_name: "Austin", rating: 67, position: "GK", nation: "England", stats: {dec: 69, pas: 65, pos: 65, ref: 66}, traits: [], card_type: "base"},
+            {id: 69, name: "shit guy", display_name: "shit guy", rating: 55, position: "ST", nation: "Poland", base_value: 540, stats: {sho: 45, pas: 40, pos: 50, def: 30}, traits: [], card_type: "base"}
         ];
+
+        // add buy/sell prices from PRICE_TABLE and generate img paths
+        allPlayers.forEach(player => {
+            const priceData = PRICE_TABLE[player.rating];
+            if (priceData) {
+                player.buy_price = priceData[0];
+                player.sell_price = priceData[1];
+            } else {
+                player.buy_price = player.base_value || 0;
+                player.sell_price = Math.floor((player.base_value || 0) * 0.67);
+            }
+            // generate img path from name
+            if (!player.img) {
+                const imgName = player.name.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
+                player.img = `cards/${imgName}.png`;
+            }
+        });
 
         const positionCategories = {
             'DEF': ['CB', 'RB', 'LB'],
@@ -691,7 +805,7 @@
             'ATT': ['RW', 'LW', 'ST']
         };
 
-        // Map Discord usernames to custom display names on leaderboards
+        // usernames to display names
         const usernameAliases = {
             "the1n1ly": "atrocity exhibition",
             "srolae": "alors",
@@ -809,7 +923,7 @@
             displayPlayers(filteredPlayers);
         }
 
-        // Add event listeners to all filter elements
+        // event listeners for filters
         document.getElementById('sort-select').addEventListener('change', filterAndSortPlayers);
         document.getElementById('position-filter').addEventListener('change', filterAndSortPlayers);
         document.getElementById('rating-filter').addEventListener('change', filterAndSortPlayers);
@@ -856,7 +970,7 @@
             try {
                 const data = await fetch('./leaderboards/player_stats.json').then(r => r.json());
                 
-                // Create stat category tabs
+                // stat cat tabs
                 let html = '<div style="margin-bottom:20px;">';
                 html += '<div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;">';
                 const categories = [
@@ -871,15 +985,15 @@
                 });
                 html += '</div></div>';
                 
-                // Store data globally for category switching
+                // cat switching data store
                 window.playerStatsData = data;
                 window.playerStatsCategories = categories;
                 
-                // Show first category by default
+                // first cat default
                 html += `<div id="stat-category-display"></div>`;
                 container.innerHTML = html;
                 
-                // Display first category
+                // first category dispkay
                 showPlayerStatCategory('topGoalScorers');
             } catch (e) {
                 container.innerHTML = `<p style="color:red;">Error loading player stats: ${e.message}</p>`;
@@ -926,7 +1040,7 @@
             try {
                 const data = await fetch('./leaderboards/user_stats.json?v=' + Date.now()).then(r => r.json());
                 
-                // Create stat category tabs
+                // stat cat tabs
                 let html = '<div style="margin-bottom:20px;">';
                 html += '<div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;">';
                 const categories = [
@@ -943,15 +1057,15 @@
                 });
                 html += '</div></div>';
                 
-                // Store data globally for category switching
+                // cat switching data store
                 window.userStatsData = data;
                 window.userStatsCategories = categories;
                 
-                // Show first category by default
+                // first cat default
                 html += `<div id="user-stat-category-display"></div>`;
                 container.innerHTML = html;
                 
-                // Display first category
+                // first cat dis
                 showUserStatCategory('richestUsers');
             } catch (e) {
                 container.innerHTML = `<p style="color:red;">Error loading user stats: ${e.message}</p>`;
@@ -974,23 +1088,23 @@
                 const stat = item.stat !== undefined ? (typeof item.stat === 'number' && item.stat % 1 !== 0 ? item.stat.toFixed(2) : item.stat) : item.value;
                 const unit = item.unit || '';
                 const color1 = item.color || '';
-                const color2 = item.color2 || color1;  // If no second color, use first color (solid)
+                const color2 = item.color2 || color1;  // if no second color, use first color
 
                 const rawUsername = item.username || item.teamName;
                 const displayUsername = mapUsername(rawUsername);
                 
-                // Debug: Log if colors exist
+                // DEBUG
                 if (color1) {
                     console.log(`[${rawUsername}] Colors found: ${color1} / ${color2}`);
                 }
                 
-                // Create gradient style
+                // grad style CREATION
                 let usernameStyle = 'font-weight:bold;';
                 let usernameClass = '';
                 
                 if (color1 && color1.startsWith('#') && color1.length === 7) {
                     try {
-                        // Parse RGB from hex for glow effect
+                        // parse rbg from hex
                         const r1 = parseInt(color1.slice(1, 3), 16) || 0;
                         const g1 = parseInt(color1.slice(3, 5), 16) || 0;
                         const b1 = parseInt(color1.slice(5, 7), 16) || 0;
@@ -1000,12 +1114,12 @@
                         const g2 = parseInt(color2Valid.slice(3, 5), 16) || 0;
                         const b2 = parseInt(color2Valid.slice(5, 7), 16) || 0;
                         
-                        // Validate RGB values
+                        // validate rgb
                         if (isNaN(r1) || isNaN(g1) || isNaN(b1) || isNaN(r2) || isNaN(g2) || isNaN(b2)) {
                             throw new Error("Invalid RGB values");
                         }
                         
-                        // Average glow color
+                        // glow avg
                         const glowR = Math.round((r1 + r2) / 2);
                         const glowG = Math.round((g1 + g2) / 2);
                         const glowB = Math.round((b1 + b2) / 2);
@@ -1046,7 +1160,7 @@
             const container = document.getElementById('league-standings-container');
             container.innerHTML = '<p style="text-align:center;color:#a0a0a0;">Loading all leagues...</p>';
             try {
-                // Fetch list of league files by trying common league IDs
+                // league ids detec
                 const leagueIds = [];
                 for (let i = 1; i <= 50; i++) {
                     try {
