@@ -1,6 +1,5 @@
-# League System - Implementation Guide
+# leagues
 
-## ✅ What's Been Implemented
 
 ### Backend (Bot)
 1. **Export League Data Function** - `export_league_data_to_json()`
