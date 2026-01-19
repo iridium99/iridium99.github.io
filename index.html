@@ -896,6 +896,7 @@
             const sortValue = document.getElementById('sort-select').value;
             const positionFilter = document.getElementById('position-filter').value;
             const ratingFilter = document.getElementById('rating-filter').value;
+            const traitFilter = document.getElementById('trait-filter').value;
             const searchTerm = document.getElementById('search-box').value.toLowerCase();
             
             const minPrice = document.getElementById('min-price').value ? parseInt(document.getElementById('min-price').value) : 0;
@@ -926,11 +927,16 @@
                         matchesRating = player.rating >= min && player.rating <= max;
                     }
                 }
+                                
+                let matchesTrait = true;
+                if(traitFilter !== 'all'){
+                    matchesTrait = player.traits && player.traits.some(trait => trait.toLowerCase() === traitFilter.toLowerCase());
+                }
                 
                 const matchesPriceRange = player.buy_price >= minPrice && player.buy_price <= maxPrice;
                 const matchesOvrRange = player.rating >= minOvr && player.rating <= maxOvr;
 
-                return matchesPosition && matchesSearch && matchesRating && matchesPriceRange && matchesOvrRange;
+                return matchesPosition && matchesSearch && matchesRating && matchesTrait && matchesPriceRange && matchesOvrRange;
             });
 
             switch(sortValue){
@@ -949,6 +955,7 @@
         document.getElementById('sort-select').addEventListener('change', filterAndSortPlayers);
         document.getElementById('position-filter').addEventListener('change', filterAndSortPlayers);
         document.getElementById('rating-filter').addEventListener('change', filterAndSortPlayers);
+        document.getElementById('trait-filter').addEventListener('change', filterAndSortPlayers);
         document.getElementById('search-box').addEventListener('input', filterAndSortPlayers);
         document.getElementById('min-price').addEventListener('input', filterAndSortPlayers);
         document.getElementById('max-price').addEventListener('input', filterAndSortPlayers);
