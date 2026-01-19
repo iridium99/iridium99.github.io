@@ -531,21 +531,19 @@
             <select id="position-filter">
                 <!-- General categories first -->
                 <option value="all">All Positions</option>
-                <option value="GK">Goalkeeper</option>
-                <option value="DEF">Defender</option>
-                <option value="MID">Midfielder</option>
-                <option value="ATT">Attacker</option>
+                <option value="GK">GK</option>
+                <option value="DEF">DEF</option>
+                <option value="MID">MID</option>
+                <option value="ATT">ATT</option>
 
                 <!-- Specific positions after -->
-                <option value="CB">Center Back</option>
-                <option value="RB">Right Back</option>
-                <option value="LB">Left Back</option>
-                <option value="CDM">Defensive Mid</option>
-                <option value="CM">Center Mid</option>
-                <option value="CAM">Attacking Mid</option>
-                <option value="RW">Right Wing</option>
-                <option value="LW">Left Wing</option>
-                <option value="ST">Striker</option>
+                <option value="CB">CB</option>
+                <option value="CDM">CDM</option>
+                <option value="CM">CM</option>
+                <option value="CAM">CAM</option>
+                <option value="RW">RW</option>
+                <option value="LW">LW</option>
+                <option value="ST">ST</option>
             </select>
             
             <select id="rating-filter">
@@ -712,7 +710,7 @@
 
         const allPlayers = [
             {id: 1, name: "Perkz", display_name: "Perkz", rating: 92, position: "CAM", nation: "Turkey", stats: {sho: 91, pas: 93, pos: 92, def: 87}, traits: ["playmakerplus", "clinical finisher"], card_type: "base"},
-            {id: 2, name: "W-pi", display_name: "W-pi", rating: 92, position: "RW", nation: "SL", stats: {sho: 92, pas: 92, pos: 90, def: 85}, traits: ["playmakerplus", "clinical finisherplus"], card_type: "base"},
+            {id: 2, name: "W-pi", display_name: "W-pi", rating: 92, position: "RW", nation: "Sierra Leone", stats: {sho: 92, pas: 92, pos: 90, def: 85}, traits: ["playmakerplus", "clinical finisherplus"], card_type: "base"},
             {id: 3, name: "alors", display_name: "alors", rating: 90, position: "ST", nation: "Algeria", stats: {sho: 91, pas: 91, pos: 89, def: 79}, traits: ["playmakerplus", "clinical finisherplus"], card_type: "base"},
             {id: 4, name: "tsukuyomi", display_name: "tsukuyomi.", rating: 91, position: "CDM", nation: "Netherlands", stats: {sho: 87, pas: 91, pos: 90, def: 90}, traits: ["playmakerplus", "composed"], card_type: "base"},
             {id: 5, name: "Lena", display_name: "Lena", rating: 90, position: "CDM", nation: "Turkey", stats: {sho: 87, pas: 91, pos: 88, def: 90}, traits: ["penalty specialist", "aggressive"], card_type: "base"},
@@ -724,7 +722,7 @@
             {id: 11, name: "zenix", display_name: "zen!x", rating: 87, position: "RW", nation: "Poland", stats: {sho: 88, pas: 85, pos: 84, def: 80}, traits: ["clinical finisherplus"], card_type: "base"},
             {id: 12, name: "Ibrahim", display_name: "Ibrahim", rating: 87, position: "CB", nation: "Egypt", stats: {sho: 85, pas: 85, pos: 88, def: 86}, traits: ["penalty specialistplus"], card_type: "base"},
             {id: 13, name: "cYn", display_name: "cYn", rating: 85, position: "CM", nation: "England", stats: {sho: 83, pas: 85, pos: 85, def: 79}, traits: ["clinical finisherplus"], card_type: "base"},
-            {id: 14, name: "ToughBaby", display_name: "ToughBaby", rating: 84, position: "CM", nation: "PS", stats: {sho: 80, pas: 86, pos: 82, def: 82}, traits: ["penalty specialistplus"], card_type: "base"},
+            {id: 14, name: "ToughBaby", display_name: "ToughBaby", rating: 84, position: "CM", nation: "Palestine", stats: {sho: 80, pas: 86, pos: 82, def: 82}, traits: ["penalty specialistplus"], card_type: "base"},
             {id: 15, name: "m1dnam", display_name: "m1dnam", rating: 84, position: "CM", nation: "Portugal", stats: {sho: 82, pas: 83, pos: 84, def: 79}, traits: ["clinical finisher"], card_type: "base"},
             {id: 16, name: "Razor", display_name: "Razor", rating: 84, position: "ST", nation: "Romania", stats: {sho: 84, pas: 82, pos: 82, def: 76}, traits: ["aggressiveplus"], card_type: "base"},
             {id: 17, name: "Arshavin", display_name: "Arshavin", rating: 83, position: "ST", nation: "Wales", stats: {sho: 84, pas: 80, pos: 82, def: 77}, traits: ["clinical finisher"], card_type: "base"},
@@ -737,28 +735,28 @@
             {id: 24, name: "Berbatov", display_name: "Berbatov", rating: 82, position: "CAM", nation: "GB", stats: {sho: 81, pas: 81, pos: 81, def: 74}, traits: ["clinical finisher"], card_type: "base"},
             {id: 25, name: "Luisdiaz", display_name: "Luisdiaz", rating: 81, position: "LW", nation: "England", stats: {sho: 82, pas: 81, pos: 80, def: 75}, traits: ["clinical finisher"], card_type: "base"},
             {id: 26, name: "Monk", display_name: "Monk", rating: 80, position: "CM", nation: "Croatia", stats: {sho: 77, pas: 82, pos: 79, def: 81}, traits: [], card_type: "base"},
-            {id: 27, name: "Maks Luburic", display_name: "Maks Luburic", rating: 80, position: "LW", nation: "NE", stats: {sho: 78, pas: 81, pos: 79, def: 79}, traits: ["aggressive"], card_type: "base"},
+            {id: 27, name: "Maks Luburic", display_name: "Maks Luburic", rating: 80, position: "LW", nation: "Niger", stats: {sho: 78, pas: 81, pos: 79, def: 79}, traits: ["aggressive"], card_type: "base"},
             {id: 28, name: "Faya lev", display_name: "Faya lev", rating: 80, position: "CM", nation: "Germany", stats: {sho: 77, pas: 81, pos: 78, def: 77}, traits: ["composed"], card_type: "base"},
             {id: 29, name: "Timber", display_name: "Timber", rating: 80, position: "CB", nation: "Netherlands", stats: {sho: 76, pas: 80, pos: 81, def: 82}, traits: [], card_type: "base"},
             {id: 30, name: "valotii", display_name: "valotii", rating: 80, position: "CAM", nation: "Italy", stats: {sho: 77, pas: 79, pos: 82, def: 80}, traits: ["aggressive"], card_type: "base"},
-            {id: 31, name: "EmKo", display_name: "EmKo", rating: 79, position: "ST", nation: "BA", stats: {sho: 80, pas: 81, pos: 77, def: 73}, traits: [], card_type: "base"},
+            {id: 31, name: "EmKo", display_name: "EmKo", rating: 79, position: "ST", nation: "Bosnia and Herzegovina", stats: {sho: 80, pas: 81, pos: 77, def: 73}, traits: [], card_type: "base"},
             {id: 32, name: "Van Nistelrooy", display_name: "Van Nistelrooy", rating: 79, position: "RW", nation: "France", stats: {sho: 79, pas: 80, pos: 79, def: 75}, traits: [], card_type: "base"},
             {id: 33, name: "Cat", display_name: "Cat", rating: 79, position: "CDM", nation: "England", stats: {sho: 75, pas: 80, pos: 80, def: 81}, traits: [], card_type: "base"},
-            {id: 34, name: "blimpus", display_name: "blimpus", rating: 79, position: "CB", nation: "GB", stats: {sho: 76, pas: 79, pos: 79, def: 79}, traits: [], card_type: "base"},
+            {id: 34, name: "blimpus", display_name: "blimpus", rating: 79, position: "CB", nation: "United Kingdom", stats: {sho: 76, pas: 79, pos: 79, def: 79}, traits: [], card_type: "base"},
             {id: 35, name: "Kepa", display_name: "Kepa", rating: 79, position: "CB", nation: "Greece", stats: {sho: 74, pas: 77, pos: 83, def: 82}, traits: [], card_type: "base"},
             {id: 36, name: "ShIeLd", display_name: "ShIeLd", rating: 85, position: "GK", nation: "Italy", stats: {dec: 85, pas: 82, pos: 86, ref: 86}, traits: ["shotstopperplus"], card_type: "base"},
             {id: 37, name: "Mbappe", display_name: "Mbappe", rating: 79, position: "ST", nation: "Spain", stats: {sho: 79, pas: 76, pos: 81, def: 72}, traits: [], card_type: "base"},
             {id: 38, name: "santi", display_name: "santi", rating: 79, position: "CB", nation: "Italy", stats: {sho: 67, pas: 74, pos: 79, def: 82}, traits: [], card_type: "base"},
-            {id: 39, name: "Van Basten", display_name: "Van Basten", rating: 78, position: "ST", nation: "NE", stats: {sho: 79, pas: 80, pos: 72, def: 71}, traits: [], card_type: "base"},
+            {id: 39, name: "Van Basten", display_name: "Van Basten", rating: 78, position: "ST", nation: "Niger", stats: {sho: 79, pas: 80, pos: 72, def: 71}, traits: [], card_type: "base"},
             {id: 40, name: "BRUTUS", display_name: "BRUTUS", rating: 78, position: "CB", nation: "Italy", stats: {sho: 77, pas: 80, pos: 77, def: 79}, traits: [], card_type: "base"},
             {id: 41, name: "DOOM", display_name: "DOOM", rating: 78, position: "LW", nation: "Czech Republic", stats: {sho: 78, pas: 79, pos: 78, def: 74}, traits: [], card_type: "base"},
             {id: 42, name: "YaYa", display_name: "YaYa", rating: 78, position: "CAM", nation: "Egypt", stats: {sho: 75, pas: 79, pos: 79, def: 73}, traits: [], card_type: "base"},
             {id: 43, name: "Misimaro", display_name: "Misimaro", rating: 78, position: "RW", nation: "Germany", stats: {sho: 76, pas: 78, pos: 77, def: 75}, traits: [], card_type: "base"},
-            {id: 44, name: "YEET", display_name: "YEET", rating: 78, position: "LW", nation: "CC", stats: {sho: 77, pas: 78, pos: 76, def: 71}, traits: [], card_type: "base"},
+            {id: 44, name: "YEET", display_name: "YEET", rating: 78, position: "LW", nation: "Cocos (Keeling) Islands", stats: {sho: 77, pas: 78, pos: 76, def: 71}, traits: [], card_type: "base"},
             {id: 45, name: "Himothy", display_name: "Himothy", rating: 77, position: "CDM", nation: "Tunisia", stats: {sho: 76, pas: 76, pos: 76, def: 69}, traits: [], card_type: "base"},
-            {id: 46, name: "Spero", display_name: "Spero", rating: 76, position: "ST", nation: "KP", stats: {sho: 79, pas: 76, pos: 78, def: 73}, traits: [], card_type: "base"},
+            {id: 46, name: "Spero", display_name: "Spero", rating: 76, position: "ST", nation: "North Korea", stats: {sho: 79, pas: 76, pos: 78, def: 73}, traits: [], card_type: "base"},
             {id: 47, name: "evil.pro", display_name: "evil.pro", rating: 76, position: "CDM", nation: "Spain", stats: {sho: 74, pas: 76, pos: 77, def: 73}, traits: [], card_type: "base"},
-            {id: 48, name: "Dynaxz", display_name: "Dynaxz", rating: 75, position: "LW", nation: "JP", stats: {sho: 73, pas: 77, pos: 74, def: 72}, traits: [], card_type: "base"},
+            {id: 48, name: "Dynaxz", display_name: "Dynaxz", rating: 75, position: "LW", nation: "Japan", stats: {sho: 73, pas: 77, pos: 74, def: 72}, traits: [], card_type: "base"},
             {id: 49, name: "Limpo", display_name: "Limpo", rating: 75, position: "CDM", nation: "France", stats: {sho: 73, pas: 77, pos: 78, def: 80}, traits: [], card_type: "base"},
             {id: 50, name: "MRN", display_name: "MRN", rating: 75, position: "CAM", nation: "Egypt", stats: {sho: 71, pas: 77, pos: 71, def: 77}, traits: [], card_type: "base"},
             {id: 51, name: "sergicanos", display_name: "sergicanos", rating: 74, position: "LW", nation: "Spain", stats: {sho: 75, pas: 74, pos: 73, def: 69}, traits: [], card_type: "base"},
@@ -767,10 +765,10 @@
             {id: 54, name: "saygex", display_name: "saygex", rating: 70, position: "CB", nation: "Germany", stats: {sho: 68, pas: 67, pos: 70, def: 65}, traits: [], card_type: "base"},
             {id: 55, name: "Calafiori", display_name: "Calafiori", rating: 69, position: "CB", nation: "Italy", stats: {sho: 68, pas: 70, pos: 70, def: 71}, traits: [], card_type: "base"},
             {id: 56, name: "Vonstassin", display_name: "Vonstassin", rating: 69, position: "RW", nation: "France", stats: {sho: 72, pas: 69, pos: 70, def: 66}, traits: [], card_type: "base"},
-            {id: 57, name: "DontThugM3", display_name: "DontThugM3", rating: 68, position: "ST", nation: "GB", stats: {sho: 72, pas: 69, pos: 67, def: 65}, traits: [], card_type: "base"},
-            {id: 58, name: "dff", display_name: "dff", rating: 68, position: "CDM", nation: "GB", stats: {sho: 64, pas: 69, pos: 70, def: 69}, traits: [], card_type: "base"},
-            {id: 59, name: "Tallinn", display_name: "Tallinn", rating: 68, position: "ST", nation: "EE", stats: {sho: 69, pas: 67, pos: 71, def: 62}, traits: [], card_type: "base"},
-            {id: 60, name: "Gullit_PC", display_name: "Gullit_PC", rating: 64, position: "ST", nation: "MA", stats: {sho: 66, pas: 64, pos: 66, def: 53}, traits: [], card_type: "base"},
+            {id: 57, name: "DontThugM3", display_name: "DontThugM3", rating: 68, position: "ST", nation: "United Kingdom", stats: {sho: 72, pas: 69, pos: 67, def: 65}, traits: [], card_type: "base"},
+            {id: 58, name: "dff", display_name: "dff", rating: 68, position: "CDM", nation: "United Kingdom", stats: {sho: 64, pas: 69, pos: 70, def: 69}, traits: [], card_type: "base"},
+            {id: 59, name: "Tallinn", display_name: "Tallinn", rating: 68, position: "ST", nation: "Estonia", stats: {sho: 69, pas: 67, pos: 71, def: 62}, traits: [], card_type: "base"},
+            {id: 60, name: "Gullit_PC", display_name: "Gullit_PC", rating: 64, position: "ST", nation: "Morocco", stats: {sho: 66, pas: 64, pos: 66, def: 53}, traits: [], card_type: "base"},
             {id: 61, name: "UrLocalFrenchGuy", display_name: "UrLocalFrenchGuy", rating: 61, position: "CAM", nation: "France", stats: {sho: 66, pas: 67, pos: 63, def: 64}, traits: [], card_type: "base"},
             {id: 62, name: "GK", display_name: "GK", rating: 81, position: "GK", nation: "Spain", stats: {dec: 79, pas: 78, pos: 81, ref: 83}, traits: ["shotstopper"], card_type: "base"},
             {id: 63, name: "Gol", display_name: "Gol", rating: 83, position: "GK", nation: "Romania", stats: {dec: 82, pas: 79, pos: 86, ref: 82}, traits: ["shotstopperplus"], card_type: "base"},
