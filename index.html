@@ -794,7 +794,15 @@
             }
             // generate img path from name
             if (!player.img) {
-                const imgName = player.name.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
+                const specialNames = {
+                    "W-pi": "w-pi",
+                    "evil.pro": "evil.pro",
+                    "Cubarsí": "cubarsi",
+                    "zen!x": "zenix",
+                    "$limani": "slimani"
+                };
+                
+                let imgName = specialNames[player.name] || player.name.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
                 player.img = `cards/${imgName}.png`;
             }
         });
