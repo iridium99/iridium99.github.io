@@ -862,6 +862,11 @@
                 <h2>Select a Player</h2>
                 <button class="modal-close" onclick="closePlayerModal()">&times;</button>
             </div>
+            <div style="margin-bottom:20px;">
+                <input type="text" id="modal-search-box" placeholder="Search players by name..." 
+                       style="width:100%;padding:12px;border:2px solid var(--primary);border-radius:8px;background:var(--card-bg);color:var(--text);font-size:16px;"
+                       oninput="filterModalPlayers()">
+            </div>
             <div class="modal-players-grid" id="modal-players-container">
                 <!-- Player cards will be loaded here -->
             </div>
@@ -1534,7 +1539,10 @@
             currentSelectingSlot = slotIndex;
             const modal = document.getElementById('player-modal');
             const container = document.getElementById('modal-players-container');
+            const searchBox = document.getElementById('modal-search-box');
             
+            // Clear search box
+            searchBox.value = '';
             // Populate modal with player cards
             container.innerHTML = '';
             const sortedPlayers = [...allPlayers].sort((a, b) => b.rating - a.rating);
@@ -1542,6 +1550,7 @@
             sortedPlayers.forEach(player => {
                 const card = document.createElement('div');
                 card.className = 'modal-player-card';
+                card.setAttribute('data-player-name', player.display_name.toLowerCase());
                 card.onclick = () => selectPlayer(player, slotIndex);
                 card.innerHTML = `
                     <img src="${player.img}" alt="${player.name}">
@@ -1555,7 +1564,21 @@
             
             modal.classList.add('active');
         }
-        
+                
+        // Filter players in modal based on search input
+        function filterModalPlayers() {
+            const searchTerm = document.getElementById('modal-search-box').value.toLowerCase();
+            const playerCards = document.querySelectorAll('.modal-player-card');
+            
+            playerCards.forEach(card => {
+                const playerName = card.getAttribute('data-player-name');
+                if (playerName.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
         // Close player selection modal
         function closePlayerModal() {
             const modal = document.getElementById('player-modal');
