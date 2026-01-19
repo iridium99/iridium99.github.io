@@ -525,8 +525,12 @@
                 <option value="rating-asc">Rating: Low to High</option>
                 <option value="name-asc">Name: A to Z</option>
                 <option value="name-desc">Name: Z to A</option>
-                <option value="price-desc">Price: High to Low</option>
-                <option value="price-asc">Price: Low to High</option>
+                <option value="sho-desc">Shooting (SHO): High to Low</option>
+                <option value="pas-desc">Passing (PAS): High to Low</option>
+                <option value="pos-desc">Positioning (POS): High to Low</option>
+                <option value="def-desc">Defending (DEF): High to Low</option>
+                <option value="dec-desc">Decision-Making (DEC): High to Low</option>
+                <option value="ref-desc">Reflexes (REF): High to Low</option>
             </select>
             
             <select id="position-filter">
@@ -938,14 +942,24 @@
 
                 return matchesPosition && matchesSearch && matchesRating && matchesTrait && matchesPriceRange && matchesOvrRange;
             });
+            
+            const getStat = (player, key) => {
+                if (!player || !player.stats) return -Infinity;
+                const value = player.stats[key];
+                return typeof value === 'number' ? value : -Infinity;
+            };
 
             switch(sortValue){
                 case'rating-desc': filteredPlayers.sort((a,b)=>b.rating-a.rating); break;
                 case'rating-asc': filteredPlayers.sort((a,b)=>a.rating-b.rating); break;
                 case'name-asc': filteredPlayers.sort((a,b)=>a.name.localeCompare(b.name)); break;
                 case'name-desc': filteredPlayers.sort((a,b)=>b.name.localeCompare(a.name)); break;
-                case'price-desc': filteredPlayers.sort((a,b)=>b.buy_price-a.buy_price); break;
-                case'price-asc': filteredPlayers.sort((a,b)=>a.buy_price-b.buy_price); break;
+                case'sho-desc': filteredPlayers.sort((a,b)=>getStat(b,'sho')-getStat(a,'sho')); break;
+                case'pas-desc': filteredPlayers.sort((a,b)=>getStat(b,'pas')-getStat(a,'pas')); break;
+                case'pos-desc': filteredPlayers.sort((a,b)=>getStat(b,'pos')-getStat(a,'pos')); break;
+                case'def-desc': filteredPlayers.sort((a,b)=>getStat(b,'def')-getStat(a,'def')); break;
+                case'dec-desc': filteredPlayers.sort((a,b)=>getStat(b,'dec')-getStat(a,'dec')); break;
+                case'ref-desc': filteredPlayers.sort((a,b)=>getStat(b,'ref')-getStat(a,'ref')); break;
             }
 
             displayPlayers(filteredPlayers);
