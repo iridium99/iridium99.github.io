@@ -7,9 +7,9 @@
     <link rel="icon" type="image/png" sizes="16x16" href="favicon.png">
     <style>
         :root {
-            --primary: #5865f2;
-            --background: #1e1e2e;
-            --card-bg: #2b2d3e;
+            --primary: #4a90d9;
+            --background: #1a1a1a;
+            --card-bg: #252525;
             --text: #ffffff;
         }
         
@@ -257,6 +257,219 @@
             margin-bottom: 10px;
         }
         
+        /* Player Comparison styles */
+        .comparison-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .player-selector {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+        
+        .selector-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .selector-item {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .selector-item label {
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .comparison-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            border: 2px solid var(--primary);
+        }
+        
+        .comparison-card h3 {
+            text-align: center;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        .comparison-stat {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px;
+            margin: 5px 0;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .comparison-stat.highest {
+            color: white;
+            font-weight: bold;
+        }
+        
+        .comparison-stat.not-highest {
+            color: #888;
+        }
+        
+        .upgrade-controls {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .upgrade-slider {
+            width: 100%;
+            margin: 10px 0;
+        }
+        
+        .total-cost {
+            background: rgba(74, 144, 217, 0.2);
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 10px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .add-player-btn {
+            width: 100%;
+            height: 150px;
+            background: var(--card-bg);
+            border: 3px dashed var(--primary);
+            border-radius: 12px;
+            color: var(--primary);
+            font-size: 36px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        
+        .add-player-btn:hover {
+            background: rgba(74, 144, 217, 0.1);
+            transform: scale(1.02);
+        }
+        
+        .add-player-btn span {
+            font-size: 12px;
+            margin-top: 8px;
+        }
+        
+        .selected-player-display {
+            width: 100%;
+            max-width: 250px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            border: 2px solid var(--primary);
+            border-radius: 8px;
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .selected-player-display:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(74, 144, 217, 0.3);
+        }
+        
+        .selected-player-display img {
+            width: 100%;
+            border-radius: 6px;
+        }
+        
+        .change-player-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .player-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            overflow: auto;
+        }
+        
+        .player-modal.active {
+            display: block;
+        }
+        
+        .modal-content {
+            padding: 40px 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            color: white;
+        }
+        
+        .modal-close {
+            font-size: 40px;
+            cursor: pointer;
+            color: var(--primary);
+            background: none;
+            border: none;
+        }
+        
+        .modal-players-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 12px;
+        }
+        
+        .modal-player-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .modal-player-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+        }
+        
+        .modal-player-card img {
+            width: 100%;
+            border-radius: 6px;
+        }
+        
         .help-content {
             max-width: 800px;
             margin: 0 auto;
@@ -499,6 +712,7 @@
     <div class="tabs">
         <div class="tab" data-tab="whats-new">What's New</div>
         <div class="tab active" data-tab="players">Players</div>
+        <div class="tab" data-tab="compare">Upgrade Lab & Player Comparison</div>
         <div class="tab" data-tab="player-stats">Player Stats Leaderboard</div>
         <div class="tab" data-tab="user-stats">User Stats Leaderboard</div>
         <div class="tab" data-tab="league-standings">League Standings</div>
@@ -525,8 +739,12 @@
                 <option value="rating-asc">Rating: Low to High</option>
                 <option value="name-asc">Name: A to Z</option>
                 <option value="name-desc">Name: Z to A</option>
-                <option value="price-desc">Price: High to Low</option>
-                <option value="price-asc">Price: Low to High</option>
+                <option value="sho-desc">Shooting (SHO): High to Low</option>
+                <option value="pas-desc">Passing (PAS): High to Low</option>
+                <option value="pos-desc">Positioning (POS): High to Low</option>
+                <option value="def-desc">Defending (DEF): High to Low</option>
+                <option value="dec-desc">Decision-Making (DEC): High to Low</option>
+                <option value="ref-desc">Reflexes (REF): High to Low</option>
             </select>
             
             <select id="position-filter">
@@ -558,6 +776,22 @@
                 <option value="40-59">40-59 OVR</option>
             </select>
             
+            <select id="trait-filter">
+                <option value="all">All Traits</option>
+                <option value="playmakerplus">Playmaker +</option>
+                <option value="clinical finisherplus">Clinical Finisher +</option>
+                <option value="shotstopperplus">Shot Stopper +</option>
+                <option value="penalty specialistplus">Penalty Specialist +</option>
+                <option value="aggressiveplus">Aggressive +</option>
+                <option value="composedplus">Composed +</option>
+                <option value="playmaker">Playmaker</option>
+                <option value="clinical finisher">Clinical Finisher</option>
+                <option value="shotstopper">Shot Stopper</option>
+                <option value="penalty specialist">Penalty Specialist</option>
+                <option value="aggressive">Aggressive</option>
+                <option value="composed">Composed</option>
+            </select>
+            
             <input type="text" id="search-box" placeholder="Search players..." class="search-box">
         </div>
 
@@ -582,6 +816,62 @@
 
         <div class="players-grid" id="players-container">
             <!-- Players will be loaded here -->
+        </div>
+    </div>
+
+    <div class="tab-content" id="compare-tab">
+        <div class="comparison-container">
+            <div class="player-selector">
+                <h2 style="text-align:center;color:var(--primary);margin-bottom:20px;">Select Up To 3 Players to Compare</h2>
+                <div class="selector-row">
+                    <div class="selector-item">
+                        <div id="player-slot-0">
+                            <button class="add-player-btn" onclick="openPlayerModal(0)">
+                                <div>+</div>
+                                <span>Add Player</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="selector-item">
+                        <div id="player-slot-1">
+                            <button class="add-player-btn" onclick="openPlayerModal(1)">
+                                <div>+</div>
+                                <span>Add Player</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="selector-item">
+                        <div id="player-slot-2">
+                            <button class="add-player-btn" onclick="openPlayerModal(2)">
+                                <div>+</div>
+                                <span>Add Player</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="comparison-grid" id="comparison-results">
+                <!-- Comparison results will appear here -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Player Selection Modal -->
+    <div id="player-modal" class="player-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Select a Player</h2>
+                <button class="modal-close" onclick="closePlayerModal()">&times;</button>
+            </div>
+            <div style="margin-bottom:20px;">
+                <input type="text" id="modal-search-box" placeholder="Search players by name..." 
+                       style="width:100%;padding:12px;border:2px solid var(--primary);border-radius:8px;background:var(--card-bg);color:var(--text);font-size:16px;"
+                       oninput="filterModalPlayers()">
+            </div>
+            <div class="modal-players-grid" id="modal-players-container">
+                <!-- Player cards will be loaded here -->
+            </div>
         </div>
     </div>
 
@@ -880,6 +1170,7 @@
             const sortValue = document.getElementById('sort-select').value;
             const positionFilter = document.getElementById('position-filter').value;
             const ratingFilter = document.getElementById('rating-filter').value;
+            const traitFilter = document.getElementById('trait-filter').value;
             const searchTerm = document.getElementById('search-box').value.toLowerCase();
             
             const minPrice = document.getElementById('min-price').value ? parseInt(document.getElementById('min-price').value) : 0;
@@ -911,19 +1202,34 @@
                     }
                 }
                 
+                let matchesTrait = true;
+                if(traitFilter !== 'all'){
+                    matchesTrait = player.traits && player.traits.some(trait => trait.toLowerCase() === traitFilter.toLowerCase());
+                }
+                
                 const matchesPriceRange = player.buy_price >= minPrice && player.buy_price <= maxPrice;
                 const matchesOvrRange = player.rating >= minOvr && player.rating <= maxOvr;
 
-                return matchesPosition && matchesSearch && matchesRating && matchesPriceRange && matchesOvrRange;
+                return matchesPosition && matchesSearch && matchesRating && matchesTrait && matchesPriceRange && matchesOvrRange;
             });
+
+            const getStat = (player, key) => {
+                if (!player || !player.stats) return -Infinity;
+                const value = player.stats[key];
+                return typeof value === 'number' ? value : -Infinity;
+            };
 
             switch(sortValue){
                 case'rating-desc': filteredPlayers.sort((a,b)=>b.rating-a.rating); break;
                 case'rating-asc': filteredPlayers.sort((a,b)=>a.rating-b.rating); break;
                 case'name-asc': filteredPlayers.sort((a,b)=>a.name.localeCompare(b.name)); break;
                 case'name-desc': filteredPlayers.sort((a,b)=>b.name.localeCompare(a.name)); break;
-                case'price-desc': filteredPlayers.sort((a,b)=>b.buy_price-a.buy_price); break;
-                case'price-asc': filteredPlayers.sort((a,b)=>a.buy_price-b.buy_price); break;
+                case'sho-desc': filteredPlayers.sort((a,b)=>getStat(b,'sho')-getStat(a,'sho')); break;
+                case'pas-desc': filteredPlayers.sort((a,b)=>getStat(b,'pas')-getStat(a,'pas')); break;
+                case'pos-desc': filteredPlayers.sort((a,b)=>getStat(b,'pos')-getStat(a,'pos')); break;
+                case'def-desc': filteredPlayers.sort((a,b)=>getStat(b,'def')-getStat(a,'def')); break;
+                case'dec-desc': filteredPlayers.sort((a,b)=>getStat(b,'dec')-getStat(a,'dec')); break;
+                case'ref-desc': filteredPlayers.sort((a,b)=>getStat(b,'ref')-getStat(a,'ref')); break;
             }
 
             displayPlayers(filteredPlayers);
@@ -933,6 +1239,7 @@
         document.getElementById('sort-select').addEventListener('change', filterAndSortPlayers);
         document.getElementById('position-filter').addEventListener('change', filterAndSortPlayers);
         document.getElementById('rating-filter').addEventListener('change', filterAndSortPlayers);
+        document.getElementById('trait-filter').addEventListener('change', filterAndSortPlayers);
         document.getElementById('search-box').addEventListener('input', filterAndSortPlayers);
         document.getElementById('min-price').addEventListener('input', filterAndSortPlayers);
         document.getElementById('max-price').addEventListener('input', filterAndSortPlayers);
@@ -1212,6 +1519,334 @@
         let playerStatsLoaded = false;
         let userStatsLoaded = false;
         let leaguesLoaded = false;
+
+        // Position-specific stat upgrades
+        const POSITION_UPGRADES = {
+            "ST": {"sho": 2, "pos": 2, "pas": 1, "def": 1},
+            "RW": {"sho": 2, "pas": 2, "pos": 1, "def": 1},
+            "LW": {"sho": 2, "pas": 2, "pos": 1, "def": 1},
+            "CAM": {"pas": 2, "pos": 2, "sho": 1, "def": 1},
+            "CM": {"pas": 2, "sho": 2, "pos": 1, "def": 1},
+            "CDM": {"def": 2, "pos": 2, "pas": 1, "sho": 1},
+            "CB": {"def": 2, "pos": 2, "pas": 1, "sho": 1},
+            "GK": {"dec": 2, "ref": 2, "pos": 1, "pas": 1}
+        };
+        
+        // Track selected players
+        let selectedPlayers = [null, null, null];
+        let currentSelectingSlot = null;
+        
+        // Open player selection modal
+        function openPlayerModal(slotIndex) {
+            currentSelectingSlot = slotIndex;
+            const modal = document.getElementById('player-modal');
+            const container = document.getElementById('modal-players-container');
+            const searchBox = document.getElementById('modal-search-box');
+            
+            // Clear search box
+            searchBox.value = '';
+            
+            // Populate modal with player cards
+            container.innerHTML = '';
+            const sortedPlayers = [...allPlayers].sort((a, b) => b.rating - a.rating);
+            
+            sortedPlayers.forEach(player => {
+                const card = document.createElement('div');
+                card.className = 'modal-player-card';
+                card.setAttribute('data-player-name', player.display_name.toLowerCase());
+                card.onclick = () => selectPlayer(player, slotIndex);
+                card.innerHTML = `
+                    <img src="${player.img}" alt="${player.name}">
+                    <div style="text-align:center;margin-top:8px;">
+                        <div style="font-weight:bold;font-size:14px;">${player.display_name}</div>
+                        <div style="font-size:12px;color:var(--primary);">${player.rating} OVR | ${player.position}</div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+            
+            modal.classList.add('active');
+        }
+        
+        // Filter players in modal based on search input
+        function filterModalPlayers() {
+            const searchTerm = document.getElementById('modal-search-box').value.toLowerCase();
+            const playerCards = document.querySelectorAll('.modal-player-card');
+            
+            playerCards.forEach(card => {
+                const playerName = card.getAttribute('data-player-name');
+                if (playerName.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+        
+        // Close player selection modal
+        function closePlayerModal() {
+            const modal = document.getElementById('player-modal');
+            modal.classList.remove('active');
+            currentSelectingSlot = null;
+        }
+        
+        // Select a player for a slot
+        function selectPlayer(player, slotIndex) {
+            selectedPlayers[slotIndex] = player;
+            
+            // Update the slot display
+            const slot = document.getElementById(`player-slot-${slotIndex}`);
+            slot.innerHTML = `
+                <div class="selected-player-display" onclick="openPlayerModal(${slotIndex})">
+                    <button class="change-player-btn">Change</button>
+                    <img src="${player.img}" alt="${player.name}">
+                    <div style="text-align:center;margin-top:8px;">
+                        <div style="font-weight:bold;">${player.display_name}</div>
+                        <div style="font-size:12px;color:var(--primary);">${player.rating} OVR | ${player.position}</div>
+                    </div>
+                </div>
+            `;
+            
+            closePlayerModal();
+            
+            // Automatically update comparison
+            updateComparison();
+        }
+        
+        // Update comparison display
+        function updateComparison() {
+            const activePlayers = selectedPlayers.filter(p => p !== null);
+            if (activePlayers.length > 0) {
+                displayComparison(activePlayers);
+            } else {
+                document.getElementById('comparison-results').innerHTML = '';
+            }
+        }
+
+        // Calculate upgraded stats for a player
+        function calculateUpgradedStats(player, upgradeLevel) {
+            if (upgradeLevel === 0) {
+                return { ...player.stats };
+            }
+            
+            const upgraded = { ...player.stats };
+            const positionUpgrades = POSITION_UPGRADES[player.position] || POSITION_UPGRADES["CM"];
+            
+            Object.keys(positionUpgrades).forEach(stat => {
+                const increase = positionUpgrades[stat] * upgradeLevel;
+                if (upgraded[stat] !== undefined) {
+                    upgraded[stat] += increase;
+                }
+            });
+            
+            return upgraded;
+        }
+
+        // Calculate upgraded rating
+        function calculateUpgradedRating(baseRating, upgradeLevel) {
+            const ratingIncrease = upgradeLevel * 1.5;
+            return baseRating + Math.floor(ratingIncrease);
+        }
+
+        // Get the correct card image path based on upgrade level
+        function getCardImagePath(player, upgradeLevel) {
+            if (upgradeLevel === 0) {
+                return player.img; // Base card image
+            }
+            
+            // Get the base image path without extension
+            const basePath = player.img.replace('.png', '');
+            return `${basePath}_upgrade${upgradeLevel}.png`;
+        }
+
+        // Calculate total upgrade cost
+        function calculateTotalUpgradeCost(player, targetLevel) {
+            if (targetLevel === 0) return 0;
+            
+            const priceData = PRICE_TABLE[player.rating];
+            if (!priceData || !priceData[2]) {
+                return 0;
+            }
+            
+            const costPerLevel = priceData[2];
+            let totalCost = 0;
+            
+            for (let i = 0; i < targetLevel && i < costPerLevel.length; i++) {
+                totalCost += costPerLevel[i];
+            }
+            
+            return totalCost;
+        }
+
+        // Display comparison results
+        function displayComparison(players) {
+            const container = document.getElementById('comparison-results');
+            container.innerHTML = '';
+            
+            if (players.length === 0) return;
+            
+            // Find the actual index in selectedPlayers array
+            players.forEach((player) => {
+                const actualIndex = selectedPlayers.indexOf(player);
+                const card = createComparisonCard(player, actualIndex, players);
+                container.appendChild(card);
+            });
+        }
+
+        // Create a comparison card for a single player
+        function createComparisonCard(player, playerIndex, allComparePlayers) {
+            const card = document.createElement('div');
+            card.className = 'comparison-card';
+            card.id = `comparison-card-${playerIndex}`;
+            
+            const upgradeLevel = 0; // Start at level 0
+            const upgradedStats = calculateUpgradedStats(player, upgradeLevel);
+            const upgradedRating = calculateUpgradedRating(player.rating, upgradeLevel);
+            const totalCost = calculateTotalUpgradeCost(player, upgradeLevel);
+            const cardImagePath = getCardImagePath(player, upgradeLevel);
+            
+            let statsHtml = '';
+            const statNames = player.position === 'GK' 
+                ? ['dec', 'ref', 'pos', 'pas'] 
+                : ['sho', 'pas', 'pos', 'def'];
+            
+            statNames.forEach(stat => {
+                const statLabel = stat.toUpperCase();
+                const statValue = upgradedStats[stat] || 0;
+                statsHtml += `<div class="comparison-stat" data-stat="${stat}">
+                    <span>${statLabel}</span>
+                    <span class="stat-value">${statValue}</span>
+                </div>`;
+            });
+            
+            card.innerHTML = `
+                <div style="text-align:center;margin-bottom:15px;">
+                    <img id="card-image-${playerIndex}" src="${cardImagePath}" alt="${player.display_name}" style="width:100%;max-width:250px;border-radius:12px;margin-bottom:10px;">
+                </div>
+                <h3>${player.display_name}</h3>
+                <div style="text-align:center;margin-bottom:15px;">
+                    <div style="font-size:14px;color:#a0a0a0;margin-bottom:5px;">${player.position} | ${player.nation}</div>
+                    <div class="player-rating" style="display:inline-block;">${upgradedRating} OVR</div>
+                </div>
+                
+                <div class="stats-display">
+                    ${statsHtml}
+                </div>
+                
+                <div class="upgrade-controls">
+                    <label for="upgrade-select-${playerIndex}">Upgrade Level:</label>
+                    <select id="upgrade-select-${playerIndex}" onchange="updatePlayerUpgrade(${playerIndex}, ${player.id})" 
+                            style="width:100%;padding:8px;margin-top:8px;border:2px solid var(--primary);border-radius:6px;background:var(--card-bg);color:var(--text);">
+                        <option value="0">0</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                    
+                    <div style="margin-top:15px;">
+                        <div style="background:rgba(74, 144, 217, 0.1);padding:10px;border-radius:6px;margin-bottom:8px;">
+                            <div style="font-size:12px;color:#a0a0a0;">Upgrade Cost</div>
+                            <div id="upgrade-cost-${playerIndex}" style="font-size:16px;color:var(--primary);">${totalCost.toLocaleString()} coins</div>
+                        </div>
+                        
+                        <div style="background:rgba(74, 144, 217, 0.1);padding:10px;border-radius:6px;margin-bottom:8px;">
+                            <div style="font-size:12px;color:#a0a0a0;">Market Value</div>
+                            <div id="market-value-${playerIndex}" style="font-size:16px;color:var(--primary);">${player.buy_price.toLocaleString()} coins</div>
+                        </div>
+                        
+                        <div class="total-cost">
+                            <div style="font-size:12px;color:#a0a0a0;">Total Cost</div>
+                            <div id="total-cost-${playerIndex}" style="font-size:18px;color:var(--primary);">${(totalCost + player.buy_price).toLocaleString()} coins</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            return card;
+        }
+
+        // Update player stats when upgrade level changes
+        function updatePlayerUpgrade(playerIndex, playerId) {
+            const upgradeLevel = parseInt(document.getElementById(`upgrade-select-${playerIndex}`).value);
+            const player = allPlayers.find(p => p.id === playerId);
+            
+            if (!player) return;
+            
+            // Calculate new stats
+            const upgradedStats = calculateUpgradedStats(player, upgradeLevel);
+            const upgradedRating = calculateUpgradedRating(player.rating, upgradeLevel);
+            const upgradeCost = calculateTotalUpgradeCost(player, upgradeLevel);
+            const marketValue = player.buy_price;
+            const totalCost = upgradeCost + marketValue;
+            const cardImagePath = getCardImagePath(player, upgradeLevel);
+            
+            // Update card image
+            const cardImage = document.getElementById(`card-image-${playerIndex}`);
+            if (cardImage) {
+                cardImage.src = cardImagePath;
+            }
+            
+            // Update rating
+            const card = document.getElementById(`comparison-card-${playerIndex}`);
+            const ratingElement = card.querySelector('.player-rating');
+            ratingElement.textContent = `${upgradedRating} OVR`;
+            
+            // Update stats
+            const statNames = player.position === 'GK' 
+                ? ['dec', 'ref', 'pos', 'pas'] 
+                : ['sho', 'pas', 'pos', 'def'];
+            
+            statNames.forEach(stat => {
+                const statElement = card.querySelector(`[data-stat="${stat}"] .stat-value`);
+                if (statElement) {
+                    statElement.textContent = upgradedStats[stat] || 0;
+                }
+            });
+            
+            // Update costs
+            document.getElementById(`upgrade-cost-${playerIndex}`).textContent = `${upgradeCost.toLocaleString()} coins`;
+            document.getElementById(`market-value-${playerIndex}`).textContent = `${marketValue.toLocaleString()} coins`;
+            document.getElementById(`total-cost-${playerIndex}`).textContent = `${totalCost.toLocaleString()} coins`;
+            
+            // Re-highlight stats across all compared players
+            highlightBestStats();
+        }
+
+        // Highlight the best stat value across all compared players
+        function highlightBestStats() {
+            const cards = document.querySelectorAll('.comparison-card');
+            if (cards.length === 0) return;
+            
+            const statNames = ['sho', 'pas', 'pos', 'def', 'dec', 'ref'];
+            
+            statNames.forEach(stat => {
+                let maxValue = -Infinity;
+                const statElements = [];
+                
+                // Find all elements for this stat and the max value
+                cards.forEach(card => {
+                    const statDiv = card.querySelector(`[data-stat="${stat}"]`);
+                    if (statDiv) {
+                        const valueElement = statDiv.querySelector('.stat-value');
+                        const value = parseInt(valueElement.textContent) || 0;
+                        statElements.push({ div: statDiv, value: value });
+                        maxValue = Math.max(maxValue, value);
+                    }
+                });
+                
+                // Apply highlighting
+                statElements.forEach(({ div, value }) => {
+                    div.classList.remove('highest', 'not-highest');
+                    if (value === maxValue && maxValue > 0) {
+                        div.classList.add('highest');
+                    } else {
+                        div.classList.add('not-highest');
+                    }
+                });
+            });
+        }
 
         document.querySelectorAll('.tab').forEach(tab => {
             tab.addEventListener('click', () => {
