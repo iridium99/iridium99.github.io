@@ -256,6 +256,31 @@
             border-radius: 12px;
             margin-bottom: 10px;
         }
+
+        .card-image-container {
+            position: relative;
+            width: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .player-image-base {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .card-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 12px;
+            mix-blend-mode: screen;
+            pointer-events: none;
+        }
         
         /* Player Comparison styles */
         .comparison-container {
@@ -1122,6 +1147,17 @@
 
         let filteredPlayers = [...allPlayers];
 
+        function getOverlayForRating(rating) {
+            if (rating >= 90) {
+                return 'overlay/mastergold.webm';
+            } else if (rating >= 85) {
+                return 'overlay/raregold.webm';
+            } else if (rating >= 77) {
+                return 'overlay/nonraregold.webm';
+            }
+            return null;
+        }
+
         function displayPlayers(playersToDisplay) {
             const container = document.getElementById('players-container');
             container.innerHTML = '';
@@ -1134,8 +1170,16 @@
             playersToDisplay.forEach(player => {
                 const card = document.createElement('div');
                 card.className = 'player-card';
+                                
+                // Determine overlay for this player
+                const overlay = getOverlayForRating(player.rating);
+                const overlayHTML = overlay ? `<video class="card-overlay" autoplay muted loop><source src="${overlay}" type="video/webm"></video>` : '';
+                
                 card.innerHTML = `
-                    <img src="${player.img}" alt="${player.name}" class="player-image">
+                    <div class="card-image-container">
+                        <img src="${player.img}" alt="${player.name}" class="player-image-base">
+                        ${overlayHTML}
+                    </div>
                     <div class="player-header">
                         <h3 class="player-name">${player.name}</h3>
                     </div>
@@ -1554,8 +1598,16 @@
                 card.className = 'modal-player-card';
                 card.setAttribute('data-player-name', player.display_name.toLowerCase());
                 card.onclick = () => selectPlayer(player, slotIndex);
+                                
+                // Determine overlay for this player
+                const overlay = getOverlayForRating(player.rating);
+                const overlayHTML = overlay ? `<video class="card-overlay" autoplay muted loop><source src="${overlay}" type="video/webm"></video>` : '';
+                
                 card.innerHTML = `
-                    <img src="${player.img}" alt="${player.name}">
+                    <div class="card-image-container">
+                        <img src="${player.img}" alt="${player.name}" class="player-image-base">
+                        ${overlayHTML}
+                    </div>
                     <div style="text-align:center;margin-top:8px;">
                         <div style="font-weight:bold;font-size:14px;">${player.display_name}</div>
                         <div style="font-size:12px;color:var(--primary);">${player.rating} OVR | ${player.position}</div>
@@ -1592,13 +1644,17 @@
         // Select a player for a slot
         function selectPlayer(player, slotIndex) {
             selectedPlayers[slotIndex] = player;
-            
+            const overlay = getOverlayForRating(player.rating);
+            const overlayHTML = overlay ? `<video class="card-overlay" autoplay muted loop><source src="${overlay}" type="video/webm"></video>` : '';
             // Update the slot display
             const slot = document.getElementById(`player-slot-${slotIndex}`);
             slot.innerHTML = `
                 <div class="selected-player-display" onclick="openPlayerModal(${slotIndex})">
                     <button class="change-player-btn">Change</button>
-                    <img src="${player.img}" alt="${player.name}">
+                    <div class="card-image-container">
+                        <img src="${player.img}" alt="${player.name}" class="player-image-base">
+                        ${overlayHTML}
+                    </div>
                     <div style="text-align:center;margin-top:8px;">
                         <div style="font-weight:bold;">${player.display_name}</div>
                         <div style="font-size:12px;color:var(--primary);">${player.rating} OVR | ${player.position}</div>
@@ -1717,11 +1773,15 @@
                     <span class="stat-value">${statValue}</span>
                 </div>`;
             });
-            
+
+            const overlay = getOverlayForRating(player.rating);
+            const overlayHTML = overlay ? `<video class="card-overlay" autoplay muted loop><source src="${overlay}" type="video/webm"></video>` : '';
             card.innerHTML = `
                 <div style="text-align:center;margin-bottom:15px;">
-                    <img id="card-image-${playerIndex}" src="${cardImagePath}" alt="${player.display_name}" style="width:100%;max-width:250px;border-radius:12px;margin-bottom:10px;">
-                </div>
+                    <div class="card-image-container" style="width:100%;max-width:250px;margin:0 auto;">
+                        <img id="card-image-${playerIndex}" src="${cardImagePath}" alt="${player.display_name}" class="player-image-base">
+                        ${overlayHTML}
+                    </div>                </div>
                 <h3>${player.display_name}</h3>
                 <div style="text-align:center;margin-bottom:15px;">
                     <div style="font-size:14px;color:#a0a0a0;margin-bottom:5px;">${player.position} | ${player.nation}</div>
