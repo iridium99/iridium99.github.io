@@ -1850,6 +1850,30 @@
             
             // Update rating
             const card = document.getElementById(`comparison-card-${playerIndex}`);
+            const cardImageContainer = card.querySelector('.card-image-container');
+            const overlay = getOverlayForRating(upgradedRating);
+            
+            // Remove old overlay if exists
+            const oldOverlay = cardImageContainer.querySelector('.card-overlay');
+            if (oldOverlay) {
+                oldOverlay.remove();
+            }
+            
+            // Add new overlay if needed
+            if (overlay) {
+                const overlayVideo = document.createElement('video');
+                overlayVideo.className = 'card-overlay';
+                overlayVideo.autoplay = true;
+                overlayVideo.muted = true;
+                overlayVideo.loop = true;
+                const source = document.createElement('source');
+                source.src = overlay;
+                source.type = 'video/webm';
+                overlayVideo.appendChild(source);
+                cardImageContainer.appendChild(overlayVideo);
+            }
+            
+            // Update rating
             const ratingElement = card.querySelector('.player-rating');
             ratingElement.textContent = `${upgradedRating} OVR`;
             
