@@ -1149,7 +1149,10 @@
 
         let filteredPlayers = [...allPlayers];
 
-        function getOverlayForRating(rating) {
+        function getOverlayForRating(rating, cardType) {
+            if (cardType !== 'base') {
+                return null;
+            }
             if (rating >= 90) {
                 return 'overlay/mastergold.webm';
             } else if (rating >= 85) {
@@ -1174,7 +1177,7 @@
                 card.className = 'player-card';
                                 
                 // Determine overlay for this player
-                const overlay = getOverlayForRating(player.rating);
+                const overlay = getOverlayForRating(player.rating, player.card_type);
                 const overlayHTML = overlay ? `<video class="card-overlay" autoplay muted loop><source src="${overlay}" type="video/webm"></video>` : '';
                 
                 card.innerHTML = `
@@ -1602,7 +1605,7 @@
                 card.onclick = () => selectPlayer(player, slotIndex);
                                 
                 // Determine overlay for this player
-                const overlay = getOverlayForRating(player.rating);
+                const overlay = getOverlayForRating(player.rating, player.card_type);
                 const overlayHTML = overlay ? `<video class="card-overlay" autoplay muted loop><source src="${overlay}" type="video/webm"></video>` : '';
                 
                 card.innerHTML = `
@@ -1646,7 +1649,7 @@
         // Select a player for a slot
         function selectPlayer(player, slotIndex) {
             selectedPlayers[slotIndex] = player;
-            const overlay = getOverlayForRating(player.rating);
+            const overlay = getOverlayForRating(player.rating, player.card_type);
             const overlayHTML = overlay ? `<video class="card-overlay" autoplay muted loop><source src="${overlay}" type="video/webm"></video>` : '';
             // Update the slot display
             const slot = document.getElementById(`player-slot-${slotIndex}`);
@@ -1776,7 +1779,7 @@
                 </div>`;
             });
 
-            const overlay = getOverlayForRating(player.rating);
+            const overlay = getOverlayForRating(player.rating, player.card_type);
             const overlayHTML = overlay ? `<video class="card-overlay" autoplay muted loop><source src="${overlay}" type="video/webm"></video>` : '';
             card.innerHTML = `
                 <div style="text-align:center;margin-bottom:15px;">
@@ -1852,7 +1855,7 @@
             // Update rating
             const card = document.getElementById(`comparison-card-${playerIndex}`);
             const cardImageContainer = card.querySelector('.card-image-container');
-            const overlay = getOverlayForRating(upgradedRating);
+            const overlay = getOverlayForRating(upgradedRating, player.card_type);
             
             // Remove old overlay if exists
             const oldOverlay = cardImageContainer.querySelector('.card-overlay');
