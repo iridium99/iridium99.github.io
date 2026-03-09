@@ -1114,10 +1114,13 @@
                     "evil.pro": "evil.pro",
                     "Cubarsí": "cubarsi",
                     "zen!x": "zenix",
-                    "$limani": "slimani"
+                    "$limani": "slimani",
+                    "tsukuyomi ❄️": "tsukuyomi_winter",
+                    "tsukuyomi_winter": "tsukuyomi_winter"
                 };
                 
-                let imgName = specialNames[player.name] || player.name.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
+                const normalizedName = (player.name || '').toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
+                let imgName = specialNames[player.name] || specialNames[player.display_name] || normalizedName;
                 player.img = `cards/${imgName}.png`;
             }
         });
