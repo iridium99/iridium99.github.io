@@ -176,8 +176,10 @@
         
         .effects-toggle-wrap {
             display: flex;
-            justify-content: center;
-            margin-bottom: 20px;
+            justify-content: flex-end;
+            max-width: 1200px;
+            margin: 0 auto 14px;
+            padding: 0 6px;
         }
 
         .effects-toggle-panel {
@@ -926,6 +928,7 @@
     <div class="tab-content active" id="players-tab">
         <div class="filters">
             <select id="sort-select">
+                <option value="recently-added">Recently Added</option>
                 <option value="rating-desc">Rating: High to Low</option>
                 <option value="rating-asc">Rating: Low to High</option>
                 <option value="name-asc">Name: A to Z</option>
@@ -986,22 +989,23 @@
             <input type="text" id="search-box" placeholder="Search players..." class="search-box">
         </div>
 
-        <div class="range-filters">
-            <div class="effects-toggle-wrap" style="width:100%;">
-                <div class="effects-toggle-panel">
-                    <span class="effects-toggle-label">Card Effects</span>
-                    <label class="switch" for="card-effects-toggle" aria-label="Toggle card effects">
-                        <input type="checkbox" id="card-effects-toggle" checked>
-                        <span class="button">
-                            <span class="light"></span>
-                            <span class="dots"></span>
-                            <span class="characters"></span>
-                            <span class="shine"></span>
-                            <span class="shadow"></span>
-                        </span>
-                    </label>
-                </div>
+        <div class="effects-toggle-wrap">
+            <div class="effects-toggle-panel">
+                <span class="effects-toggle-label">Card Effects</span>
+                <label class="switch" for="card-effects-toggle" aria-label="Toggle card effects">
+                    <input type="checkbox" id="card-effects-toggle" checked>
+                    <span class="button">
+                        <span class="light"></span>
+                        <span class="dots"></span>
+                        <span class="characters"></span>
+                        <span class="shine"></span>
+                        <span class="shadow"></span>
+                    </span>
+                </label>
             </div>
+        </div>
+
+        <div class="range-filters">
             <div class="range-filter">
                 <label for="min-price">Min Price:</label>
                 <input type="number" id="min-price" placeholder="0" min="0">
@@ -1441,6 +1445,37 @@
             };
 
             switch(sortValue){
+                case'recently-added': {
+                    const groupMaxId = {};
+                    allPlayers.forEach(p => {
+                        const key = p.card_type === 'base' ? 'base' : `event:${p.card_type || 'event'}`;
+                        groupMaxId[key] = Math.max(groupMaxId[key] || 0, p.id || 0);
+                    });
+
+                    filteredPlayers.sort((a, b) => {
+                        const aKey = a.card_type === 'base' ? 'base' : `event:${a.card_type || 'event'}`;
+                        const bKey = b.card_type === 'base' ? 'base' : `event:${b.card_type || 'event'}`;
+
+                        if (aKey !== bKey) {
+                            const aBase = aKey === 'base';
+                            const bBase = bKey === 'base';
+                            if (aBase !== bBase) {
+                                return aBase ? 1 : -1;
+                            }
+                            return (groupMaxId[bKey] || 0) - (groupMaxId[aKey] || 0);
+                        }
+
+                        if (aKey !== 'base') {
+                            if (b.rating !== a.rating) {
+                                return b.rating - a.rating;
+                            }
+                            return (b.id || 0) - (a.id || 0);
+                        }
+
+                        return (b.id || 0) - (a.id || 0);
+                    });
+                    break;
+                }
                 case'rating-desc': filteredPlayers.sort((a,b)=>b.rating-a.rating); break;
                 case'rating-asc': filteredPlayers.sort((a,b)=>a.rating-b.rating); break;
                 case'name-asc': filteredPlayers.sort((a,b)=>a.name.localeCompare(b.name)); break;
