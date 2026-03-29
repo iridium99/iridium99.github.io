@@ -739,8 +739,6 @@
         <div class="tab" data-tab="whats-new">What's New</div>
         <div class="tab active" data-tab="players">Players</div>
         <div class="tab" data-tab="compare">Upgrade Lab & Player Comparison</div>
-        <div class="tab" data-tab="player-stats">Player Rankings</div>
-        <div class="tab" data-tab="user-stats">User Rankings</div>
         <div class="tab" data-tab="help">Help & Commands</div>
     </div>
 
@@ -898,20 +896,6 @@
                 <!-- Player cards will be loaded here -->
             </div>
         </div>
-    </div>
-
-    <div class="tab-content" id="player-stats-tab">
-        <div class="filters">
-            <button id="load-player-stats-btn" style="padding:10px 20px;background:var(--primary);border:none;border-radius:8px;color:white;cursor:pointer;">Load Player Stats</button>
-        </div>
-        <div id="player-stats-container" style="max-width:1000px;margin:0 auto;"></div>
-    </div>
-
-    <div class="tab-content" id="user-stats-tab">
-        <div class="filters">
-            <button id="load-user-stats-btn" style="padding:10px 20px;background:var(--primary);border:none;border-radius:8px;color:white;cursor:pointer;">Load User Stats</button>
-        </div>
-        <div id="user-stats-container" style="max-width:1000px;margin:0 auto;"></div>
     </div>
 
     <div class="tab-content" id="league-standings-tab">
@@ -1328,197 +1312,6 @@
             return html;
         }
 
-        async function loadPlayerStats() {
-            const container = document.getElementById('player-stats-container');
-            container.innerHTML = '<p style="text-align:center;color:#a0a0a0;">Loading...</p>';
-            try {
-                const data = await fetch('./leaderboards/player_stats.json').then(r => r.json());
-                
-                // stat cat tabs
-                let html = '<div style="margin-bottom:20px;">';
-                html += '<div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;">';
-                const categories = [
-                    { key: 'topGoalScorers', label: '🔥 Top Goal Scorers' },
-                    { key: 'topAssists', label: '🎯 Top Assists' },
-                    { key: 'mostAppearances', label: '👥 Most Appearances' },
-                    { key: 'mostMotms', label: '⭐ Most MOTMs' }
-                ];
-                
-                categories.forEach((cat, idx) => {
-                    html += `<button onclick="showPlayerStatCategory('${cat.key}')" style="padding:8px 12px;background:var(--primary);border:none;border-radius:6px;color:white;cursor:pointer;font-size:12px;">${cat.label}</button>`;
-                });
-                html += '</div></div>';
-                
-                // cat switching data store
-                window.playerStatsData = data;
-                window.playerStatsCategories = categories;
-                
-                // first cat default
-                html += `<div id="stat-category-display"></div>`;
-                container.innerHTML = html;
-                
-                // first category dispkay
-                showPlayerStatCategory('topGoalScorers');
-            } catch (e) {
-                container.innerHTML = `<p style="color:red;">Error loading player stats: ${e.message}</p>`;
-            }
-        }
-
-        function showPlayerStatCategory(category) {
-            const data = window.playerStatsData[category] || [];
-            const display = document.getElementById('stat-category-display');
-            
-            if(!data || data.length === 0) {
-                display.innerHTML = '<p style="text-align:center;color:#a0a0a0;">No data available</p>';
-                return;
-            }
-            
-            let html = '<div style="max-width:900px;margin:0 auto;">';
-            data.slice(0, 20).forEach((item, idx) => {
-                let stat;
-                if (item.stat !== undefined) {
-                    const decimals = item.decimals !== undefined ? item.decimals : 2;
-                    stat = typeof item.stat === 'number' ? item.stat.toFixed(decimals) : item.stat;
-                } else {
-                    stat = item.value;
-                }
-                const unit = item.unit || '';
-                html += `
-                    <div style="background:var(--card-bg);padding:12px;margin-bottom:10px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;border-left:4px solid var(--primary);">
-                        <div style="flex:1;">
-                            <span style="color:var(--primary);font-weight:bold;margin-right:8px;">#${idx + 1}</span>
-                            <span style="font-weight:bold;">${item.playerName}</span>
-                            <span style="color:#a0a0a0;font-size:12px;margin-left:10px;">(${item.teamName})</span>
-                        </div>
-                        <div style="font-weight:bold;color:var(--primary);font-size:16px;">${stat} ${unit}</div>
-                    </div>
-                `;
-            });
-            html += '</div>';
-            display.innerHTML = html;
-        }
-
-        async function loadUserStats() {
-            const container = document.getElementById('user-stats-container');
-            container.innerHTML = '<p style="text-align:center;color:#a0a0a0;">Loading...</p>';
-            try {
-                const data = await fetch('./leaderboards/user_stats.json?v=' + Date.now()).then(r => r.json());
-                
-                // stat cat tabs
-                let html = '<div style="margin-bottom:20px;">';
-                html += '<div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;">';
-                const categories = [
-                    { key: 'richestUsers', label: '💰 Richest Users' },
-                    { key: 'biggestCollection', label: '🎴 Biggest Collection' },
-                    { key: 'mostValuableTeam', label: '💎 Most Valuable Team' },
-                    { key: 'highestAvgRating', label: '⭐ Highest Avg Rating' },
-                    { key: 'teamGoalsScored', label: '⚽ Team Goals Scored' },
-                    { key: 'highestWinrate', label: '🏆 Highest Winrate (min 10)' }
-                ];
-                
-                categories.forEach((cat, idx) => {
-                    html += `<button onclick="showUserStatCategory('${cat.key}')" style="padding:8px 12px;background:var(--primary);border:none;border-radius:6px;color:white;cursor:pointer;font-size:12px;">${cat.label}</button>`;
-                });
-                html += '</div></div>';
-                
-                // cat switching data store
-                window.userStatsData = data;
-                window.userStatsCategories = categories;
-                
-                // first cat default
-                html += `<div id="user-stat-category-display"></div>`;
-                container.innerHTML = html;
-                
-                // first cat dis
-                showUserStatCategory('richestUsers');
-            } catch (e) {
-                container.innerHTML = `<p style="color:red;">Error loading user stats: ${e.message}</p>`;
-            }
-        }
-
-        function showUserStatCategory(category) {
-            console.log(`📊 Showing category: ${category}`);
-            const data = window.userStatsData[category] || [];
-            console.log(`📊 Category data:`, data);
-            const display = document.getElementById('user-stat-category-display');
-            
-            if(!data || data.length === 0) {
-                display.innerHTML = '<p style="text-align:center;color:#a0a0a0;">No data available</p>';
-                return;
-            }
-            
-            let html = '<div style="max-width:900px;margin:0 auto;">';
-            data.slice(0, 20).forEach((item, idx) => {
-                const stat = item.stat !== undefined ? (typeof item.stat === 'number' && item.stat % 1 !== 0 ? item.stat.toFixed(2) : item.stat) : item.value;
-                const unit = item.unit || '';
-                const color1 = item.color || '';
-                const color2 = item.color2 || color1;  // if no second color, use first color
-
-                const rawUsername = item.username || item.teamName;
-                const displayUsername = mapUsername(rawUsername);
-                
-                // DEBUG
-                if (color1) {
-                    console.log(`[${rawUsername}] Colors found: ${color1} / ${color2}`);
-                }
-                
-                // grad style CREATION
-                let usernameStyle = 'font-weight:bold;';
-                let usernameClass = '';
-                
-                if (color1 && color1.startsWith('#') && color1.length === 7) {
-                    try {
-                        // parse rbg from hex
-                        const r1 = parseInt(color1.slice(1, 3), 16) || 0;
-                        const g1 = parseInt(color1.slice(3, 5), 16) || 0;
-                        const b1 = parseInt(color1.slice(5, 7), 16) || 0;
-                        
-                        const color2Valid = (color2 && color2.startsWith('#') && color2.length === 7) ? color2 : color1;
-                        const r2 = parseInt(color2Valid.slice(1, 3), 16) || 0;
-                        const g2 = parseInt(color2Valid.slice(3, 5), 16) || 0;
-                        const b2 = parseInt(color2Valid.slice(5, 7), 16) || 0;
-                        
-                        // validate rgb
-                        if (isNaN(r1) || isNaN(g1) || isNaN(b1) || isNaN(r2) || isNaN(g2) || isNaN(b2)) {
-                            throw new Error("Invalid RGB values");
-                        }
-                        
-                        // glow avg
-                        const glowR = Math.round((r1 + r2) / 2);
-                        const glowG = Math.round((g1 + g2) / 2);
-                        const glowB = Math.round((b1 + b2) / 2);
-                        
-                        usernameStyle = `
-                            font-weight:bold;
-                            background: linear-gradient(90deg, ${color1}, ${color2Valid});
-                            -webkit-background-clip: text;
-                            -webkit-text-fill-color: transparent;
-                            background-clip: text;
-                            background-size: 400% 400%;
-                            animation: usernameGradientMove 7s ease infinite;
-                            filter: drop-shadow(0 0 8px rgba(${glowR}, ${glowG}, ${glowB}, 0.6)) 
-                                    drop-shadow(0 0 4px rgba(${glowR}, ${glowG}, ${glowB}, 0.4));
-                        `;
-                    } catch (e) {
-                        console.warn(`Invalid color format for user ${rawUsername}: ${color1}, ${color2}`, e);
-                        usernameStyle = `font-weight:bold;color:var(--primary);`;
-                    }
-                }
-                
-                html += `
-                    <div style="background:var(--card-bg);padding:12px;margin-bottom:10px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;border-left:4px solid var(--primary);">
-                        <div style="flex:1;">
-                            <span style="color:var(--primary);font-weight:bold;margin-right:8px;">#${idx + 1}</span>
-                            <span style="${usernameStyle}">${displayUsername}</span>
-                            <span style="color:#a0a0a0;font-size:12px;margin-left:10px;">${item.teamName ? '(' + item.teamName + ')' : ''}</span>
-                        </div>
-                        <div style="font-weight:bold;color:var(--primary);font-size:16px;">${stat} ${unit}</div>
-                    </div>
-                `;
-            });
-            html += '</div>';
-            display.innerHTML = html;
-        }
 
         async function loadAllLeagueStandings() {
             const container = document.getElementById('league-standings-container');
@@ -1563,12 +1356,8 @@
             }
         }
 
-        document.getElementById('load-player-stats-btn').addEventListener('click', loadPlayerStats);
-        document.getElementById('load-user-stats-btn').addEventListener('click', loadUserStats);
         document.getElementById('load-all-leagues-btn').addEventListener('click', loadAllLeagueStandings);
 
-        let playerStatsLoaded = false;
-        let userStatsLoaded = false;
         let leaguesLoaded = false;
 
         // Position-specific stat upgrades
@@ -1946,14 +1735,6 @@
                 tab.classList.add('active');
                 const tabName = tab.getAttribute('data-tab');
                 document.getElementById(`${tabName}-tab`).classList.add('active');
-                if(tabName === 'player-stats' && !playerStatsLoaded) {
-                    playerStatsLoaded = true;
-                    loadPlayerStats();
-                }
-                if(tabName === 'user-stats' && !userStatsLoaded) {
-                    userStatsLoaded = true;
-                    loadUserStats();
-                }
                 if(tabName === 'league-standings' && !leaguesLoaded) {
                     leaguesLoaded = true;
                     loadAllLeagueStandings();
