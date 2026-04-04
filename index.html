@@ -298,40 +298,41 @@
             max-width: 1200px;
             margin: 0 auto;
             display: grid;
-            gap: 20px;
+            gap: 12px;
         }
 
         .world-cup-top-grid {
             display: grid;
-            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-            gap: 16px;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(300px, 0.78fr);
+            gap: 10px;
             align-items: start;
         }
 
         .world-cup-groups-column {
             display: grid;
-            gap: 16px;
+            gap: 10px;
         }
 
         .world-cup-card {
             background: var(--card-bg);
             border-radius: 12px;
             border: 1px solid rgba(255, 255, 255, 0.08);
-            padding: 20px;
+            padding: 12px;
         }
 
         .world-cup-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 12px;
+            gap: 8px;
             flex-wrap: wrap;
-            margin-bottom: 16px;
+            margin-bottom: 10px;
         }
 
         .world-cup-title {
             margin: 0;
             color: var(--primary);
+            font-size: 16px;
         }
 
         .world-cup-toggle {
@@ -341,13 +342,14 @@
         }
 
         .world-cup-toggle button {
-            padding: 8px 14px;
+            padding: 6px 10px;
             border-radius: 8px;
             border: 1px solid var(--primary);
             background: transparent;
             color: var(--text);
             cursor: pointer;
             font-weight: 600;
+            font-size: 12px;
         }
 
         .world-cup-toggle button.active {
@@ -362,15 +364,30 @@
         .world-cup-table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 720px;
+            min-width: 620px;
+            font-size: 13px;
         }
 
         .world-cup-table th,
         .world-cup-table td {
-            padding: 10px 12px;
+            padding: 6px 8px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.08);
             text-align: center;
             white-space: nowrap;
+            line-height: 1.25;
+            transition: background-color 0.2s ease;
+        }
+
+        .world-cup-table tbody tr:hover {
+            background: rgba(74, 144, 217, 0.12);
+        }
+
+        .world-cup-top-one {
+            background: rgba(80, 200, 120, 0.12);
+        }
+
+        .world-cup-top-two {
+            background: rgba(80, 200, 120, 0.06);
         }
 
         .world-cup-table th:first-child,
@@ -394,22 +411,21 @@
         }
 
         .world-cup-stats-row {
-            display: flex;
-            gap: 12px;
-            overflow-x: auto;
-            padding-bottom: 4px;
+            display: grid;
+            grid-template-columns: repeat(5, minmax(180px, 1fr));
+            gap: 8px;
         }
 
         .world-cup-stats-row .world-cup-card {
-            min-width: 220px;
-            flex: 1 1 0;
+            min-width: 0;
+            height: 100%;
         }
 
         .world-cup-bracket-wrapper .bracket {
             display: flex;
             justify-content: center;
-            gap: 34px;
-            padding: 10px 0 20px;
+            gap: 24px;
+            padding: 6px 0 12px;
             overflow-x: auto;
         }
 
@@ -417,21 +433,22 @@
             display: flex;
             flex-direction: column;
             justify-content: space-around;
-            gap: 24px;
-            min-width: 170px;
+            gap: 16px;
+            min-width: 145px;
         }
 
         .world-cup-bracket-wrapper .match {
             background: #1e293b;
-            padding: 10px 16px;
+            padding: 7px 10px;
             border-radius: 8px;
-            width: 160px;
+            width: 132px;
             position: relative;
             border: 1px solid rgba(148, 163, 184, 0.28);
+            font-size: 12px;
         }
 
         .world-cup-bracket-wrapper .team {
-            padding: 5px 0;
+            padding: 3px 0;
             border-bottom: 1px solid #334155;
             color: #f8fafc;
         }
@@ -466,7 +483,7 @@
         }
 
         .world-cup-third-place {
-            margin-top: 18px;
+            margin-top: 12px;
             text-align: center;
         }
 
@@ -475,30 +492,31 @@
         }
 
         .world-cup-team-list {
-            display: flex;
-            gap: 10px;
-            overflow-x: auto;
-            padding-bottom: 4px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 6px;
         }
 
         .world-cup-team-card {
             border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 10px;
-            padding: 12px;
+            padding: 8px;
             background: rgba(255, 255, 255, 0.03);
-            min-width: 250px;
+            min-width: 0;
         }
 
         .world-cup-team-name {
             font-weight: 700;
-            margin-bottom: 8px;
+            margin-bottom: 4px;
+            font-size: 13px;
         }
 
         .world-cup-player-list {
             margin: 0;
-            padding-left: 18px;
+            padding-left: 14px;
             color: #e0e0e0;
-            line-height: 1.6;
+            line-height: 1.25;
+            font-size: 12px;
         }
 
         .world-cup-stats-section {
@@ -513,9 +531,10 @@
 
         .world-cup-stat-table th,
         .world-cup-stat-table td {
-            padding: 10px 12px;
+            padding: 6px 8px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.08);
             text-align: left;
+            font-size: 12px;
         }
 
         .world-cup-stat-table th:last-child,
@@ -537,6 +556,16 @@
 
         @media (max-width: 1100px) {
             .world-cup-top-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .world-cup-stats-row {
+                grid-template-columns: repeat(2, minmax(180px, 1fr));
+            }
+        }
+
+        @media (max-width: 680px) {
+            .world-cup-stats-row {
                 grid-template-columns: 1fr;
             }
         }
@@ -1520,6 +1549,7 @@
         // NEW
         const worldCupTeamLookup = new Map(teams.map(team => [team.name, team]));
         let worldCupViewMode = 'raw';
+        // NEW
         let worldCupTeamSortKey = null;
         let worldCupTeamSortDirection = 'desc';
 
@@ -1875,7 +1905,8 @@
             html += '</tr></thead><tbody>';
             rows.forEach((row, index) => {
                 const rowClass = index === rows.length - 1 ? 'world-cup-last-place' : '';
-                html += `<tr class="${rowClass}"><td>${row.team}</td><td>${row.MP}</td><td>${row.W}</td><td>${row.D}</td><td>${row.L}</td><td>${row.GF}</td><td>${row.GA}</td><td>${row.GD}</td><td>${row.Pts}</td></tr>`;
+                const topClass = index === 0 ? 'world-cup-top-one' : (index === 1 ? 'world-cup-top-two' : '');
+                html += `<tr class="${rowClass} ${topClass}"><td>${row.team}</td><td>${row.MP}</td><td>${row.W}</td><td>${row.D}</td><td>${row.L}</td><td>${row.GF}</td><td>${row.GA}</td><td>${row.GD}</td><td>${row.Pts}</td></tr>`;
             });
             html += '</tbody></table></div></div>';
             return html;
@@ -1920,8 +1951,8 @@
                 if (worldCupTeamSortKey === 'possession') {
                     return worldCupViewMode === 'per-game' ? (team.halves === 0 ? 0 : team.possession / team.halves) : team.possession;
                 }
-                if (worldCupTeamSortKey === 'shots-per-game') {
-                    return team.halves === 0 ? 0 : team.shots / team.halves;
+                if (worldCupTeamSortKey === 'shots') {
+                    return worldCupViewMode === 'per-game' ? (team.halves === 0 ? 0 : team.shots / team.halves) : team.shots;
                 }
                 return 0;
             };
@@ -1942,14 +1973,14 @@
                 const safeDivisor = divisor === 0 ? 1 : divisor;
                 const passes = team.passes / safeDivisor;
                 const possession = team.possession / safeDivisor;
-                const shotsPerGame = team.halves === 0 ? 0 : team.shots / team.halves;
+                const shots = worldCupViewMode === 'per-game' ? (team.halves === 0 ? 0 : team.shots / team.halves) : team.shots;
                 return `
                     <tr>
                         <td>${team.team}</td>
                         <td>${team.halves}</td>
                         <td>${worldCupViewMode === 'per-game' ? passes.toFixed(1) : team.passes}</td>
                         <td>${worldCupViewMode === 'per-game' ? `${possession.toFixed(1)}%` : `${team.possession}%`}</td>
-                        <td>${shotsPerGame.toFixed(1)}</td>
+                        <td>${worldCupViewMode === 'per-game' ? shots.toFixed(1) : team.shots}</td>
                     </tr>
                 `;
             }).join('');
@@ -1961,6 +1992,41 @@
                 return '';
             }
             return worldCupTeamSortDirection === 'asc' ? ' ↑' : ' ↓';
+        }
+
+        // NEW
+        function getSortLabel() {
+            if (!worldCupTeamSortKey) {
+                return 'None';
+            }
+            if (worldCupTeamSortKey === 'passes') {
+                return 'Passes';
+            }
+            if (worldCupTeamSortKey === 'possession') {
+                return 'Possession %';
+            }
+            if (worldCupTeamSortKey === 'shots') {
+                return 'Shots on Goal';
+            }
+            return 'None';
+        }
+
+        // NEW
+        function setWorldCupSort(key) {
+            if (worldCupTeamSortKey === key) {
+                worldCupTeamSortDirection = worldCupTeamSortDirection === 'desc' ? 'asc' : 'desc';
+            } else {
+                worldCupTeamSortKey = key;
+                worldCupTeamSortDirection = 'desc';
+            }
+            renderWorldCupTab();
+        }
+
+        // NEW
+        function clearWorldCupSort() {
+            worldCupTeamSortKey = null;
+            worldCupTeamSortDirection = 'desc';
+            renderWorldCupTab();
         }
 
         // NEW
@@ -2122,15 +2188,24 @@
                                 <button type="button" data-world-cup-mode="per-game" class="${perGameButtonClass}">Per Game</button>
                             </div>
                         </div>
+                        <div class="world-cup-header" style="margin-bottom:8px;">
+                            <div class="world-cup-toggle">
+                                <button type="button" data-team-sort="possession">Sort by: Possession %${getSortArrow('possession')}</button>
+                                <button type="button" data-team-sort="shots">Sort by: Shots on Goal${getSortArrow('shots')}</button>
+                                <button type="button" data-team-sort="passes">Sort by: Passes${getSortArrow('passes')}</button>
+                                <button type="button" data-team-sort="none">Reset</button>
+                            </div>
+                            <div style="font-size:12px;color:#b7c2d0;">Current: ${getSortLabel()}</div>
+                        </div>
                         <div class="world-cup-table-wrap">
-                            <table class="world-cup-table">
+                            <table class="world-cup-table" style="max-width:900px;">
                                 <thead>
                                     <tr>
                                         <th>Team</th>
                                         <th>Halves Recorded</th>
-                                        <th><button type="button" data-team-sort="passes" style="background:none;border:none;color:inherit;cursor:pointer;font:inherit;">Passes${getSortArrow('passes')}</button></th>
-                                        <th><button type="button" data-team-sort="possession" style="background:none;border:none;color:inherit;cursor:pointer;font:inherit;">Possession %${getSortArrow('possession')}</button></th>
-                                        <th><button type="button" data-team-sort="shots-per-game" style="background:none;border:none;color:inherit;cursor:pointer;font:inherit;">Shots / Game${getSortArrow('shots-per-game')}</button></th>
+                                        <th>Passes</th>
+                                        <th>Possession %</th>
+                                        <th>Shots on Goal</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -2162,13 +2237,11 @@
             container.querySelectorAll('[data-team-sort]').forEach(button => {
                 button.addEventListener('click', () => {
                     const selectedKey = button.getAttribute('data-team-sort');
-                    if (worldCupTeamSortKey === selectedKey) {
-                        worldCupTeamSortDirection = worldCupTeamSortDirection === 'desc' ? 'asc' : 'desc';
+                    if (selectedKey === 'none') {
+                        clearWorldCupSort();
                     } else {
-                        worldCupTeamSortKey = selectedKey;
-                        worldCupTeamSortDirection = 'desc';
+                        setWorldCupSort(selectedKey);
                     }
-                    renderWorldCupTab();
                 });
             });
         }
@@ -2566,5 +2639,4 @@
     </script>
 </body>
 </html>
-
 
