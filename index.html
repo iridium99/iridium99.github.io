@@ -301,6 +301,13 @@
             gap: 20px;
         }
 
+        .world-cup-top-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 16px;
+            align-items: start;
+        }
+
         .world-cup-card {
             background: var(--card-bg);
             border-radius: 12px;
@@ -381,6 +388,18 @@
             gap: 16px;
         }
 
+        .world-cup-stats-row {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+        }
+
+        .world-cup-stats-row .world-cup-card {
+            min-width: 220px;
+            flex: 1 1 0;
+        }
+
         .world-cup-bracket {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -397,6 +416,12 @@
             border-radius: 10px;
             padding: 12px;
             background: rgba(255, 255, 255, 0.03);
+        }
+
+        .world-cup-team-line {
+            display: block;
+            padding: 2px 0;
+            color: #e8e8e8;
         }
 
         .world-cup-match-title {
@@ -449,6 +474,24 @@
         .world-cup-stat-table th:last-child,
         .world-cup-stat-table td:last-child {
             text-align: right;
+        }
+
+        .medal-gold {
+            background: rgba(255, 215, 0, 0.2);
+        }
+
+        .medal-silver {
+            background: rgba(192, 192, 192, 0.2);
+        }
+
+        .medal-bronze {
+            background: rgba(205, 127, 50, 0.22);
+        }
+
+        @media (max-width: 1100px) {
+            .world-cup-top-grid {
+                grid-template-columns: 1fr;
+            }
         }
         
         .players-grid {
@@ -1018,7 +1061,6 @@
         <div class="tab active" data-tab="players">Players</div>
         <div class="tab" data-tab="world-cup">World Cup</div>
         <div class="tab" data-tab="compare">Upgrade Lab & Player Comparison</div>
-        <div class="tab" data-tab="league-standings">League Standings</div>
         <div class="tab" data-tab="help">Help & Commands</div>
     </div>
 
@@ -1197,16 +1239,6 @@
             </div>
         </div>
     </div>
-
-
-
-    <div class="tab-content" id="league-standings-tab">
-        <div class="filters">
-            <button id="load-all-leagues-btn" style="padding:10px 20px;background:var(--primary);border:none;border-radius:8px;color:white;cursor:pointer;">Show All Leagues</button>
-        </div>
-        <div id="league-standings-container" style="max-width:1000px;margin:0 auto;"></div>
-    </div>
-
     <div class="tab-content" id="help-tab">
         <div class="help-content">
             <div class="help-section">
@@ -1441,6 +1473,8 @@
         // NEW
         const worldCupTeamLookup = new Map(teams.map(team => [team.name, team]));
         let worldCupViewMode = 'raw';
+        let worldCupTeamSortKey = null;
+        let worldCupTeamSortDirection = 'desc';
 
         const allPlayers = [
             {id: 1, name: "shit guy", display_name: "shit guy", rating: 55, position: "ST", nation: "Poland", base_value: 540, stats: {sho: 45, pas: 40, pos: 50, def: 30}, traits: [], card_type: "base"},
@@ -1826,8 +1860,37 @@
         }
 
         // NEW
+        function getWorldCupSortedTeamStats() {
+            const rows = [...teamStats];
+            if (!worldCupTeamSortKey) {
+                return rows;
+            }
+
+            const getValue = (team) => {
+                if (worldCupTeamSortKey === 'passes') {
+                    return worldCupViewMode === 'per-game' ? (team.halves === 0 ? 0 : team.passes / team.halves) : team.passes;
+                }
+                if (worldCupTeamSortKey === 'possession') {
+                    return worldCupViewMode === 'per-game' ? (team.halves === 0 ? 0 : team.possession / team.halves) : team.possession;
+                }
+                if (worldCupTeamSortKey === 'shots') {
+                    return worldCupViewMode === 'per-game' ? (team.halves === 0 ? 0 : team.shots / team.halves) : team.shots;
+                }
+                return 0;
+            };
+
+            rows.sort((a, b) => {
+                const diff = getValue(a) - getValue(b);
+                return worldCupTeamSortDirection === 'asc' ? diff : -diff;
+            });
+
+            return rows;
+        }
+
+        // NEW
         function renderWorldCupTeamStatsRows() {
-            return teamStats.map(team => {
+            const sortedRows = getWorldCupSortedTeamStats();
+            return sortedRows.map(team => {
                 const divisor = worldCupViewMode === 'per-game' ? team.halves : 1;
                 const safeDivisor = divisor === 0 ? 1 : divisor;
                 const passes = team.passes / safeDivisor;
@@ -1846,7 +1909,15 @@
         }
 
         // NEW
-        function renderWorldCupStatTable(title, rows) {
+        function getSortArrow(key) {
+            if (worldCupTeamSortKey !== key) {
+                return '';
+            }
+            return worldCupTeamSortDirection === 'asc' ? ' ↑' : ' ↓';
+        }
+
+        // NEW
+        function renderWorldCupStatTable(title, rows, metricLabel) {
             return `
                 <div class="world-cup-card">
                     <h2 class="world-cup-title">${title}</h2>
@@ -1855,11 +1926,14 @@
                             <thead>
                                 <tr>
                                     <th>Player</th>
-                                    <th>Value</th>
+                                    <th>${metricLabel}</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                ${rows.map(row => `<tr><td>${row.player}</td><td>${row.value}</td></tr>`).join('')}
+                                ${rows.map((row, index) => {
+                                    const medalClass = index === 0 ? 'medal-gold' : index === 1 ? 'medal-silver' : index === 2 ? 'medal-bronze' : '';
+                                    return `<tr class="${medalClass}"><td>${row.player}</td><td>${row.value}</td></tr>`;
+                                }).join('')}
                             </tbody>
                         </table>
                     </div>
@@ -1898,21 +1972,50 @@
 
             container.innerHTML = `
                 <div class="world-cup-layout">
-                    ${renderWorldCupTable('Group A', worldCupGroups.groupA)}
-                    ${renderWorldCupTable('Group B', worldCupGroups.groupB)}
-
-                    <div class="world-cup-card">
-                        <div class="world-cup-header">
-                            <h2 class="world-cup-title">Knockout Bracket</h2>
-                        </div>
-                        <div class="world-cup-bracket">
-                            ${renderWorldCupBracketGroup('Group A', worldCupGroups.groupA)}
-                            ${renderWorldCupBracketGroup('Group B', worldCupGroups.groupB)}
-                            <div class="world-cup-card world-cup-round">
-                                <h2 class="world-cup-title">Final</h2>
-                                <div class="world-cup-match">
-                                    <div class="world-cup-match-title">World Cup Final</div>
-                                    <div>Winner of Group A vs Winner of Group B</div>
+                    <div class="world-cup-top-grid">
+                        ${renderWorldCupTable('Group A', worldCupGroups.groupA)}
+                        ${renderWorldCupTable('Group B', worldCupGroups.groupB)}
+                        <div class="world-cup-card">
+                            <div class="world-cup-header">
+                                <h2 class="world-cup-title">Knockout Bracket</h2>
+                            </div>
+                            <div class="world-cup-bracket">
+                                <div class="world-cup-round">
+                                    <div class="world-cup-match">
+                                        <div class="world-cup-match-title">Quarter Final A1</div>
+                                        <span class="world-cup-team-line">${worldCupGroups.groupA[0].team}</span>
+                                        <span class="world-cup-team-line">${worldCupGroups.groupA[3].team}</span>
+                                    </div>
+                                    <div class="world-cup-match">
+                                        <div class="world-cup-match-title">Quarter Final A2</div>
+                                        <span class="world-cup-team-line">${worldCupGroups.groupA[1].team}</span>
+                                        <span class="world-cup-team-line">${worldCupGroups.groupA[2].team}</span>
+                                    </div>
+                                    <div class="world-cup-match">
+                                        <div class="world-cup-match-title">Quarter Final B1</div>
+                                        <span class="world-cup-team-line">${worldCupGroups.groupB[0].team}</span>
+                                        <span class="world-cup-team-line">${worldCupGroups.groupB[3].team}</span>
+                                    </div>
+                                    <div class="world-cup-match">
+                                        <div class="world-cup-match-title">Quarter Final B2</div>
+                                        <span class="world-cup-team-line">${worldCupGroups.groupB[1].team}</span>
+                                        <span class="world-cup-team-line">${worldCupGroups.groupB[2].team}</span>
+                                    </div>
+                                    <div class="world-cup-match">
+                                        <div class="world-cup-match-title">Semi Final A</div>
+                                        <span class="world-cup-team-line">Winner QF A1</span>
+                                        <span class="world-cup-team-line">Winner QF A2</span>
+                                    </div>
+                                    <div class="world-cup-match">
+                                        <div class="world-cup-match-title">Semi Final B</div>
+                                        <span class="world-cup-team-line">Winner QF B1</span>
+                                        <span class="world-cup-team-line">Winner QF B2</span>
+                                    </div>
+                                    <div class="world-cup-match">
+                                        <div class="world-cup-match-title">Final</div>
+                                        <span class="world-cup-team-line">Winner SF A</span>
+                                        <span class="world-cup-team-line">Winner SF B</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1932,9 +2035,9 @@
                                     <tr>
                                         <th>Team</th>
                                         <th>Halves Recorded</th>
-                                        <th>Passes</th>
-                                        <th>Possession %</th>
-                                        <th>Shots on Goal</th>
+                                        <th><button type="button" data-team-sort="passes" style="background:none;border:none;color:inherit;cursor:pointer;font:inherit;">Passes${getSortArrow('passes')}</button></th>
+                                        <th><button type="button" data-team-sort="possession" style="background:none;border:none;color:inherit;cursor:pointer;font:inherit;">Possession %${getSortArrow('possession')}</button></th>
+                                        <th><button type="button" data-team-sort="shots" style="background:none;border:none;color:inherit;cursor:pointer;font:inherit;">Shots on Goal${getSortArrow('shots')}</button></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -1944,12 +2047,12 @@
                         </div>
                     </div>
 
-                    <div class="world-cup-grid">
-                        ${renderWorldCupStatTable('Clean Sheets', playerStats.cleanSheets)}
-                        ${renderWorldCupStatTable('MVPs', playerStats.mvps)}
-                        ${renderWorldCupStatTable('Goals', playerStats.goals)}
-                        ${renderWorldCupStatTable('Assists', playerStats.assists)}
-                        ${renderWorldCupStatTable('Own Goals', playerStats.ownGoals)}
+                    <div class="world-cup-stats-row">
+                        ${renderWorldCupStatTable('Clean Sheets', playerStats.cleanSheets, 'Clean Sheets')}
+                        ${renderWorldCupStatTable('MVPs', playerStats.mvps, 'MVPs')}
+                        ${renderWorldCupStatTable('Goals', playerStats.goals, 'Goals')}
+                        ${renderWorldCupStatTable('Assists', playerStats.assists, 'Assists')}
+                        ${renderWorldCupStatTable('Own Goals', playerStats.ownGoals, 'Own Goals')}
                     </div>
 
                     ${renderWorldCupPlayersByTeam()}
@@ -1962,6 +2065,19 @@
                     renderWorldCupTab();
                 });
             });
+
+            container.querySelectorAll('[data-team-sort]').forEach(button => {
+                button.addEventListener('click', () => {
+                    const selectedKey = button.getAttribute('data-team-sort');
+                    if (worldCupTeamSortKey === selectedKey) {
+                        worldCupTeamSortDirection = worldCupTeamSortDirection === 'desc' ? 'asc' : 'desc';
+                    } else {
+                        worldCupTeamSortKey = selectedKey;
+                        worldCupTeamSortDirection = 'desc';
+                    }
+                    renderWorldCupTab();
+                });
+            });
         }
 
         // MODIFIED
@@ -1970,53 +2086,6 @@
 
 
 
-
-        async function loadAllLeagueStandings() {
-            const container = document.getElementById('league-standings-container');
-            container.innerHTML = '<p style="text-align:center;color:#a0a0a0;">Loading all leagues...</p>';
-            try {
-                // league ids detec
-                const leagueIds = [];
-                for (let i = 1; i <= 50; i++) {
-                    try {
-                        const response = await fetch(`./leaderboards/league_${i}.json`);
-                        if (response.ok) {
-                            leagueIds.push(i);
-                        }
-                    } catch (e) {
-                        // continue
-                    }
-                }
-                
-                if (leagueIds.length === 0) {
-                    container.innerHTML = '<p style="text-align:center;color:#a0a0a0;">No league standings available yet.</p>';
-                    return;
-                }
-                
-                let html = '';
-                for (const leagueId of leagueIds) {
-                    try {
-                        const data = await fetch(`./leaderboards/league_${leagueId}.json`).then(r => r.json());
-                        const viewDetailsLink = `<a href="leagues/league.html?id=${leagueId}" style="margin-left:15px;color:#5865f2;text-decoration:none;font-weight:bold;">View Full Details →</a>`;
-                        html += `<div style="margin-bottom:30px;"><h3 style="margin:0 0 15px;color:var(--primary);font-size:18px;display:flex;align-items:center;justify-content:space-between;"><div>League ${leagueId}</div><div style="font-size:0.7em;margin-right:10px;">${viewDetailsLink}</div></h3>${renderLeaderboardTable(data.standings || data)}</div>`;
-                    } catch (e) {
-                        // skip unreadable league
-                    }
-                }
-                
-                if (html === '') {
-                    container.innerHTML = '<p style="text-align:center;color:#a0a0a0;">No league data available.</p>';
-                } else {
-                    container.innerHTML = html;
-                }
-            } catch (e) {
-                container.innerHTML = `<p style="color:red;">Error loading leagues: ${e.message}</p>`;
-            }
-        }
-
-        document.getElementById('load-all-leagues-btn').addEventListener('click', loadAllLeagueStandings);
-
-        let leaguesLoaded = false;
 
         // Position-specific stat upgrades
         const POSITION_UPGRADES = {
@@ -2399,13 +2468,8 @@
                 tab.classList.add('active');
                 const tabName = tab.getAttribute('data-tab');
                 document.getElementById(`${tabName}-tab`).classList.add('active');
-                if(tabName === 'league-standings' && !leaguesLoaded) {
-                    leaguesLoaded = true;
-                    loadAllLeagueStandings();
-                }
             });
         });
     </script>
 </body>
 </html>
-
