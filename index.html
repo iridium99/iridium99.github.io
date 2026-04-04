@@ -292,6 +292,164 @@
             font-size: 12px;
             white-space: nowrap;
         }
+
+        /* World Cup tab */
+        .world-cup-layout {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            gap: 20px;
+        }
+
+        .world-cup-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 20px;
+        }
+
+        .world-cup-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .world-cup-title {
+            margin: 0;
+            color: var(--primary);
+        }
+
+        .world-cup-toggle {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .world-cup-toggle button {
+            padding: 8px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--primary);
+            background: transparent;
+            color: var(--text);
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .world-cup-toggle button.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .world-cup-table-wrap {
+            overflow-x: auto;
+        }
+
+        .world-cup-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 720px;
+        }
+
+        .world-cup-table th,
+        .world-cup-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .world-cup-table th:first-child,
+        .world-cup-table td:first-child {
+            text-align: left;
+        }
+
+        .world-cup-table thead th {
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .world-cup-last-place {
+            background: rgba(255, 0, 0, 0.18);
+        }
+
+        .world-cup-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 16px;
+        }
+
+        .world-cup-bracket {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+        }
+
+        .world-cup-round {
+            display: grid;
+            gap: 12px;
+        }
+
+        .world-cup-match {
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .world-cup-match-title {
+            color: var(--primary);
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .world-cup-team-list {
+            display: grid;
+            gap: 10px;
+        }
+
+        .world-cup-team-card {
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .world-cup-team-name {
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .world-cup-player-list {
+            margin: 0;
+            padding-left: 18px;
+            color: #e0e0e0;
+            line-height: 1.6;
+        }
+
+        .world-cup-stats-section {
+            display: grid;
+            gap: 12px;
+        }
+
+        .world-cup-stat-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .world-cup-stat-table th,
+        .world-cup-stat-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            text-align: left;
+        }
+
+        .world-cup-stat-table th:last-child,
+        .world-cup-stat-table td:last-child {
+            text-align: right;
+        }
         
         .players-grid {
             display: grid;
@@ -858,7 +1016,9 @@
     <div class="tabs">
         <div class="tab" data-tab="whats-new">What's New</div>
         <div class="tab active" data-tab="players">Players</div>
+        <div class="tab" data-tab="world-cup">World Cup</div>
         <div class="tab" data-tab="compare">Upgrade Lab & Player Comparison</div>
+        <div class="tab" data-tab="league-standings">League Standings</div>
         <div class="tab" data-tab="help">Help & Commands</div>
     </div>
 
@@ -976,6 +1136,10 @@
         <div class="players-grid" id="players-container">
             <!-- Players will be loaded here -->
         </div>
+    </div>
+
+    <div class="tab-content" id="world-cup-tab">
+        <div id="world-cup-container"></div>
     </div>
 
     <div class="tab-content" id="compare-tab">
@@ -1145,6 +1309,138 @@
             94: [16000000, 6400000, [5500000, 11000000, 16500000, 22000000, 27500000]],
             95: [25000000, 10000000, [8500000, 17000000, 25500000, 34000000, 42500000]]
         };
+
+        // NEW
+        const worldCupGroups = {
+            groupA: [
+                { team: "Spain", MP: 1, W: 1, D: 0, L: 0, GF: 1, GA: 0, GD: 1, Pts: 3 },
+                { team: "Italy", MP: 1, W: 0, D: 1, L: 0, GF: 1, GA: 1, GD: 0, Pts: 1 },
+                { team: "World XI", MP: 1, W: 0, D: 1, L: 0, GF: 1, GA: 1, GD: 0, Pts: 1 },
+                { team: "Germany", MP: 1, W: 0, D: 0, L: 1, GF: 0, GA: 1, GD: -1, Pts: 0 },
+                { team: "Netherlands", MP: 0, W: 0, D: 0, L: 0, GF: 0, GA: 0, GD: 0, Pts: 0 }
+            ],
+            groupB: [
+                { team: "Egypt", MP: 1, W: 1, D: 0, L: 0, GF: 5, GA: 0, GD: 5, Pts: 3 },
+                { team: "France", MP: 2, W: 0, D: 2, L: 0, GF: 1, GA: 1, GD: 0, Pts: 2 },
+                { team: "England", MP: 2, W: 0, D: 2, L: 0, GF: 1, GA: 1, GD: 0, Pts: 2 },
+                { team: "Poland", MP: 1, W: 0, D: 1, L: 0, GF: 0, GA: 0, GD: 0, Pts: 1 },
+                { team: "Tunisia + Algeria", MP: 2, W: 0, D: 1, L: 1, GF: 0, GA: 5, GD: -5, Pts: 1 }
+            ]
+        };
+
+        // NEW
+        const teamStats = [
+            { team: "Spain", halves: 1, passes: 50, possession: 47.8, shots: 1 },
+            { team: "Germany", halves: 1, passes: 51, possession: 52.2, shots: 3 },
+            { team: "Egypt", halves: 2, passes: 58, possession: 108.3, shots: 5 },
+            { team: "Tunisia + Algeria", halves: 4, passes: 131, possession: 182.4, shots: 10 },
+            { team: "Netherlands", halves: 0, passes: 0, possession: 0, shots: 0 },
+            { team: "Italy", halves: 2, passes: 120, possession: 110.1, shots: 11 },
+            { team: "World XI", halves: 2, passes: 61, possession: 89.8, shots: 6 },
+            { team: "France", halves: 4, passes: 168, possession: 194.8, shots: 13 },
+            { team: "England", halves: 4, passes: 277, possession: 208.7, shots: 17 },
+            { team: "Poland", halves: 2, passes: 99, possession: 105.8, shots: 3 }
+        ];
+
+        // NEW
+        const playerStats = {
+            cleanSheets: [
+                { player: "atrocity exhibition", value: 3 },
+                { player: "Zenon", value: 3 },
+                { player: "ShadiOzz", value: 2 },
+                { player: "Mbappe", value: 2 },
+                { player: "luur", value: 2 },
+                { player: "Praetor", value: 2 },
+                { player: "Misimaro", value: 1 },
+                { player: "ShIeLd", value: 1 },
+                { player: "kakii", value: 1 }
+            ],
+            mvps: [
+                { player: "A7mdBibo", value: 1 },
+                { player: "Pedri", value: 1 },
+                { player: "BananaJoe", value: 1 },
+                { player: "cYn", value: 1 },
+                { player: "Toshiba", value: 1 },
+                { player: "FullMetal", value: 1 }
+            ],
+            goals: [
+                { player: "A7mdBibo", value: 1 },
+                { player: "SUCA", value: 1 },
+                { player: "Tiki", value: 1 },
+                { player: "Kong", value: 1 },
+                { player: "BananaJoe", value: 1 },
+                { player: "Toshiba", value: 1 },
+                { player: "LuisDiaz", value: 1 }
+            ],
+            assists: [
+                { player: "MRN", value: 2 },
+                { player: "A7mdBibo", value: 1 },
+                { player: "aaron", value: 1 },
+                { player: "Lookman", value: 1 }
+            ],
+            ownGoals: [
+                { player: "Saygex", value: 1 },
+                { player: "SergioRamoss", value: 1 }
+            ]
+        };
+
+        // NEW
+        const teams = [
+            {
+                name: "Germany",
+                flag: "🇩🇪",
+                players: ["Misimaro (C)", "Karl", "Refix", "Saygex", "Passi", "Perkz", "Drku", "SamuelleRicci", "Naeh", "Faya", "Burak"]
+            },
+            {
+                name: "Spain",
+                flag: "🇪🇸",
+                players: ["Pedri", "Mbappe", "Slimani", "Chie", "Pitarch", "Sergicanos", "m1dnam", "Jhonny Sins", "Berniee", "Mata"]
+            },
+            {
+                name: "Poland",
+                flag: "🇵🇱",
+                players: ["Monk", "Razor", "Luur", "Doom", "Dreamz", "Grmii", "Piątek", "Spero", "Zenix", "V4ks", "ZaQu"]
+            },
+            {
+                name: "Italy",
+                flag: "🇮🇹",
+                players: ["Shield", "Bananajoe", "Fad", "Lookman", "Blue", "Gini", "Santi", "Triple G", "Isagi Yoichi", "Valotti", "Sergio Ramos"]
+            },
+            {
+                name: "England",
+                flag: "🏴",
+                players: ["SVimes", "Wakanda", "LuisDiaz", "Arshavin", "Cytro", "Blazing", "Evil Pedri", "cYn", "vvv", "Berbatov", "Atrocity Exhibition"]
+            },
+            {
+                name: "France",
+                flag: "🇫🇷",
+                players: ["Von", "Nosso", "Galaz", "Elpedri", "Vannystelroy", "Toshiba", "Zenon", "Ur Local French Guy", "Olise", "Aaron"]
+            },
+            {
+                name: "Netherlands",
+                flag: "🇳🇱",
+                players: ["Tsukuyomi.", "Shinsuke", "Isagi Yoichi (Lyreco)", "Yonko (Kaiser)", "Erdi", "Poppa", "Nympex", "Wamo", "7ooby", "Timber", "Levitan"]
+            },
+            {
+                name: "World XI",
+                flag: "🌍",
+                players: ["Jesus", "Nexalent", "Shush", "Ben Dover", "Col", "Kakii", "Paul McCartney", "MaksLuburic", "MK", "Tjay", "Wizop"]
+            },
+            {
+                name: "Egypt",
+                flag: "🇪🇬",
+                players: ["A7mdBibo", "Toughbaby", "ShadiOzz", "Belli", "Mrn", "Tiki", "VVD", "Ryzen", "Yaya", "Nxen", "Kong"]
+            },
+            {
+                name: "Tunisia + Algeria",
+                flag: "🇩🇿🇹🇳",
+                players: ["Kaka", "Santos", "Himothy", "Zalofa", "SUCA", "YEET", "SAFF", "Chiggas", "Blimpus", "Braga"]
+            }
+        ];
+
+        // NEW
+        const worldCupTeamLookup = new Map(teams.map(team => [team.name, team]));
+        let worldCupViewMode = 'raw';
 
         const allPlayers = [
             {id: 1, name: "shit guy", display_name: "shit guy", rating: 55, position: "ST", nation: "Poland", base_value: 540, stats: {sho: 45, pas: 40, pos: 50, def: 30}, traits: [], card_type: "base"},
@@ -1487,6 +1783,189 @@
             html += '</div>';
             return html;
         }
+
+        // NEW
+        function renderWorldCupTable(title, rows) {
+            const headers = ['Team', 'MP', 'W', 'D', 'L', 'GF', 'GA', 'GD', 'Pts'];
+            let html = `<div class="world-cup-card"><div class="world-cup-header"><h2 class="world-cup-title">${title}</h2></div><div class="world-cup-table-wrap"><table class="world-cup-table"><thead><tr>`;
+            headers.forEach(header => {
+                html += `<th>${header}</th>`;
+            });
+            html += '</tr></thead><tbody>';
+            rows.forEach((row, index) => {
+                const rowClass = index === rows.length - 1 ? 'world-cup-last-place' : '';
+                html += `<tr class="${rowClass}"><td>${row.team}</td><td>${row.MP}</td><td>${row.W}</td><td>${row.D}</td><td>${row.L}</td><td>${row.GF}</td><td>${row.GA}</td><td>${row.GD}</td><td>${row.Pts}</td></tr>`;
+            });
+            html += '</tbody></table></div></div>';
+            return html;
+        }
+
+        // NEW
+        function renderWorldCupBracketGroup(groupName, rows) {
+            const quarterFinalOne = `${rows[0].team} vs ${rows[3].team}`;
+            const quarterFinalTwo = `${rows[1].team} vs ${rows[2].team}`;
+            return `
+                <div class="world-cup-card world-cup-round">
+                    <h2 class="world-cup-title">${groupName}</h2>
+                    <div class="world-cup-match">
+                        <div class="world-cup-match-title">Quarter Finals</div>
+                        <div>${quarterFinalOne}</div>
+                        <div>${quarterFinalTwo}</div>
+                    </div>
+                    <div class="world-cup-match">
+                        <div class="world-cup-match-title">Semi Final</div>
+                        <div>Winner of ${quarterFinalOne}</div>
+                        <div>vs Winner of ${quarterFinalTwo}</div>
+                    </div>
+                    <div class="world-cup-match">
+                        <div class="world-cup-match-title">Group Winner</div>
+                        <div>Winner of the ${groupName} semi final</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // NEW
+        function renderWorldCupTeamStatsRows() {
+            return teamStats.map(team => {
+                const divisor = worldCupViewMode === 'per-game' ? team.halves : 1;
+                const safeDivisor = divisor === 0 ? 1 : divisor;
+                const passes = team.passes / safeDivisor;
+                const possession = team.possession / safeDivisor;
+                const shots = team.shots / safeDivisor;
+                return `
+                    <tr>
+                        <td>${team.team}</td>
+                        <td>${team.halves}</td>
+                        <td>${worldCupViewMode === 'per-game' ? passes.toFixed(1) : team.passes}</td>
+                        <td>${worldCupViewMode === 'per-game' ? `${possession.toFixed(1)}%` : `${team.possession}%`}</td>
+                        <td>${worldCupViewMode === 'per-game' ? shots.toFixed(1) : team.shots}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // NEW
+        function renderWorldCupStatTable(title, rows) {
+            return `
+                <div class="world-cup-card">
+                    <h2 class="world-cup-title">${title}</h2>
+                    <div class="world-cup-table-wrap">
+                        <table class="world-cup-stat-table">
+                            <thead>
+                                <tr>
+                                    <th>Player</th>
+                                    <th>Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${rows.map(row => `<tr><td>${row.player}</td><td>${row.value}</td></tr>`).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+
+        // NEW
+        function renderWorldCupPlayersByTeam() {
+            return `
+                <div class="world-cup-card">
+                    <h2 class="world-cup-title">Players by Team</h2>
+                    <div class="world-cup-team-list">
+                        ${teams.map(team => `
+                            <div class="world-cup-team-card">
+                                <div class="world-cup-team-name">${team.flag} ${team.name}</div>
+                                <ul class="world-cup-player-list">
+                                    ${team.players.map(player => `<li>${player}</li>`).join('')}
+                                </ul>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        // NEW
+        function renderWorldCupTab() {
+            const container = document.getElementById('world-cup-container');
+            if (!container) {
+                return;
+            }
+
+            const rawButtonClass = worldCupViewMode === 'raw' ? 'active' : '';
+            const perGameButtonClass = worldCupViewMode === 'per-game' ? 'active' : '';
+
+            container.innerHTML = `
+                <div class="world-cup-layout">
+                    ${renderWorldCupTable('Group A', worldCupGroups.groupA)}
+                    ${renderWorldCupTable('Group B', worldCupGroups.groupB)}
+
+                    <div class="world-cup-card">
+                        <div class="world-cup-header">
+                            <h2 class="world-cup-title">Knockout Bracket</h2>
+                        </div>
+                        <div class="world-cup-bracket">
+                            ${renderWorldCupBracketGroup('Group A', worldCupGroups.groupA)}
+                            ${renderWorldCupBracketGroup('Group B', worldCupGroups.groupB)}
+                            <div class="world-cup-card world-cup-round">
+                                <h2 class="world-cup-title">Final</h2>
+                                <div class="world-cup-match">
+                                    <div class="world-cup-match-title">World Cup Final</div>
+                                    <div>Winner of Group A vs Winner of Group B</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="world-cup-card">
+                        <div class="world-cup-header">
+                            <h2 class="world-cup-title">Team Stats</h2>
+                            <div class="world-cup-toggle">
+                                <button type="button" data-world-cup-mode="raw" class="${rawButtonClass}">Raw</button>
+                                <button type="button" data-world-cup-mode="per-game" class="${perGameButtonClass}">Per Game</button>
+                            </div>
+                        </div>
+                        <div class="world-cup-table-wrap">
+                            <table class="world-cup-table">
+                                <thead>
+                                    <tr>
+                                        <th>Team</th>
+                                        <th>Halves Recorded</th>
+                                        <th>Passes</th>
+                                        <th>Possession %</th>
+                                        <th>Shots on Goal</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${renderWorldCupTeamStatsRows()}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="world-cup-grid">
+                        ${renderWorldCupStatTable('Clean Sheets', playerStats.cleanSheets)}
+                        ${renderWorldCupStatTable('MVPs', playerStats.mvps)}
+                        ${renderWorldCupStatTable('Goals', playerStats.goals)}
+                        ${renderWorldCupStatTable('Assists', playerStats.assists)}
+                        ${renderWorldCupStatTable('Own Goals', playerStats.ownGoals)}
+                    </div>
+
+                    ${renderWorldCupPlayersByTeam()}
+                </div>
+            `;
+
+            container.querySelectorAll('[data-world-cup-mode]').forEach(button => {
+                button.addEventListener('click', () => {
+                    worldCupViewMode = button.getAttribute('data-world-cup-mode');
+                    renderWorldCupTab();
+                });
+            });
+        }
+
+        // MODIFIED
+        renderWorldCupTab();
 
 
 
