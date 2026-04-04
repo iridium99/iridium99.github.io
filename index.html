@@ -303,9 +303,14 @@
 
         .world-cup-top-grid {
             display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
             gap: 16px;
             align-items: start;
+        }
+
+        .world-cup-groups-column {
+            display: grid;
+            gap: 16px;
         }
 
         .world-cup-card {
@@ -400,39 +405,80 @@
             flex: 1 1 0;
         }
 
-        .world-cup-bracket {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 16px;
+        .world-cup-bracket-wrapper .bracket {
+            display: flex;
+            justify-content: center;
+            gap: 34px;
+            padding: 10px 0 20px;
+            overflow-x: auto;
         }
 
-        .world-cup-round {
-            display: grid;
-            gap: 12px;
+        .world-cup-bracket-wrapper .round {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            gap: 24px;
+            min-width: 170px;
         }
 
-        .world-cup-match {
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 10px;
-            padding: 12px;
-            background: rgba(255, 255, 255, 0.03);
+        .world-cup-bracket-wrapper .match {
+            background: #1e293b;
+            padding: 10px 16px;
+            border-radius: 8px;
+            width: 160px;
+            position: relative;
+            border: 1px solid rgba(148, 163, 184, 0.28);
         }
 
-        .world-cup-team-line {
-            display: block;
-            padding: 2px 0;
-            color: #e8e8e8;
+        .world-cup-bracket-wrapper .team {
+            padding: 5px 0;
+            border-bottom: 1px solid #334155;
+            color: #f8fafc;
         }
 
-        .world-cup-match-title {
-            color: var(--primary);
-            font-weight: 700;
-            margin-bottom: 6px;
+        .world-cup-bracket-wrapper .team:last-child {
+            border-bottom: none;
+        }
+
+        .world-cup-bracket-wrapper .match::after {
+            content: "";
+            position: absolute;
+            right: -30px;
+            top: 50%;
+            width: 30px;
+            height: 2px;
+            background: #cbd5e1;
+        }
+
+        .world-cup-bracket-wrapper .round:nth-child(2) .match::before,
+        .world-cup-bracket-wrapper .round:nth-child(3) .match::before {
+            content: "";
+            position: absolute;
+            left: -30px;
+            top: 50%;
+            width: 30px;
+            height: 2px;
+            background: #cbd5e1;
+        }
+
+        .world-cup-bracket-wrapper .round:last-child .match::after {
+            display: none;
+        }
+
+        .world-cup-third-place {
+            margin-top: 18px;
+            text-align: center;
+        }
+
+        .world-cup-third-place .match {
+            margin: 0 auto;
         }
 
         .world-cup-team-list {
-            display: grid;
+            display: flex;
             gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 4px;
         }
 
         .world-cup-team-card {
@@ -440,6 +486,7 @@
             border-radius: 10px;
             padding: 12px;
             background: rgba(255, 255, 255, 0.03);
+            min-width: 250px;
         }
 
         .world-cup-team-name {
@@ -1873,8 +1920,8 @@
                 if (worldCupTeamSortKey === 'possession') {
                     return worldCupViewMode === 'per-game' ? (team.halves === 0 ? 0 : team.possession / team.halves) : team.possession;
                 }
-                if (worldCupTeamSortKey === 'shots') {
-                    return worldCupViewMode === 'per-game' ? (team.halves === 0 ? 0 : team.shots / team.halves) : team.shots;
+                if (worldCupTeamSortKey === 'shots-per-game') {
+                    return team.halves === 0 ? 0 : team.shots / team.halves;
                 }
                 return 0;
             };
@@ -1895,14 +1942,14 @@
                 const safeDivisor = divisor === 0 ? 1 : divisor;
                 const passes = team.passes / safeDivisor;
                 const possession = team.possession / safeDivisor;
-                const shots = team.shots / safeDivisor;
+                const shotsPerGame = team.halves === 0 ? 0 : team.shots / team.halves;
                 return `
                     <tr>
                         <td>${team.team}</td>
                         <td>${team.halves}</td>
                         <td>${worldCupViewMode === 'per-game' ? passes.toFixed(1) : team.passes}</td>
                         <td>${worldCupViewMode === 'per-game' ? `${possession.toFixed(1)}%` : `${team.possession}%`}</td>
-                        <td>${worldCupViewMode === 'per-game' ? shots.toFixed(1) : team.shots}</td>
+                        <td>${shotsPerGame.toFixed(1)}</td>
                     </tr>
                 `;
             }).join('');
@@ -1914,6 +1961,37 @@
                 return '';
             }
             return worldCupTeamSortDirection === 'asc' ? ' ↑' : ' ↓';
+        }
+
+        // NEW
+        function getWorldCupMedalClass(rows, rowValue, metricLabel) {
+            if (metricLabel === 'Own Goals') {
+                return '';
+            }
+
+            const uniqueValues = [...new Set(rows.map(row => row.value))].sort((a, b) => b - a);
+            if (uniqueValues.length <= 1) {
+                return '';
+            }
+
+            let highlightedTiers = 3;
+            if (uniqueValues.length === 2) {
+                highlightedTiers = 1;
+            } else if (uniqueValues.length === 3) {
+                highlightedTiers = 2;
+            }
+
+            const tierIndex = uniqueValues.indexOf(rowValue);
+            if (tierIndex === 0 && highlightedTiers >= 1) {
+                return 'medal-gold';
+            }
+            if (tierIndex === 1 && highlightedTiers >= 2) {
+                return 'medal-silver';
+            }
+            if (tierIndex === 2 && highlightedTiers >= 3) {
+                return 'medal-bronze';
+            }
+            return '';
         }
 
         // NEW
@@ -1930,8 +2008,8 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                ${rows.map((row, index) => {
-                                    const medalClass = index === 0 ? 'medal-gold' : index === 1 ? 'medal-silver' : index === 2 ? 'medal-bronze' : '';
+                                ${rows.map((row) => {
+                                    const medalClass = getWorldCupMedalClass(rows, row.value, metricLabel);
                                     return `<tr class="${medalClass}"><td>${row.player}</td><td>${row.value}</td></tr>`;
                                 }).join('')}
                             </tbody>
@@ -1973,48 +2051,63 @@
             container.innerHTML = `
                 <div class="world-cup-layout">
                     <div class="world-cup-top-grid">
-                        ${renderWorldCupTable('Group A', worldCupGroups.groupA)}
-                        ${renderWorldCupTable('Group B', worldCupGroups.groupB)}
+                        <div class="world-cup-groups-column">
+                            ${renderWorldCupTable('Group A', worldCupGroups.groupA)}
+                            ${renderWorldCupTable('Group B', worldCupGroups.groupB)}
+                        </div>
                         <div class="world-cup-card">
                             <div class="world-cup-header">
                                 <h2 class="world-cup-title">Knockout Bracket</h2>
                             </div>
-                            <div class="world-cup-bracket">
-                                <div class="world-cup-round">
-                                    <div class="world-cup-match">
-                                        <div class="world-cup-match-title">Quarter Final A1</div>
-                                        <span class="world-cup-team-line">${worldCupGroups.groupA[0].team}</span>
-                                        <span class="world-cup-team-line">${worldCupGroups.groupA[3].team}</span>
+                            <div class="world-cup-bracket-wrapper">
+                                <div class="bracket">
+                                    <div class="round">
+                                        <div class="match">
+                                            <div class="team">${worldCupGroups.groupA[0].team}</div>
+                                            <div class="team">${worldCupGroups.groupA[3].team}</div>
+                                        </div>
+
+                                        <div class="match">
+                                            <div class="team">${worldCupGroups.groupA[1].team}</div>
+                                            <div class="team">${worldCupGroups.groupA[2].team}</div>
+                                        </div>
+
+                                        <div class="match">
+                                            <div class="team">${worldCupGroups.groupB[0].team}</div>
+                                            <div class="team">${worldCupGroups.groupB[3].team}</div>
+                                        </div>
+
+                                        <div class="match">
+                                            <div class="team">${worldCupGroups.groupB[1].team}</div>
+                                            <div class="team">${worldCupGroups.groupB[2].team}</div>
+                                        </div>
                                     </div>
-                                    <div class="world-cup-match">
-                                        <div class="world-cup-match-title">Quarter Final A2</div>
-                                        <span class="world-cup-team-line">${worldCupGroups.groupA[1].team}</span>
-                                        <span class="world-cup-team-line">${worldCupGroups.groupA[2].team}</span>
+
+                                    <div class="round">
+                                        <div class="match">
+                                            <div class="team">Winner QF1</div>
+                                            <div class="team">Winner QF2</div>
+                                        </div>
+
+                                        <div class="match">
+                                            <div class="team">Winner QF3</div>
+                                            <div class="team">Winner QF4</div>
+                                        </div>
                                     </div>
-                                    <div class="world-cup-match">
-                                        <div class="world-cup-match-title">Quarter Final B1</div>
-                                        <span class="world-cup-team-line">${worldCupGroups.groupB[0].team}</span>
-                                        <span class="world-cup-team-line">${worldCupGroups.groupB[3].team}</span>
+
+                                    <div class="round">
+                                        <div class="match">
+                                            <div class="team">Winner SF1</div>
+                                            <div class="team">Winner SF2</div>
+                                        </div>
                                     </div>
-                                    <div class="world-cup-match">
-                                        <div class="world-cup-match-title">Quarter Final B2</div>
-                                        <span class="world-cup-team-line">${worldCupGroups.groupB[1].team}</span>
-                                        <span class="world-cup-team-line">${worldCupGroups.groupB[2].team}</span>
-                                    </div>
-                                    <div class="world-cup-match">
-                                        <div class="world-cup-match-title">Semi Final A</div>
-                                        <span class="world-cup-team-line">Winner QF A1</span>
-                                        <span class="world-cup-team-line">Winner QF A2</span>
-                                    </div>
-                                    <div class="world-cup-match">
-                                        <div class="world-cup-match-title">Semi Final B</div>
-                                        <span class="world-cup-team-line">Winner QF B1</span>
-                                        <span class="world-cup-team-line">Winner QF B2</span>
-                                    </div>
-                                    <div class="world-cup-match">
-                                        <div class="world-cup-match-title">Final</div>
-                                        <span class="world-cup-team-line">Winner SF A</span>
-                                        <span class="world-cup-team-line">Winner SF B</span>
+                                </div>
+
+                                <div class="world-cup-third-place">
+                                    <h3 style="margin:0 0 10px;color:var(--primary);">3rd Place Playoff</h3>
+                                    <div class="match">
+                                        <div class="team">Loser SF1</div>
+                                        <div class="team">Loser SF2</div>
                                     </div>
                                 </div>
                             </div>
@@ -2037,7 +2130,7 @@
                                         <th>Halves Recorded</th>
                                         <th><button type="button" data-team-sort="passes" style="background:none;border:none;color:inherit;cursor:pointer;font:inherit;">Passes${getSortArrow('passes')}</button></th>
                                         <th><button type="button" data-team-sort="possession" style="background:none;border:none;color:inherit;cursor:pointer;font:inherit;">Possession %${getSortArrow('possession')}</button></th>
-                                        <th><button type="button" data-team-sort="shots" style="background:none;border:none;color:inherit;cursor:pointer;font:inherit;">Shots on Goal${getSortArrow('shots')}</button></th>
+                                        <th><button type="button" data-team-sort="shots-per-game" style="background:none;border:none;color:inherit;cursor:pointer;font:inherit;">Shots / Game${getSortArrow('shots-per-game')}</button></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -2473,3 +2566,5 @@
     </script>
 </body>
 </html>
+
+
