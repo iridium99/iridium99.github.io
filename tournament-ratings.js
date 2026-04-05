@@ -1,6 +1,9 @@
 (() => {
   const SEED_URL = 'tournament_structured_data.json';
   const LIVE_EVENTS_KEY = 'ldc-rs-legends-tournament-live-events';
+  const MAX_DISPLAY_RATING = 95;
+  const ELITE_THRESHOLD = 90;
+  const ELITE_COMPRESSION_FACTOR = 0.25;
 
   const TEAM_STRENGTHS = {
     England: 0.200,
@@ -38,10 +41,10 @@
       mvpTeamScoreFactor: 0.2
     },
     tournament: {
-      base: 50,
+      base: 75,
       pointsPerGame: 8,
       goalDifferencePerGame: 3,
-      outcomeVsExpectationPerGame: 14,
+      outcomeVsExpectationPerGame: 20,
       averageTeamScoreDelta: 2,
       shotsPerHalfDelta: 1.2,
       possessionPerHalfDelta: 0.8,
@@ -76,6 +79,20 @@
   function toNumber(value, fallback = 0) {
     const num = Number(value);
     return Number.isFinite(num) ? num : fallback;
+  }
+
+  function scrubPlayerName(playerName) {
+    return String(playerName || '')
+      .replace(/NEW/g, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  function compressEliteRating(rawRating) {
+    if (rawRating <= ELITE_THRESHOLD) {
+      return rawRating;
+    }
+    return ELITE_THRESHOLD + ((rawRating - ELITE_THRESHOLD) * ELITE_COMPRESSION_FACTOR);
   }
 
   function buildAliasMap() {
@@ -139,8 +156,9 @@
     const teams = Array.isArray(window.teams) ? window.teams : [];
     teams.forEach(team => {
       (team.players || []).forEach(playerName => {
-        roster.set(normalizeName(playerName), {
-          canonical: playerName,
+        const cleanName = scrubPlayerName(playerName);
+        roster.set(normalizeName(cleanName), {
+          canonical: cleanName,
           team: team.name
         });
       });
@@ -149,18 +167,19 @@
   }
 
   function canonicalizePlayerName(rawName) {
-    const normalized = normalizeName(rawName);
+    const cleanRawName = scrubPlayerName(rawName);
+    const normalized = normalizeName(cleanRawName);
     if (!normalized) return 'Unknown';
 
     if (state.aliases.has(normalized)) {
-      return state.aliases.get(normalized);
+      return scrubPlayerName(state.aliases.get(normalized));
     }
 
     if (state.roster.has(normalized)) {
-      return state.roster.get(normalized).canonical;
+      return scrubPlayerName(state.roster.get(normalized).canonical);
     }
 
-    return (rawName || 'Unknown').trim();
+    return cleanRawName || 'Unknown';
   }
 
   function matchKey(match) {
@@ -421,7 +440,7 @@
         ? (team.teamScores.reduce((sum, score) => sum + score, 0) / team.teamScores.length)
         : 50;
 
-      team.teamRating = clamp(
+      const rawTeamRating =
         WEIGHTS.tournament.base
           + (WEIGHTS.tournament.pointsPerGame * pointsPerGame)
           + (WEIGHTS.tournament.goalDifferencePerGame * gdPerGame)
@@ -429,17 +448,20 @@
           + (WEIGHTS.tournament.averageTeamScoreDelta * ((avgTeamScore - 50) / 10))
           + (WEIGHTS.tournament.shotsPerHalfDelta * (shotsPerHalf - avgShots))
           + (WEIGHTS.tournament.possessionPerHalfDelta * (possessionPerHalf - 50))
-          + (WEIGHTS.tournament.passesPerHalfDelta * (passesPerHalf - avgPasses)),
-        0,
-        100
-      );
+          + (WEIGHTS.tournament.passesPerHalfDelta * (passesPerHalf - avgPasses));
+
+      team.teamRating = clamp(compressEliteRating(rawTeamRating), 0, MAX_DISPLAY_RATING);
     });
 
     const playerRows = Array.from(playerMap.values())
       .filter(player => player.matchesPlayed > 0)
       .map(player => ({
         ...player,
-        tournamentRating: player.matchRatings.reduce((sum, value) => sum + value, 0) / player.matchRatings.length
+        tournamentRating: clamp(
+          compressEliteRating(player.matchRatings.reduce((sum, value) => sum + value, 0) / player.matchRatings.length),
+          0,
+          MAX_DISPLAY_RATING
+        )
       }));
 
     state.results = {
@@ -477,7 +499,7 @@
             <tr><th>Player</th><th>Rating</th></tr>
           </thead>
           <tbody>
-            ${players.map((player, idx) => `<tr><td>${idx + 1}. ${player.canonical || 'Unknown'}</td><td>${round1(player.tournamentRating).toFixed(1)}</td></tr>`).join('')}
+            ${players.map((player, idx) => `<tr><td>${idx + 1}. ${scrubPlayerName(player.canonical) || 'Unknown'}</td><td>${round1(player.tournamentRating).toFixed(1)}</td></tr>`).join('')}
           </tbody>
         </table>
       </div>
