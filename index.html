@@ -303,7 +303,7 @@
 
         .world-cup-top-grid {
             display: grid;
-            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(300px, 0.78fr);
+            grid-template-columns: minmax(0, 1.15fr) minmax(340px, 0.85fr);
             gap: 10px;
             align-items: start;
         }
@@ -311,6 +311,7 @@
         .world-cup-groups-column {
             display: grid;
             gap: 10px;
+            min-width: 0;
         }
 
         .world-cup-card {
@@ -377,12 +378,14 @@
 
         .world-cup-table-wrap {
             overflow-x: auto;
+            min-width: 0;
         }
 
         .world-cup-table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 620px;
+            min-width: 0;
+            table-layout: fixed;
             font-size: 13px;
         }
 
@@ -411,6 +414,10 @@
         .world-cup-table th:first-child,
         .world-cup-table td:first-child {
             text-align: left;
+            width: 36%;
+            white-space: normal;
+            overflow-wrap: anywhere;
+            word-break: break-word;
         }
 
         .world-cup-table thead th {
@@ -461,8 +468,6 @@
             width: 100%;
             max-width: 100%;
             overflow: hidden;
-            transform: scale(0.9);
-            transform-origin: top center;
         }
 
         /* MODIFIED */
@@ -644,10 +649,16 @@
         @media (max-width: 1100px) {
             .world-cup-top-grid {
                 grid-template-columns: 1fr;
+                justify-items: center;
             }
 
             .world-cup-stats-row {
                 grid-template-columns: repeat(2, minmax(180px, 1fr));
+            }
+
+            .world-cup-top-grid > * {
+                width: 100%;
+                max-width: 100%;
             }
         }
 
@@ -1584,12 +1595,12 @@
             {
                 name: "Germany",
                 flag: "🇩🇪",
-                players: ["Misimaro (C)", "Karl", "Refix", "Saygex", "Passi", "Perkz", "Drku", "SamuelleRicci", "Naeh", "Faya", "Burak"]
+                players: ["Misimaro (C)", "Karl", "Refix", "Saygex", "Passi", "Perkz", "Drkuu", "SamuelleRicci", "Naeh", "Faya", "Burak"]
             },
             {
                 name: "Spain",
                 flag: "🇪🇸",
-                players: ["Pedri", "Mbappe", "Slimani", "Chie", "Pitarch", "Sergicanos", "m1dnam", "Jhonny Sins", "Berniee", "Mata"]
+                players: ["Pedri", "Mbappe", "Slimani", "Chie", "Pitarch", "Sergicanos", "m1dnam", "Johnny Sins", "Berniee", "Mata"]
             },
             {
                 name: "Poland",
@@ -1599,7 +1610,7 @@
             {
                 name: "Italy",
                 flag: "🇮🇹",
-                players: ["Shield", "Bananajoe", "Fad", "Lookman", "Blue", "Gini", "Santi", "Triple G", "Isagi Yoichi", "Valotti", "Sergio Ramos"]
+                players: ["Shield", "Bananajoe", "Fad", "Lookman", "Blue", "Gini", "Santi", "Triple G", "Isagi Yoichi", "Valotii", "Sergio Ramos"]
             },
             {
                 name: "England",
@@ -1609,7 +1620,7 @@
             {
                 name: "France",
                 flag: "🇫🇷",
-                players: ["Von", "Nosso", "Galaz", "Elpedri", "Vannystelroy", "Toshiba", "Zenon", "Ur Local French Guy", "Olise", "Aaron"]
+                players: ["Von", "Nosso", "Galaz", "Elpedri", "Van Nistelrooy", "Toshiba", "Zenon", "Ur Local French Guy", "Olise", "Aaron"]
             },
             {
                 name: "Netherlands",
@@ -1642,6 +1653,16 @@
             v4ks: 'vaks',
             tripleg: 'gggheddafi'
         };
+
+        const explicitRegisteredWorldCupNames = new Set([
+            'saygex', 'perkz', 'pedri', 'mbappe', 'slimani', 'sergicanos', 'm1dnam',
+            'monk', 'razor', 'luur', 'doom', 'spero', 'zenix', 'vaks', 'shield',
+            'fad', 'santi', 'gggheddafi', 'wpi', 'cyn', 'berbatov',
+            'atrocityexhibition', 'urlocalfrenchguy', 'von', 'tsukuyomi', '7ooby',
+            'timber', 'maksluburic', 'tjay', 'a7mdbibo', 'toughbaby', 'shadiozz',
+            'mrn', 'yaya', 'himothy', 'yeet', 'blimpus', 'valotii', 'drkuu',
+            'faya', 'johnnysins', 'vannistelrooy'
+        ]);
 
         // NEW
         const worldCupTeamLookup = new Map(teams.map(team => [team.name, team]));
@@ -1761,6 +1782,10 @@
             const normalizedName = normalizeWorldCupName(name);
             if (!normalizedName) {
                 return false;
+            }
+
+            if (explicitRegisteredWorldCupNames.has(normalizedName)) {
+                return true;
             }
 
             if (registeredWorldCupPlayerNames.has(normalizedName)) {
