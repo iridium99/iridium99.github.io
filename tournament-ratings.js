@@ -733,15 +733,15 @@
     `;
   }
 
-  function renderPlayerLeaderBoard(players) {
+  function renderPlayerLeaderBoard(players, limit = 10, compact = false) {
     const sorted = [...players]
       .sort((a, b) => b.tournamentRating - a.tournamentRating)
-      .slice(0, 10);
+      .slice(0, limit);
 
     return `
-      <div class="tr-card tr-span-2">
+      <div class="tr-card ${compact ? '' : 'tr-span-2'}">
         <div class="tr-card-header">
-          <h3>Top 10 Players</h3>
+          <h3>Top ${limit} Players</h3>
           <span class="tr-meta">Ranked by tournamentRating</span>
         </div>
         <div class="tr-table-wrap">
@@ -770,15 +770,15 @@
     `;
   }
 
-  function renderTeamLeaderBoard(teams) {
+  function renderTeamLeaderBoard(teams, limit = 10) {
     const sorted = [...teams]
       .sort((a, b) => b.teamRating - a.teamRating)
-      .slice(0, 10);
+      .slice(0, limit);
 
     return `
       <div class="tr-card">
         <div class="tr-card-header">
-          <h3>Top 10 Teams</h3>
+          <h3>Top ${limit} Teams</h3>
           <span class="tr-meta">Ranked by teamRating</span>
         </div>
         <div class="tr-table-wrap">
@@ -909,7 +909,8 @@
 
   function renderRoot() {
     const host = document.getElementById('tournament-ratings-root');
-    if (!host || !state.computed) return;
+    const inlineHost = document.getElementById('tournament-ratings-inline');
+    if (!host || !inlineHost || !state.computed) return;
 
     const playerRows = state.computed.players;
     const teamRows = state.computed.teams;
@@ -919,16 +920,21 @@
     const cleanRows = buildSummaryRows(Array.from(state.currentCurrentState.cleanSheetsLeaderboard || []), 'cleanSheets');
     const ownGoalRows = buildSummaryRows(Array.from(state.currentCurrentState.ownGoalsLeaderboard || []), 'ownGoals');
 
-    const topPlayerSection = renderPlayerLeaderBoard(playerRows);
-    const topTeamSection = renderTeamLeaderBoard(teamRows);
+    const topPlayerSection = renderPlayerLeaderBoard(playerRows, 5, true);
+    const topTeamSection = renderTeamLeaderBoard(teamRows, 5);
     const playersByTeamSection = renderPlayersByTeam(playerRows, teamRows);
     const reviewSection = renderReviewPanel(state.computed.reviewItems);
+
+    inlineHost.innerHTML = `
+      ${topTeamSection}
+      ${topPlayerSection}
+    `;
 
     host.innerHTML = `
       <div class="tr-shell">
         <div class="tr-card tr-span-2">
           <div class="tr-card-header">
-            <h3>Tournament Rating System</h3>
+            <h3>Live Match Processor</h3>
             <span class="tr-meta">Paste one structured match JSON object or array of match objects</span>
           </div>
           <textarea id="tr-match-input" class="tr-input" rows="10" placeholder='Paste structured match JSON here. Example: {"matchNumber":7,"halfNumber":1,...}'></textarea>
@@ -939,17 +945,8 @@
           </div>
         </div>
 
-        ${topPlayerSection}
-        <div class="tr-grid-two tr-span-2">
-          ${topTeamSection}
-          ${renderStatStrip('Clean Sheets', cleanRows, 'cleanSheets')}
-        </div>
         ${renderTeamLeaderboardCardAndStats(teamRows)}
         ${playersByTeamSection}
-        ${renderStatStrip('Goals', goalsRows, 'goals')}
-        ${renderStatStrip('Assists', assistsRows, 'assists')}
-        ${renderStatStrip('MVPs', mvpRows, 'mvps')}
-        ${renderStatStrip('Own Goals', ownGoalRows, 'ownGoals')}
         ${reviewSection}
       </div>
     `;
@@ -1066,6 +1063,9 @@
     style.textContent = `
       #tournament-ratings-root {
         margin-top: 20px;
+      }
+      #tournament-ratings-inline {
+        display: contents;
       }
       .tr-shell {
         max-width: 1400px;
@@ -1242,14 +1242,21 @@
     if (typeof originalRenderWorldCupTab === 'function') {
       window.renderWorldCupTab = function patchedRenderWorldCupTab() {
         originalRenderWorldCupTab();
-        if (!document.getElementById('tournament-ratings-root')) {
-          const host = document.getElementById('world-cup-container');
-          if (host) {
-            const root = document.createElement('div');
-            root.id = 'tournament-ratings-root';
-            host.appendChild(root);
-          }
+        const host = document.getElementById('world-cup-container');
+        const statsRow = host ? host.querySelector('.world-cup-stats-row') : null;
+
+        if (statsRow && !document.getElementById('tournament-ratings-inline')) {
+          const inlineRoot = document.createElement('div');
+          inlineRoot.id = 'tournament-ratings-inline';
+          statsRow.appendChild(inlineRoot);
         }
+
+        if (host && !document.getElementById('tournament-ratings-root')) {
+          const root = document.createElement('div');
+          root.id = 'tournament-ratings-root';
+          host.appendChild(root);
+        }
+
         recomputeAndRender();
       };
     }
@@ -1272,6 +1279,12 @@
     } else {
       const host = document.getElementById('world-cup-container');
       if (host) {
+        const statsRow = host.querySelector('.world-cup-stats-row');
+        if (statsRow && !document.getElementById('tournament-ratings-inline')) {
+          const inlineRoot = document.createElement('div');
+          inlineRoot.id = 'tournament-ratings-inline';
+          statsRow.appendChild(inlineRoot);
+        }
         const root = document.createElement('div');
         root.id = 'tournament-ratings-root';
         host.appendChild(root);
@@ -1281,6 +1294,7 @@
   }
 
   init().catch(error => {
-    console.error('Tournament rating system failed to initialize', error);
+    console.error('Live ratings module failed to initialize', error);
   });
 })();
+
