@@ -335,6 +335,24 @@
             font-size: 16px;
         }
 
+        .world-cup-legend {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: #cbd5e1;
+            flex-wrap: wrap;
+        }
+
+        .world-cup-legend-swatch {
+            width: 12px;
+            height: 12px;
+            border-radius: 999px;
+            background: rgba(34, 197, 94, 0.22);
+            border: 1px solid rgba(34, 197, 94, 0.7);
+            box-sizing: border-box;
+        }
+
         .world-cup-toggle {
             display: flex;
             gap: 8px;
@@ -486,6 +504,12 @@
             border-bottom: none;
         }
 
+        .world-cup-bracket-wrapper .team.world-cup-bracket-tbd {
+            color: #94a3b8;
+            background: rgba(148, 163, 184, 0.08);
+            font-style: italic;
+        }
+
         /* MODIFIED */
         .world-cup-bracket-wrapper .match::after {
             content: "";
@@ -547,10 +571,39 @@
 
         .world-cup-player-list {
             margin: 0;
-            padding-left: 14px;
+            padding-left: 0;
             color: #e0e0e0;
             line-height: 1.25;
             font-size: 12px;
+            list-style: none;
+            display: grid;
+            gap: 4px;
+        }
+
+        .world-cup-player-list li {
+            padding: 4px 6px;
+            border-radius: 6px;
+        }
+
+        .world-cup-player-list li.world-cup-registered-player {
+            background: rgba(34, 197, 94, 0.14);
+            color: #dcfce7;
+            font-weight: 700;
+            border: 1px solid rgba(34, 197, 94, 0.28);
+        }
+
+        .world-cup-registered-badge {
+            display: inline-block;
+            margin-left: 6px;
+            padding: 1px 6px;
+            border-radius: 999px;
+            background: rgba(34, 197, 94, 0.18);
+            border: 1px solid rgba(34, 197, 94, 0.38);
+            color: #bbf7d0;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            vertical-align: middle;
         }
 
         .world-cup-stats-section {
@@ -1580,6 +1633,16 @@
             }
         ];
 
+        function normalizeWorldCupName(value) {
+            return (value || '').toLowerCase().replace(/[^a-z0-9]+/g, '');
+        }
+
+        const registeredWorldCupPlayerAliases = {
+            wakanda: 'wpi',
+            v4ks: 'vaks',
+            tripleg: 'gggheddafi'
+        };
+
         // NEW
         const worldCupTeamLookup = new Map(teams.map(team => [team.name, team]));
         let worldCupViewMode = 'raw';
@@ -1604,9 +1667,9 @@
             {id: 14, name: "McHamm", display_name: "McHamm", rating: 74, position: "CB", nation: "Ireland", stats: {sho: 68, pas: 74, pos: 74, def: 77}, traits: [], card_type: "base"},
             {id: 15, name: "MRN", display_name: "MRN", rating: 75, position: "CAM", nation: "Egypt", stats: {sho: 71, pas: 77, pos: 71, def: 77}, traits: [], card_type: "base"},
             {id: 16, name: "Limpo", display_name: "Limpo", rating: 75, position: "CDM", nation: "France", stats: {sho: 73, pas: 77, pos: 78, def: 80}, traits: [], card_type: "base"},
-            {id: 17, name: "Dynaxz", display_name: "Dynaxz", rating: 75, position: "LW", nation: "JP", stats: {sho: 73, pas: 77, pos: 74, def: 72}, traits: [], card_type: "base"},
+            {id: 17, name: "Dynaxz", display_name: "Dynaxz", rating: 75, position: "LW", nation: "Japan", stats: {sho: 73, pas: 77, pos: 74, def: 72}, traits: [], card_type: "base"},
             {id: 18, name: "evil.pro", display_name: "evil.pro", rating: 76, position: "CDM", nation: "Spain", stats: {sho: 74, pas: 76, pos: 77, def: 73}, traits: [], card_type: "base"},
-            {id: 19, name: "Spero", display_name: "Spero", rating: 76, position: "ST", nation: "KP", stats: {sho: 79, pas: 76, pos: 78, def: 73}, traits: [], card_type: "base"},
+            {id: 19, name: "Spero", display_name: "Spero", rating: 76, position: "ST", nation: "North Korea", stats: {sho: 79, pas: 76, pos: 78, def: 73}, traits: [], card_type: "base"},
             {id: 20, name: "Himothy", display_name: "Himothy", rating: 77, position: "CDM", nation: "Tunisia", stats: {sho: 76, pas: 76, pos: 76, def: 69}, traits: [], card_type: "base"},
             {id: 21, name: "YEET", display_name: "YEET", rating: 78, position: "LW", nation: "Cocos (Keeling) Islands", stats: {sho: 77, pas: 78, pos: 76, def: 71}, traits: [], card_type: "base"},
             {id: 22, name: "Misimaro", display_name: "Misimaro", rating: 78, position: "RW", nation: "Germany", stats: {sho: 76, pas: 78, pos: 77, def: 75}, traits: [], card_type: "base"},
@@ -1636,7 +1699,7 @@
             {id: 46, name: "Slimani", display_name: "$limani", rating: 82, position: "CB", nation: "Portugal", stats: {sho: 78, pas: 83, pos: 84, def: 83}, traits: ["aggressive"], card_type: "base"},
             {id: 47, name: "ShadiOzz", display_name: "ShadiOzz", rating: 82, position: "ST", nation: "Egypt", stats: {sho: 84, pas: 82, pos: 82, def: 75}, traits: ["clinical finisher"], card_type: "base"},
             {id: 48, name: "Tjay", display_name: "Tjay", rating: 82, position: "CAM", nation: "England", stats: {sho: 80, pas: 82, pos: 81, def: 76}, traits: ["playmaker"], card_type: "base"},
-            {id: 49, name: "Berbatov", display_name: "Berbatov", rating: 82, position: "CAM", nation: "GB", stats: {sho: 81, pas: 81, pos: 81, def: 74}, traits: ["clinical finisher"], card_type: "base"},
+            {id: 49, name: "Berbatov", display_name: "Berbatov", rating: 82, position: "CAM", nation: "United Kingdom", stats: {sho: 81, pas: 81, pos: 81, def: 74}, traits: ["clinical finisher"], card_type: "base"},
             {id: 50, name: "Arshavin", display_name: "Arshavin", rating: 83, position: "ST", nation: "Wales", stats: {sho: 84, pas: 80, pos: 82, def: 77}, traits: ["clinical finisher"], card_type: "base"},
             {id: 51, name: "Gol", display_name: "Gol", rating: 83, position: "GK", nation: "Romania", stats: {dec: 82, pas: 79, pos: 86, ref: 82}, traits: ["shotstopperplus"], card_type: "base"},
             {id: 52, name: "ToughBaby", display_name: "ToughBaby", rating: 84, position: "CM", nation: "Palestine", stats: {sho: 80, pas: 86, pos: 82, def: 82}, traits: ["penalty specialistplus"], card_type: "base"},
@@ -1656,7 +1719,7 @@
             {id: 66, name: "Vaks", display_name: "Vaks", rating: 90, position: "CB", nation: "Poland", stats: {sho: 86, pas: 90, pos: 89, def: 89}, traits: ["playmakerplus", "composed"], card_type: "base"},
             {id: 67, name: "tsukuyomi", display_name: "tsukuyomi.", rating: 91, position: "CDM", nation: "Netherlands", stats: {sho: 87, pas: 91, pos: 90, def: 90}, traits: ["playmakerplus", "composed"], card_type: "base"},
             {id: 68, name: "Perkz", display_name: "Perkz", rating: 92, position: "CAM", nation: "Turkey", stats: {sho: 91, pas: 93, pos: 92, def: 87}, traits: ["playmakerplus", "clinical finisher"], card_type: "base"},
-            {id: 69, name: "W-pi", display_name: "W-pi", rating: 92, position: "RW", nation: "SL", stats: {sho: 92, pas: 92, pos: 90, def: 85}, traits: ["playmakerplus", "clinical finisherplus"], card_type: "base"},
+            {id: 69, name: "W-pi", display_name: "W-pi", rating: 92, position: "RW", nation: "Sierra Leone", stats: {sho: 92, pas: 92, pos: 90, def: 85}, traits: ["playmakerplus", "clinical finisherplus"], card_type: "base"},
             {id: 70, name: "tsukuyomi_winter", display_name: "tsukuyomi ❄️", rating: 94, position: "CDM", nation: "Netherlands", stats: {sho: 90, pas: 95, pos: 94, def: 94}, traits: ["playmakerplus", "composedplus", "penalty specialist"], card_type: "winter"}
         ];
 
@@ -1687,6 +1750,26 @@
                 player.img = `cards/${imgName}.png`;
             }
         });
+
+        const registeredWorldCupPlayerNames = new Set(
+            allPlayers
+                .filter(player => player.card_type !== 'winter')
+                .map(player => normalizeWorldCupName(player.name))
+        );
+
+        function isRegisteredWorldCupPlayer(name) {
+            const normalizedName = normalizeWorldCupName(name);
+            if (!normalizedName) {
+                return false;
+            }
+
+            if (registeredWorldCupPlayerNames.has(normalizedName)) {
+                return true;
+            }
+
+            const aliasTarget = registeredWorldCupPlayerAliases[normalizedName];
+            return aliasTarget ? registeredWorldCupPlayerNames.has(aliasTarget) : false;
+        }
 
         const positionCategories = {
             'DEF': ['CB', 'RB', 'LB'],
@@ -2123,13 +2206,22 @@
         function renderWorldCupPlayersByTeam() {
             return `
                 <div class="world-cup-card">
-                    <h2 class="world-cup-title">Players by Team</h2>
+                    <div class="world-cup-header">
+                        <h2 class="world-cup-title">Players by Team</h2>
+                        <div class="world-cup-legend">
+                            <span class="world-cup-legend-swatch"></span>
+                            <span>Registered with LDC RS Legends</span>
+                        </div>
+                    </div>
                     <div class="world-cup-team-list">
                         ${teams.map(team => `
                             <div class="world-cup-team-card">
                                 <div class="world-cup-team-name">${team.flag} ${team.name}</div>
                                 <ul class="world-cup-player-list">
-                                    ${team.players.map(player => `<li>${player}</li>`).join('')}
+                                    ${team.players.map(player => {
+                                        const isRegistered = isRegisteredWorldCupPlayer(player);
+                                        return `<li class="${isRegistered ? 'world-cup-registered-player' : ''}">${player}${isRegistered ? ' <span class="world-cup-registered-badge">Registered</span>' : ''}</li>`;
+                                    }).join('')}
                                 </ul>
                             </div>
                         `).join('')}
@@ -2144,6 +2236,8 @@
             if (!container) {
                 return;
             }
+
+            const tbdTeamMarkup = '<div class="team world-cup-bracket-tbd">TBD</div>';
 
             const rawButtonClass = worldCupViewMode === 'raw' ? 'active' : '';
             const perGameButtonClass = worldCupViewMode === 'per-game' ? 'active' : '';
@@ -2163,42 +2257,42 @@
                                 <div class="bracket">
                                     <div class="round">
                                         <div class="match">
-                                            <div class="team">${worldCupGroups.groupA[0].team}</div>
-                                            <div class="team">${worldCupGroups.groupA[3].team}</div>
+                                            ${tbdTeamMarkup}
+                                            ${tbdTeamMarkup}
                                         </div>
 
                                         <div class="match">
-                                            <div class="team">${worldCupGroups.groupA[1].team}</div>
-                                            <div class="team">${worldCupGroups.groupA[2].team}</div>
+                                            ${tbdTeamMarkup}
+                                            ${tbdTeamMarkup}
                                         </div>
 
                                         <div class="match">
-                                            <div class="team">${worldCupGroups.groupB[0].team}</div>
-                                            <div class="team">${worldCupGroups.groupB[3].team}</div>
+                                            ${tbdTeamMarkup}
+                                            ${tbdTeamMarkup}
                                         </div>
 
                                         <div class="match">
-                                            <div class="team">${worldCupGroups.groupB[1].team}</div>
-                                            <div class="team">${worldCupGroups.groupB[2].team}</div>
-                                        </div>
-                                    </div>
-
-                                    <div class="round">
-                                        <div class="match">
-                                            <div class="team">Winner QF1</div>
-                                            <div class="team">Winner QF2</div>
-                                        </div>
-
-                                        <div class="match">
-                                            <div class="team">Winner QF3</div>
-                                            <div class="team">Winner QF4</div>
+                                            ${tbdTeamMarkup}
+                                            ${tbdTeamMarkup}
                                         </div>
                                     </div>
 
                                     <div class="round">
                                         <div class="match">
-                                            <div class="team">Winner SF1</div>
-                                            <div class="team">Winner SF2</div>
+                                            ${tbdTeamMarkup}
+                                            ${tbdTeamMarkup}
+                                        </div>
+
+                                        <div class="match">
+                                            ${tbdTeamMarkup}
+                                            ${tbdTeamMarkup}
+                                        </div>
+                                    </div>
+
+                                    <div class="round">
+                                        <div class="match">
+                                            ${tbdTeamMarkup}
+                                            ${tbdTeamMarkup}
                                         </div>
                                     </div>
                                 </div>
@@ -2206,8 +2300,8 @@
                                 <div class="world-cup-third-place">
                                     <h3 style="margin:0 0 10px;color:var(--primary);">3rd Place Playoff</h3>
                                     <div class="match">
-                                        <div class="team">Loser SF1</div>
-                                        <div class="team">Loser SF2</div>
+                                        ${tbdTeamMarkup}
+                                        ${tbdTeamMarkup}
                                     </div>
                                 </div>
                             </div>
@@ -2673,5 +2767,3 @@
     </script>
 </body>
 </html>
-
-
