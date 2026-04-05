@@ -4,7 +4,7 @@
   const SOFT_CAP_RATING = 90;
   const MAX_DISPLAY_RATING = 95;
   const ELITE_CURVE_RATE = 0.12;
-  const TEAM_COMPETITIVE_SPREAD = 0.42;
+  const TEAM_COMPETITIVE_SPREAD = 0.78;
   const PLAYER_COMPETITIVE_SPREAD = 0.62;
   const ACTIVE_TEAM_RATING_FLOOR = 60;
   const TEAM_NEUTRAL_BASELINE = 70;
@@ -114,6 +114,16 @@
   function getConfidenceFromMatches(matchesPlayed) {
     const safeMatches = Math.max(0, toNumber(matchesPlayed));
     return clamp(safeMatches / TEAM_MATCHES_FOR_FULL_CONFIDENCE, 0, 1);
+  }
+
+  function weightedAverage(items) {
+    const totals = items.reduce((accumulator, item) => {
+      accumulator.weight += item.weight;
+      accumulator.value += item.value * item.weight;
+      return accumulator;
+    }, { weight: 0, value: 0 });
+
+    return totals.weight > 0 ? (totals.value / totals.weight) : 0;
   }
 
   function buildAliasMap() {
@@ -273,6 +283,7 @@
         losses: 0,
         points: 0,
         expectedPoints: 0,
+        opponentStrengthTotal: 0,
         goalsFor: 0,
         goalsAgainst: 0,
         teamScores: []
@@ -349,6 +360,8 @@
 
       teamARecord.teamScores.push(scoreTeamA);
       teamBRecord.teamScores.push(scoreTeamB);
+      teamARecord.opponentStrengthTotal += strengthB;
+      teamBRecord.opponentStrengthTotal += strengthA;
 
       teamARecord.matchesPlayed += 1;
       teamBRecord.matchesPlayed += 1;
@@ -447,6 +460,7 @@
     const teamRows = Array.from(teamMap.values());
     const avgShots = teamRows.reduce((sum, team) => sum + (team.halvesRecorded ? team.shots / team.halvesRecorded : 0), 0) / Math.max(teamRows.length, 1);
     const avgPasses = teamRows.reduce((sum, team) => sum + (team.halvesRecorded ? team.passes / team.halvesRecorded : 0), 0) / Math.max(teamRows.length, 1);
+    const maxObservedStrength = Math.max(...Object.values(TEAM_STRENGTHS));
 
     teamRows.forEach(team => {
       const halves = team.halvesRecorded || 1;
@@ -460,16 +474,33 @@
       const avgTeamScore = team.teamScores.length
         ? (team.teamScores.reduce((sum, score) => sum + score, 0) / team.teamScores.length)
         : 50;
+      const avgOpponentStrength = team.matchesPlayed ? (team.opponentStrengthTotal / team.matchesPlayed) : 0;
 
-      team.rawTeamRating =
-        WEIGHTS.tournament.base
-          + (WEIGHTS.tournament.pointsPerGame * pointsPerGame)
-          + (WEIGHTS.tournament.goalDifferencePerGame * gdPerGame)
-          + (WEIGHTS.tournament.outcomeVsExpectationPerGame * outcomeVsExpectationPerGame)
-          + (WEIGHTS.tournament.averageTeamScoreDelta * ((avgTeamScore - 50) / 10))
-          + (WEIGHTS.tournament.shotsPerHalfDelta * (shotsPerHalf - avgShots))
-          + (WEIGHTS.tournament.possessionPerHalfDelta * (possessionPerHalf - 50))
-          + (WEIGHTS.tournament.passesPerHalfDelta * (passesPerHalf - avgPasses));
+      const resultScore = clamp((pointsPerGame / 3) * 100, 0, 100);
+      const expectationScore = clamp(50 + (outcomeVsExpectationPerGame * 24), 0, 100);
+      const scheduleScore = clamp((avgOpponentStrength / Math.max(maxObservedStrength, 0.001)) * 100, 0, 100);
+      const goalDifferenceScore = clamp(50 + (gdPerGame * 10), 0, 100);
+      const statsScore = clamp(
+        50
+          + ((shotsPerHalf - avgShots) * 5)
+          + ((possessionPerHalf - 50) * 0.45)
+          + ((passesPerHalf - avgPasses) * 0.28),
+        0,
+        100
+      );
+
+      const weightedComposite = weightedAverage([
+        { value: resultScore, weight: 0.34 },
+        { value: expectationScore, weight: 0.30 },
+        { value: scheduleScore, weight: 0.20 },
+        { value: goalDifferenceScore, weight: 0.10 },
+        { value: statsScore, weight: 0.06 }
+      ]);
+
+      const confidence = clamp(Math.log1p(team.matchesPlayed) / Math.log1p(TEAM_MATCHES_FOR_FULL_CONFIDENCE + 1), 0, 1);
+      const blendedRating = 60 + ((weightedComposite - 60) * confidence);
+
+      team.rawTeamRating = blendedRating;
     });
 
     const meanRawTeamRating = teamRows.length
@@ -478,9 +509,7 @@
 
     teamRows.forEach(team => {
       const spreadAdjustedTeamRating = compressTowardMean(team.rawTeamRating, meanRawTeamRating, TEAM_COMPETITIVE_SPREAD);
-      const confidence = getConfidenceFromMatches(team.matchesPlayed);
-      const confidenceNormalizedTeamRating = TEAM_NEUTRAL_BASELINE + ((spreadAdjustedTeamRating - TEAM_NEUTRAL_BASELINE) * confidence);
-      const curvedTeamRating = applySoftCapCurve(confidenceNormalizedTeamRating);
+      const curvedTeamRating = applySoftCapCurve(spreadAdjustedTeamRating);
       const floorAdjustedTeamRating = team.matchesPlayed > 0
         ? Math.max(ACTIVE_TEAM_RATING_FLOOR, curvedTeamRating)
         : curvedTeamRating;
@@ -604,5 +633,4 @@
     console.error('World Cup top 5 injection failed', error);
   });
 })();
-
 
