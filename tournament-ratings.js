@@ -18,12 +18,12 @@
   const WEIGHTS = {
     team: {
       base: 50,
-      actual: 12,
+      actual: 20,
       goalDifference: 4,
       shotDifference: 3,
       possessionDifference: 2,
       passDifference: 2,
-      upset: 10
+      upset: 20
     },
     player: {
       goals: 6,
@@ -39,11 +39,13 @@
     },
     tournament: {
       base: 50,
-      pointsPerGame: 5,
+      pointsPerGame: 8,
       goalDifferencePerGame: 3,
-      shotsPerHalfDelta: 2,
-      possessionPerHalfDelta: 1.5,
-      passesPerHalfDelta: 1
+      outcomeVsExpectationPerGame: 14,
+      averageTeamScoreDelta: 2,
+      shotsPerHalfDelta: 1.2,
+      possessionPerHalfDelta: 0.8,
+      passesPerHalfDelta: 0.6
     }
   };
 
@@ -231,6 +233,7 @@
         draws: 0,
         losses: 0,
         points: 0,
+        expectedPoints: 0,
         goalsFor: 0,
         goalsAgainst: 0,
         teamScores: []
@@ -298,6 +301,10 @@
       const scoreB = toNumber(match.scoreB);
       const scoreTeamA = teamScore(match, 'A');
       const scoreTeamB = teamScore(match, 'B');
+      const strengthA = TEAM_STRENGTHS[teamA] ?? 0;
+      const strengthB = TEAM_STRENGTHS[teamB] ?? 0;
+      const expectedA = strengthA + strengthB > 0 ? strengthA / (strengthA + strengthB) : 0.5;
+      const expectedB = 1 - expectedA;
 
       const teamARecord = ensureTeamRecord(teamMap, teamA);
       const teamBRecord = ensureTeamRecord(teamMap, teamB);
@@ -307,6 +314,8 @@
 
       teamARecord.matchesPlayed += 1;
       teamBRecord.matchesPlayed += 1;
+      teamARecord.expectedPoints += (3 * expectedA);
+      teamBRecord.expectedPoints += (3 * expectedB);
 
       if (scoreA > scoreB) {
         teamARecord.wins += 1;
@@ -407,12 +416,19 @@
       const possessionPerHalf = team.possession / halves;
       const shotsPerHalf = team.shots / halves;
       const pointsPerGame = team.matchesPlayed ? team.points / team.matchesPlayed : 0;
+      const expectedPointsPerGame = team.matchesPlayed ? team.expectedPoints / team.matchesPlayed : 0;
+      const outcomeVsExpectationPerGame = pointsPerGame - expectedPointsPerGame;
       const gdPerGame = team.matchesPlayed ? ((team.goalsFor - team.goalsAgainst) / team.matchesPlayed) : 0;
+      const avgTeamScore = team.teamScores.length
+        ? (team.teamScores.reduce((sum, score) => sum + score, 0) / team.teamScores.length)
+        : 50;
 
       team.teamRating = clamp(
         WEIGHTS.tournament.base
           + (WEIGHTS.tournament.pointsPerGame * pointsPerGame)
           + (WEIGHTS.tournament.goalDifferencePerGame * gdPerGame)
+          + (WEIGHTS.tournament.outcomeVsExpectationPerGame * outcomeVsExpectationPerGame)
+          + (WEIGHTS.tournament.averageTeamScoreDelta * ((avgTeamScore - 50) / 10))
           + (WEIGHTS.tournament.shotsPerHalfDelta * (shotsPerHalf - avgShots))
           + (WEIGHTS.tournament.possessionPerHalfDelta * (possessionPerHalf - 50))
           + (WEIGHTS.tournament.passesPerHalfDelta * (passesPerHalf - avgPasses)),
@@ -532,4 +548,5 @@
     console.error('World Cup top 5 injection failed', error);
   });
 })();
+
 
