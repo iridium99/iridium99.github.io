@@ -438,37 +438,54 @@
     const statsRow = document.querySelector('#world-cup-container .world-cup-stats-row');
     if (!statsRow || !state.results) return;
 
-    let inline = document.getElementById('tournament-ratings-inline');
-    if (!inline) {
-      inline = document.createElement('div');
-      inline.id = 'tournament-ratings-inline';
-      inline.className = 'world-cup-card';
-      statsRow.appendChild(inline);
-    }
-
     const players = state.results.playersTop5;
     const teams = state.results.teamsTop5;
 
-    inline.innerHTML = `
-      <div class="inline-top5-grid">
-        <div class="inline-top5-card">
-          <h2 class="world-cup-title">Top 5 Teams</h2>
-          <table class="world-cup-stat-table">
-            <thead><tr><th># Team</th><th>Rating</th></tr></thead>
-            <tbody>
-              ${teams.map((team, idx) => `<tr><td>${idx + 1}. ${team.team}</td><td>${round1(team.teamRating).toFixed(1)}</td></tr>`).join('')}
-            </tbody>
-          </table>
-        </div>
-        <div class="inline-top5-card">
-          <h2 class="world-cup-title">Top 5 Players</h2>
-          <table class="world-cup-stat-table">
-            <thead><tr><th># Player</th><th>Rating</th></tr></thead>
-            <tbody>
-              ${players.map((player, idx) => `<tr><td>${idx + 1}. ${player.canonical}${player.registered ? '' : ' <span class="inline-new-tag">NEW</span>'}</td><td>${round1(player.tournamentRating).toFixed(1)}</td></tr>`).join('')}
-            </tbody>
-          </table>
-        </div>
+    let playersCard = document.getElementById('world-cup-top5-players-card');
+    if (!playersCard) {
+      playersCard = document.createElement('div');
+      playersCard.id = 'world-cup-top5-players-card';
+      playersCard.className = 'world-cup-card';
+      statsRow.prepend(playersCard);
+    }
+
+    let teamsCard = document.getElementById('world-cup-top5-teams-card');
+    if (!teamsCard) {
+      teamsCard = document.createElement('div');
+      teamsCard.id = 'world-cup-top5-teams-card';
+      teamsCard.className = 'world-cup-card';
+      if (playersCard.nextSibling) {
+        statsRow.insertBefore(teamsCard, playersCard.nextSibling);
+      } else {
+        statsRow.appendChild(teamsCard);
+      }
+    }
+
+    playersCard.innerHTML = `
+      <h2 class="world-cup-title">Top 5 Players</h2>
+      <div class="world-cup-table-wrap">
+        <table class="world-cup-stat-table">
+          <thead>
+            <tr><th>Player</th><th>Rating</th></tr>
+          </thead>
+          <tbody>
+            ${players.map((player, idx) => `<tr><td>${idx + 1}. ${player.canonical}</td><td>${round1(player.tournamentRating).toFixed(1)}</td></tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+    `;
+
+    teamsCard.innerHTML = `
+      <h2 class="world-cup-title">Top 5 Teams</h2>
+      <div class="world-cup-table-wrap">
+        <table class="world-cup-stat-table">
+          <thead>
+            <tr><th>Team</th><th>Rating</th></tr>
+          </thead>
+          <tbody>
+            ${teams.map((team, idx) => `<tr><td>${idx + 1}. ${team.team}</td><td>${round1(team.teamRating).toFixed(1)}</td></tr>`).join('')}
+          </tbody>
+        </table>
       </div>
     `;
   }
@@ -476,27 +493,9 @@
   function injectStyles() {
     const style = document.createElement('style');
     style.textContent = `
-      #tournament-ratings-inline {
+      #world-cup-top5-players-card,
+      #world-cup-top5-teams-card {
         min-width: 0;
-      }
-      .inline-top5-grid {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 10px;
-      }
-      .inline-top5-card {
-        min-width: 0;
-      }
-      .inline-new-tag {
-        display: inline-block;
-        margin-left: 6px;
-        padding: 1px 6px;
-        border-radius: 999px;
-        background: rgba(245, 158, 11, 0.18);
-        border: 1px solid rgba(245, 158, 11, 0.35);
-        color: #fde68a;
-        font-size: 10px;
-        font-weight: 700;
       }
     `;
     document.head.appendChild(style);
