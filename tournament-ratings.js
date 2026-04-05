@@ -1,9 +1,11 @@
 (() => {
   const SEED_URL = 'tournament_structured_data.json';
   const LIVE_EVENTS_KEY = 'ldc-rs-legends-tournament-live-events';
+  const SOFT_CAP_RATING = 90;
   const MAX_DISPLAY_RATING = 95;
-  const ELITE_THRESHOLD = 90;
-  const ELITE_COMPRESSION_FACTOR = 0.25;
+  const ELITE_CURVE_RATE = 0.18;
+  const TEAM_COMPETITIVE_SPREAD = 0.55;
+  const PLAYER_COMPETITIVE_SPREAD = 0.62;
 
   const TEAM_STRENGTHS = {
     England: 0.200,
@@ -21,12 +23,12 @@
   const WEIGHTS = {
     team: {
       base: 50,
-      actual: 20,
+      actual: 16,
       goalDifference: 4,
       shotDifference: 3,
       possessionDifference: 2,
       passDifference: 2,
-      upset: 20
+      upset: 14
     },
     player: {
       goals: 6,
@@ -41,14 +43,14 @@
       mvpTeamScoreFactor: 0.2
     },
     tournament: {
-      base: 75,
-      pointsPerGame: 8,
-      goalDifferencePerGame: 3,
-      outcomeVsExpectationPerGame: 20,
-      averageTeamScoreDelta: 2,
-      shotsPerHalfDelta: 1.2,
-      possessionPerHalfDelta: 0.8,
-      passesPerHalfDelta: 0.6
+      base: 72,
+      pointsPerGame: 6,
+      goalDifferencePerGame: 2,
+      outcomeVsExpectationPerGame: 12,
+      averageTeamScoreDelta: 1.2,
+      shotsPerHalfDelta: 0.7,
+      possessionPerHalfDelta: 0.45,
+      passesPerHalfDelta: 0.35
     }
   };
 
@@ -88,11 +90,18 @@
       .trim();
   }
 
-  function compressEliteRating(rawRating) {
-    if (rawRating <= ELITE_THRESHOLD) {
+  function applySoftCapCurve(rawRating) {
+    if (rawRating <= SOFT_CAP_RATING) {
       return rawRating;
     }
-    return ELITE_THRESHOLD + ((rawRating - ELITE_THRESHOLD) * ELITE_COMPRESSION_FACTOR);
+    const eliteDelta = rawRating - SOFT_CAP_RATING;
+    const eliteRange = MAX_DISPLAY_RATING - SOFT_CAP_RATING;
+    const curvedGain = eliteRange * (1 - Math.exp(-eliteDelta * ELITE_CURVE_RATE));
+    return SOFT_CAP_RATING + curvedGain;
+  }
+
+  function compressTowardMean(value, mean, factor) {
+    return mean + ((value - mean) * factor);
   }
 
   function buildAliasMap() {
@@ -440,7 +449,7 @@
         ? (team.teamScores.reduce((sum, score) => sum + score, 0) / team.teamScores.length)
         : 50;
 
-      const rawTeamRating =
+      team.rawTeamRating =
         WEIGHTS.tournament.base
           + (WEIGHTS.tournament.pointsPerGame * pointsPerGame)
           + (WEIGHTS.tournament.goalDifferencePerGame * gdPerGame)
@@ -449,20 +458,32 @@
           + (WEIGHTS.tournament.shotsPerHalfDelta * (shotsPerHalf - avgShots))
           + (WEIGHTS.tournament.possessionPerHalfDelta * (possessionPerHalf - 50))
           + (WEIGHTS.tournament.passesPerHalfDelta * (passesPerHalf - avgPasses));
+    });
 
-      team.teamRating = clamp(compressEliteRating(rawTeamRating), 0, MAX_DISPLAY_RATING);
+    const meanRawTeamRating = teamRows.length
+      ? (teamRows.reduce((sum, team) => sum + team.rawTeamRating, 0) / teamRows.length)
+      : WEIGHTS.tournament.base;
+
+    teamRows.forEach(team => {
+      const spreadAdjustedTeamRating = compressTowardMean(team.rawTeamRating, meanRawTeamRating, TEAM_COMPETITIVE_SPREAD);
+      team.teamRating = clamp(applySoftCapCurve(spreadAdjustedTeamRating), 0, MAX_DISPLAY_RATING);
     });
 
     const playerRows = Array.from(playerMap.values())
       .filter(player => player.matchesPlayed > 0)
       .map(player => ({
         ...player,
-        tournamentRating: clamp(
-          compressEliteRating(player.matchRatings.reduce((sum, value) => sum + value, 0) / player.matchRatings.length),
-          0,
-          MAX_DISPLAY_RATING
-        )
+        rawTournamentRating: player.matchRatings.reduce((sum, value) => sum + value, 0) / player.matchRatings.length
       }));
+
+    const meanRawPlayerRating = playerRows.length
+      ? (playerRows.reduce((sum, player) => sum + player.rawTournamentRating, 0) / playerRows.length)
+      : SOFT_CAP_RATING;
+
+    playerRows.forEach(player => {
+      const spreadAdjustedPlayerRating = compressTowardMean(player.rawTournamentRating, meanRawPlayerRating, PLAYER_COMPETITIVE_SPREAD);
+      player.tournamentRating = clamp(applySoftCapCurve(spreadAdjustedPlayerRating), 0, MAX_DISPLAY_RATING);
+    });
 
     state.results = {
       playersTop5: playerRows.sort((a, b) => b.tournamentRating - a.tournamentRating).slice(0, 5),
@@ -499,7 +520,7 @@
             <tr><th>Player</th><th>Rating</th></tr>
           </thead>
           <tbody>
-            ${players.map((player, idx) => `<tr><td>${idx + 1}. ${scrubPlayerName(player.canonical) || 'Unknown'}</td><td>${round1(player.tournamentRating).toFixed(1)}</td></tr>`).join('')}
+            ${players.map((player) => `<tr><td>${scrubPlayerName(player.canonical) || 'Unknown'}</td><td>${round1(player.tournamentRating).toFixed(1)}</td></tr>`).join('')}
           </tbody>
         </table>
       </div>
@@ -513,7 +534,7 @@
             <tr><th>Team</th><th>Rating</th></tr>
           </thead>
           <tbody>
-            ${teams.map((team, idx) => `<tr><td>${idx + 1}. ${team.team}</td><td>${round1(team.teamRating).toFixed(1)}</td></tr>`).join('')}
+            ${teams.map((team) => `<tr><td>${team.team}</td><td>${round1(team.teamRating).toFixed(1)}</td></tr>`).join('')}
           </tbody>
         </table>
       </div>
