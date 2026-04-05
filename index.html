@@ -421,59 +421,90 @@
             height: 100%;
         }
 
-        .world-cup-bracket-wrapper .bracket {
-            display: flex;
-            justify-content: center;
-            gap: 24px;
-            padding: 6px 0 12px;
-            overflow-x: auto;
+        /* MODIFIED */
+        .world-cup-bracket-card {
+            max-width: 100%;
+            overflow: hidden;
         }
 
+        /* MODIFIED */
+        .world-cup-bracket-wrapper {
+            max-width: 100%;
+            overflow: hidden;
+        }
+
+        /* MODIFIED */
+        .world-cup-bracket-wrapper .bracket {
+            display: flex;
+            justify-content: space-between;
+            align-items: stretch;
+            gap: 8px;
+            padding: 4px 0 8px;
+            width: 100%;
+            max-width: 100%;
+            overflow: hidden;
+            transform: scale(0.9);
+            transform-origin: top center;
+        }
+
+        /* MODIFIED */
         .world-cup-bracket-wrapper .round {
             display: flex;
             flex-direction: column;
             justify-content: space-around;
-            gap: 16px;
-            min-width: 145px;
+            align-items: center;
+            gap: 10px;
+            min-width: 0;
+            flex: 1 1 0;
         }
 
+        /* MODIFIED */
         .world-cup-bracket-wrapper .match {
             background: #1e293b;
-            padding: 7px 10px;
+            padding: 5px 8px;
             border-radius: 8px;
-            width: 132px;
+            width: 100%;
+            max-width: 108px;
             position: relative;
             border: 1px solid rgba(148, 163, 184, 0.28);
-            font-size: 12px;
+            font-size: 11px;
+            box-sizing: border-box;
         }
 
+        /* MODIFIED */
         .world-cup-bracket-wrapper .team {
-            padding: 3px 0;
+            padding: 2px 0;
             border-bottom: 1px solid #334155;
             color: #f8fafc;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.2;
         }
 
         .world-cup-bracket-wrapper .team:last-child {
             border-bottom: none;
         }
 
+        /* MODIFIED */
         .world-cup-bracket-wrapper .match::after {
             content: "";
             position: absolute;
-            right: -30px;
+            right: -10px;
             top: 50%;
-            width: 30px;
+            width: 10px;
             height: 2px;
             background: #cbd5e1;
         }
 
+        /* MODIFIED */
         .world-cup-bracket-wrapper .round:nth-child(2) .match::before,
         .world-cup-bracket-wrapper .round:nth-child(3) .match::before {
             content: "";
             position: absolute;
-            left: -30px;
+            left: -10px;
             top: 50%;
-            width: 30px;
+            width: 10px;
             height: 2px;
             background: #cbd5e1;
         }
@@ -482,9 +513,12 @@
             display: none;
         }
 
+        /* MODIFIED */
         .world-cup-third-place {
             margin-top: 12px;
             text-align: center;
+            max-width: 100%;
+            overflow: hidden;
         }
 
         .world-cup-third-place .match {
@@ -2639,4 +2673,5 @@
     </script>
 </body>
 </html>
+
 
