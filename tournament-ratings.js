@@ -3,9 +3,12 @@
   const LIVE_EVENTS_KEY = 'ldc-rs-legends-tournament-live-events';
   const SOFT_CAP_RATING = 90;
   const MAX_DISPLAY_RATING = 95;
-  const ELITE_CURVE_RATE = 0.18;
-  const TEAM_COMPETITIVE_SPREAD = 0.55;
+  const ELITE_CURVE_RATE = 0.12;
+  const TEAM_COMPETITIVE_SPREAD = 0.42;
   const PLAYER_COMPETITIVE_SPREAD = 0.62;
+  const ACTIVE_TEAM_RATING_FLOOR = 60;
+  const TEAM_NEUTRAL_BASELINE = 70;
+  const TEAM_MATCHES_FOR_FULL_CONFIDENCE = 4;
 
   const TEAM_STRENGTHS = {
     England: 0.200,
@@ -90,6 +93,10 @@
       .trim();
   }
 
+  function toRating1(value, min = 0, max = MAX_DISPLAY_RATING) {
+    return round1(clamp(value, min, max));
+  }
+
   function applySoftCapCurve(rawRating) {
     if (rawRating <= SOFT_CAP_RATING) {
       return rawRating;
@@ -102,6 +109,11 @@
 
   function compressTowardMean(value, mean, factor) {
     return mean + ((value - mean) * factor);
+  }
+
+  function getConfidenceFromMatches(matchesPlayed) {
+    const safeMatches = Math.max(0, toNumber(matchesPlayed));
+    return clamp(safeMatches / TEAM_MATCHES_FOR_FULL_CONFIDENCE, 0, 1);
   }
 
   function buildAliasMap() {
@@ -428,7 +440,7 @@
         }
 
         player.matchesPlayed += 1;
-        player.matchRatings.push(clamp(rating, 0, 100));
+        player.matchRatings.push(clamp(rating, 0, MAX_DISPLAY_RATING));
       });
     });
 
@@ -466,7 +478,13 @@
 
     teamRows.forEach(team => {
       const spreadAdjustedTeamRating = compressTowardMean(team.rawTeamRating, meanRawTeamRating, TEAM_COMPETITIVE_SPREAD);
-      team.teamRating = clamp(applySoftCapCurve(spreadAdjustedTeamRating), 0, MAX_DISPLAY_RATING);
+      const confidence = getConfidenceFromMatches(team.matchesPlayed);
+      const confidenceNormalizedTeamRating = TEAM_NEUTRAL_BASELINE + ((spreadAdjustedTeamRating - TEAM_NEUTRAL_BASELINE) * confidence);
+      const curvedTeamRating = applySoftCapCurve(confidenceNormalizedTeamRating);
+      const floorAdjustedTeamRating = team.matchesPlayed > 0
+        ? Math.max(ACTIVE_TEAM_RATING_FLOOR, curvedTeamRating)
+        : curvedTeamRating;
+      team.teamRating = toRating1(floorAdjustedTeamRating);
     });
 
     const playerRows = Array.from(playerMap.values())
@@ -482,7 +500,7 @@
 
     playerRows.forEach(player => {
       const spreadAdjustedPlayerRating = compressTowardMean(player.rawTournamentRating, meanRawPlayerRating, PLAYER_COMPETITIVE_SPREAD);
-      player.tournamentRating = clamp(applySoftCapCurve(spreadAdjustedPlayerRating), 0, MAX_DISPLAY_RATING);
+      player.tournamentRating = toRating1(applySoftCapCurve(spreadAdjustedPlayerRating));
     });
 
     state.results = {
