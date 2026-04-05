@@ -141,8 +141,7 @@
       (team.players || []).forEach(playerName => {
         roster.set(normalizeName(playerName), {
           canonical: playerName,
-          team: team.name,
-          registered: true
+          team: team.name
         });
       });
     });
@@ -247,7 +246,6 @@
       map.set(canonical, {
         canonical,
         team,
-        registered: state.roster.has(normalizeName(canonical)),
         matchesPlayed: 0,
         matchRatings: []
       });
@@ -479,10 +477,7 @@
             <tr><th>Player</th><th>Rating</th></tr>
           </thead>
           <tbody>
-            ${players.map((player, idx) => {
-              const displayName = (player.canonical || '').replace(/\s*NEW\s*$/i, '').trim();
-              return `<tr><td>${idx + 1}. ${displayName}</td><td>${round1(player.tournamentRating).toFixed(1)}</td></tr>`;
-            }).join('')}
+            ${players.map((player, idx) => `<tr><td>${idx + 1}. ${player.canonical || 'Unknown'}</td><td>${round1(player.tournamentRating).toFixed(1)}</td></tr>`).join('')}
           </tbody>
         </table>
       </div>
