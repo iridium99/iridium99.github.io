@@ -4,11 +4,12 @@
   const SOFT_CAP_RATING = 90;
   const MAX_DISPLAY_RATING = 95;
   const ELITE_CURVE_RATE = 0.12;
-  const TEAM_COMPETITIVE_SPREAD = 0.78;
+  const TEAM_COMPETITIVE_SPREAD = 0.95;
   const PLAYER_COMPETITIVE_SPREAD = 0.62;
   const ACTIVE_TEAM_RATING_FLOOR = 60;
-  const TEAM_NEUTRAL_BASELINE = 70;
   const TEAM_MATCHES_FOR_FULL_CONFIDENCE = 4;
+  const TEAM_CONFIDENCE_FLOOR = 0.6;
+  const TEAM_CONFIDENCE_SPAN = 0.4;
 
   const TEAM_STRENGTHS = {
     England: 0.200,
@@ -113,7 +114,7 @@
 
   function getConfidenceFromMatches(matchesPlayed) {
     const safeMatches = Math.max(0, toNumber(matchesPlayed));
-    return clamp(safeMatches / TEAM_MATCHES_FOR_FULL_CONFIDENCE, 0, 1);
+    return TEAM_CONFIDENCE_FLOOR + (TEAM_CONFIDENCE_SPAN * clamp(safeMatches / TEAM_MATCHES_FOR_FULL_CONFIDENCE, 0, 1));
   }
 
   function weightedAverage(items) {
@@ -471,33 +472,30 @@
       const expectedPointsPerGame = team.matchesPlayed ? team.expectedPoints / team.matchesPlayed : 0;
       const outcomeVsExpectationPerGame = pointsPerGame - expectedPointsPerGame;
       const gdPerGame = team.matchesPlayed ? ((team.goalsFor - team.goalsAgainst) / team.matchesPlayed) : 0;
-      const avgTeamScore = team.teamScores.length
-        ? (team.teamScores.reduce((sum, score) => sum + score, 0) / team.teamScores.length)
-        : 50;
       const avgOpponentStrength = team.matchesPlayed ? (team.opponentStrengthTotal / team.matchesPlayed) : 0;
 
-      const resultScore = clamp((pointsPerGame / 3) * 100, 0, 100);
-      const expectationScore = clamp(50 + (outcomeVsExpectationPerGame * 24), 0, 100);
-      const scheduleScore = clamp((avgOpponentStrength / Math.max(maxObservedStrength, 0.001)) * 100, 0, 100);
-      const goalDifferenceScore = clamp(50 + (gdPerGame * 10), 0, 100);
+      const resultScore = clamp(35 + (pointsPerGame * 22), 0, 100);
+      const expectationScore = clamp(50 + (outcomeVsExpectationPerGame * 30), 0, 100);
+      const scheduleScore = clamp(35 + ((avgOpponentStrength / Math.max(maxObservedStrength, 0.001)) * 65), 0, 100);
+      const goalDifferenceScore = clamp(50 + (gdPerGame * 14), 0, 100);
       const statsScore = clamp(
         50
-          + ((shotsPerHalf - avgShots) * 5)
-          + ((possessionPerHalf - 50) * 0.45)
-          + ((passesPerHalf - avgPasses) * 0.28),
+          + ((shotsPerHalf - avgShots) * 6)
+          + ((possessionPerHalf - 50) * 0.6)
+          + ((passesPerHalf - avgPasses) * 0.35),
         0,
         100
       );
 
       const weightedComposite = weightedAverage([
-        { value: resultScore, weight: 0.34 },
-        { value: expectationScore, weight: 0.30 },
-        { value: scheduleScore, weight: 0.20 },
+        { value: resultScore, weight: 0.40 },
+        { value: expectationScore, weight: 0.28 },
+        { value: scheduleScore, weight: 0.16 },
         { value: goalDifferenceScore, weight: 0.10 },
         { value: statsScore, weight: 0.06 }
       ]);
 
-      const confidence = clamp(Math.log1p(team.matchesPlayed) / Math.log1p(TEAM_MATCHES_FOR_FULL_CONFIDENCE + 1), 0, 1);
+      const confidence = getConfidenceFromMatches(team.matchesPlayed);
       const blendedRating = 60 + ((weightedComposite - 60) * confidence);
 
       team.rawTeamRating = blendedRating;
@@ -633,4 +631,5 @@
     console.error('World Cup top 5 injection failed', error);
   });
 })();
+
 
