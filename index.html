@@ -336,24 +336,6 @@
             font-size: 16px;
         }
 
-        .world-cup-legend {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 12px;
-            color: #cbd5e1;
-            flex-wrap: wrap;
-        }
-
-        .world-cup-legend-swatch {
-            width: 12px;
-            height: 12px;
-            border-radius: 999px;
-            background: rgba(34, 197, 94, 0.22);
-            border: 1px solid rgba(34, 197, 94, 0.7);
-            box-sizing: border-box;
-        }
-
         .world-cup-toggle {
             display: flex;
             gap: 8px;
@@ -437,7 +419,7 @@
 
         .world-cup-stats-row {
             display: grid;
-            grid-template-columns: repeat(5, minmax(180px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 8px;
         }
 
@@ -554,63 +536,6 @@
             margin: 0 auto;
         }
 
-        .world-cup-team-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
-            gap: 6px;
-        }
-
-        .world-cup-team-card {
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 10px;
-            padding: 8px;
-            background: rgba(255, 255, 255, 0.03);
-            min-width: 0;
-        }
-
-        .world-cup-team-name {
-            font-weight: 700;
-            margin-bottom: 4px;
-            font-size: 13px;
-        }
-
-        .world-cup-player-list {
-            margin: 0;
-            padding-left: 0;
-            color: #e0e0e0;
-            line-height: 1.25;
-            font-size: 12px;
-            list-style: none;
-            display: grid;
-            gap: 4px;
-        }
-
-        .world-cup-player-list li {
-            padding: 4px 6px;
-            border-radius: 6px;
-        }
-
-        .world-cup-player-list li.world-cup-registered-player {
-            background: rgba(34, 197, 94, 0.14);
-            color: #dcfce7;
-            font-weight: 700;
-            border: 1px solid rgba(34, 197, 94, 0.28);
-        }
-
-        .world-cup-registered-badge {
-            display: inline-block;
-            margin-left: 6px;
-            padding: 1px 6px;
-            border-radius: 999px;
-            background: rgba(34, 197, 94, 0.18);
-            border: 1px solid rgba(34, 197, 94, 0.38);
-            color: #bbf7d0;
-            font-size: 10px;
-            font-weight: 700;
-            letter-spacing: 0.02em;
-            vertical-align: middle;
-        }
-
         .world-cup-stats-section {
             display: grid;
             gap: 12px;
@@ -652,19 +577,9 @@
                 justify-items: center;
             }
 
-            .world-cup-stats-row {
-                grid-template-columns: repeat(2, minmax(180px, 1fr));
-            }
-
             .world-cup-top-grid > * {
                 width: 100%;
                 max-width: 100%;
-            }
-        }
-
-        @media (max-width: 680px) {
-            .world-cup-stats-row {
-                grid-template-columns: 1fr;
             }
         }
         
@@ -1644,26 +1559,6 @@
             }
         ];
 
-        function normalizeWorldCupName(value) {
-            return (value || '').toLowerCase().replace(/[^a-z0-9]+/g, '');
-        }
-
-        const registeredWorldCupPlayerAliases = {
-            wakanda: 'wpi',
-            v4ks: 'vaks',
-            tripleg: 'gggheddafi'
-        };
-
-        const explicitRegisteredWorldCupNames = new Set([
-            'saygex', 'perkz', 'pedri', 'mbappe', 'slimani', 'sergicanos', 'm1dnam',
-            'monk', 'razor', 'luur', 'doom', 'spero', 'zenix', 'vaks', 'shield',
-            'fad', 'santi', 'gggheddafi', 'wpi', 'cyn', 'berbatov',
-            'atrocityexhibition', 'urlocalfrenchguy', 'von', 'tsukuyomi', '7ooby',
-            'timber', 'maksluburic', 'tjay', 'a7mdbibo', 'toughbaby', 'shadiozz',
-            'mrn', 'yaya', 'himothy', 'yeet', 'blimpus', 'valotii', 'drkuu',
-            'faya', 'johnnysins', 'vannistelrooy'
-        ]);
-
         // NEW
         const worldCupTeamLookup = new Map(teams.map(team => [team.name, team]));
         let worldCupViewMode = 'raw';
@@ -1771,30 +1666,6 @@
                 player.img = `cards/${imgName}.png`;
             }
         });
-
-        const registeredWorldCupPlayerNames = new Set(
-            allPlayers
-                .filter(player => player.card_type !== 'winter')
-                .map(player => normalizeWorldCupName(player.name))
-        );
-
-        function isRegisteredWorldCupPlayer(name) {
-            const normalizedName = normalizeWorldCupName(name);
-            if (!normalizedName) {
-                return false;
-            }
-
-            if (explicitRegisteredWorldCupNames.has(normalizedName)) {
-                return true;
-            }
-
-            if (registeredWorldCupPlayerNames.has(normalizedName)) {
-                return true;
-            }
-
-            const aliasTarget = registeredWorldCupPlayerAliases[normalizedName];
-            return aliasTarget ? registeredWorldCupPlayerNames.has(aliasTarget) : false;
-        }
 
         const positionCategories = {
             'DEF': ['CB', 'RB', 'LB'],
@@ -2228,34 +2099,6 @@
         }
 
         // NEW
-        function renderWorldCupPlayersByTeam() {
-            return `
-                <div class="world-cup-card">
-                    <div class="world-cup-header">
-                        <h2 class="world-cup-title">Players by Team</h2>
-                        <div class="world-cup-legend">
-                            <span class="world-cup-legend-swatch"></span>
-                            <span>Registered with LDC RS Legends</span>
-                        </div>
-                    </div>
-                    <div class="world-cup-team-list">
-                        ${teams.map(team => `
-                            <div class="world-cup-team-card">
-                                <div class="world-cup-team-name">${team.flag} ${team.name}</div>
-                                <ul class="world-cup-player-list">
-                                    ${team.players.map(player => {
-                                        const isRegistered = isRegisteredWorldCupPlayer(player);
-                                        return `<li class="${isRegistered ? 'world-cup-registered-player' : ''}">${player}${isRegistered ? ' <span class="world-cup-registered-badge">Registered</span>' : ''}</li>`;
-                                    }).join('')}
-                                </ul>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-            `;
-        }
-
-        // NEW
         function renderWorldCupTab() {
             const container = document.getElementById('world-cup-container');
             if (!container) {
@@ -2369,14 +2212,12 @@
                     </div>
 
                     <div class="world-cup-stats-row">
-                        ${renderWorldCupStatTable('Clean Sheets', playerStats.cleanSheets, 'Clean Sheets')}
-                        ${renderWorldCupStatTable('MVPs', playerStats.mvps, 'MVPs')}
                         ${renderWorldCupStatTable('Goals', playerStats.goals, 'Goals')}
                         ${renderWorldCupStatTable('Assists', playerStats.assists, 'Assists')}
+                        ${renderWorldCupStatTable('MVPs', playerStats.mvps, 'MVPs')}
+                        ${renderWorldCupStatTable('Clean Sheets', playerStats.cleanSheets, 'Clean Sheets')}
                         ${renderWorldCupStatTable('Own Goals', playerStats.ownGoals, 'Own Goals')}
                     </div>
-
-                    ${renderWorldCupPlayersByTeam()}
                 </div>
             `;
 
