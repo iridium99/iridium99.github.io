@@ -446,7 +446,6 @@
       playersCard = document.createElement('div');
       playersCard.id = 'world-cup-top5-players-card';
       playersCard.className = 'world-cup-card';
-      statsRow.prepend(playersCard);
     }
 
     let teamsCard = document.getElementById('world-cup-top5-teams-card');
@@ -454,11 +453,6 @@
       teamsCard = document.createElement('div');
       teamsCard.id = 'world-cup-top5-teams-card';
       teamsCard.className = 'world-cup-card';
-      if (playersCard.nextSibling) {
-        statsRow.insertBefore(teamsCard, playersCard.nextSibling);
-      } else {
-        statsRow.appendChild(teamsCard);
-      }
     }
 
     playersCard.innerHTML = `
@@ -469,7 +463,10 @@
             <tr><th>Player</th><th>Rating</th></tr>
           </thead>
           <tbody>
-            ${players.map((player, idx) => `<tr><td>${idx + 1}. ${player.canonical}</td><td>${round1(player.tournamentRating).toFixed(1)}</td></tr>`).join('')}
+            ${players.map((player, idx) => {
+              const displayName = (player.canonical || '').replace(/\s*NEW\s*$/i, '').trim();
+              return `<tr><td>${idx + 1}. ${displayName}</td><td>${round1(player.tournamentRating).toFixed(1)}</td></tr>`;
+            }).join('')}
           </tbody>
         </table>
       </div>
@@ -488,6 +485,11 @@
         </table>
       </div>
     `;
+
+    // Keep these two cards at the end of the stats row:
+    // Goals, Assists, MVPs, Clean Sheets, Own Goals, Top 5 Players, Top 5 Teams
+    statsRow.appendChild(playersCard);
+    statsRow.appendChild(teamsCard);
   }
 
   function injectStyles() {
@@ -530,3 +532,4 @@
     console.error('World Cup top 5 injection failed', error);
   });
 })();
+
