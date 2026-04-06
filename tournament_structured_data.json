@@ -14,6 +14,22 @@
     },
     "goalsLeaderboard": [
       {
+        "player": "zen!x",
+        "goals": 3
+      },
+      {
+        "player": "yonko",
+        "goals": 2
+      },
+      {
+        "player": "Wakanda",
+        "goals": 2
+      },
+      {
+        "player": "Luisdiaz",
+        "goals": 2
+      },
+      {
         "player": "A7mdBibo",
         "goals": 1
       },
@@ -38,13 +54,37 @@
         "goals": 1
       },
       {
-        "player": "Luisdiaz",
+        "player": "Tiki",
+        "goals": 1
+      },
+      {
+        "player": "zaQu",
+        "goals": 1
+      },
+      {
+        "player": "ToughBaby",
+        "goals": 1
+      },
+      {
+        "player": "cytro",
+        "goals": 1
+      },
+      {
+        "player": "Zalofa",
         "goals": 1
       }
     ],
     "assistsLeaderboard": [
       {
         "player": "MRN",
+        "assists": 2
+      },
+      {
+        "player": "grmii",
+        "assists": 2
+      },
+      {
+        "player": "W",
         "assists": 2
       },
       {
@@ -69,6 +109,34 @@
       },
       {
         "player": "Wakanda",
+        "assists": 1
+      },
+      {
+        "player": "ShadiOzz",
+        "assists": 1
+      },
+      {
+        "player": "zen!x",
+        "assists": 1
+      },
+      {
+        "player": "zaQu",
+        "assists": 1
+      },
+      {
+        "player": "Isagi Yoichi",
+        "assists": 1
+      },
+      {
+        "player": "tsukuyomi.",
+        "assists": 1
+      },
+      {
+        "player": "vvv",
+        "assists": 1
+      },
+      {
+        "player": "santos",
         "assists": 1
       }
     ],
@@ -144,6 +212,10 @@
       {
         "player": "SergioRamoss",
         "ownGoals": 1
+      },
+      {
+        "player": "Himothy",
+        "ownGoals": 1
       }
     ],
     "goalkeepers": [
@@ -163,14 +235,25 @@
     "groupTables": {
       "Group A": [
         {
-          "team": "Spain",
-          "MP": 1,
-          "W": 1,
+          "team": "Netherlands",
+          "MP": 2,
+          "W": 2,
           "D": 0,
           "L": 0,
-          "GF": 1,
+          "GF": 2,
           "GA": 0,
-          "GD": 1,
+          "GD": 2,
+          "Pts": 6
+        },
+        {
+          "team": "Spain",
+          "MP": 3,
+          "W": 1,
+          "D": 0,
+          "L": 2,
+          "GF": 1,
+          "GA": 2,
+          "GD": -1,
           "Pts": 3
         },
         {
@@ -205,29 +288,40 @@
           "GA": 1,
           "GD": -1,
           "Pts": 0
-        },
-        {
-          "team": "Netherlands",
-          "MP": 0,
-          "W": 0,
-          "D": 0,
-          "L": 0,
-          "GF": 0,
-          "GA": 0,
-          "GD": 0,
-          "Pts": 0
         }
       ],
       "Group B": [
         {
+          "team": "England",
+          "MP": 4,
+          "W": 2,
+          "D": 2,
+          "L": 0,
+          "GF": 6,
+          "GA": 2,
+          "GD": 4,
+          "Pts": 8
+        },
+        {
+          "team": "Poland",
+          "MP": 2,
+          "W": 1,
+          "D": 1,
+          "L": 0,
+          "GF": 4,
+          "GA": 1,
+          "GD": 3,
+          "Pts": 4
+        },
+        {
           "team": "Egypt",
-          "MP": 1,
+          "MP": 2,
           "W": 1,
           "D": 0,
-          "L": 0,
-          "GF": 5,
-          "GA": 0,
-          "GD": 5,
+          "L": 1,
+          "GF": 6,
+          "GA": 4,
+          "GD": 2,
           "Pts": 3
         },
         {
@@ -242,36 +336,14 @@
           "Pts": 2
         },
         {
-          "team": "England",
-          "MP": 2,
-          "W": 0,
-          "D": 2,
-          "L": 0,
-          "GF": 1,
-          "GA": 1,
-          "GD": 0,
-          "Pts": 2
-        },
-        {
-          "team": "Poland",
-          "MP": 1,
-          "W": 0,
-          "D": 1,
-          "L": 0,
-          "GF": 0,
-          "GA": 0,
-          "GD": 0,
-          "Pts": 1
-        },
-        {
           "team": "Tunisia + Algeria",
-          "MP": 2,
+          "MP": 4,
           "W": 0,
           "D": 1,
-          "L": 1,
-          "GF": 0,
-          "GA": 5,
-          "GD": -5,
+          "L": 3,
+          "GF": 1,
+          "GA": 10,
+          "GD": -9,
           "Pts": 1
         }
       ]
@@ -279,10 +351,10 @@
     "teamRawStats": [
       {
         "team": "England",
-        "halvesRecorded": 4,
-        "passes": 277,
-        "possessionPercent": 208.7,
-        "shotsOnGoal": 17
+        "halvesRecorded": 6,
+        "passes": 407,
+        "possessionPercent": 311.5,
+        "shotsOnGoal": 26
       },
       {
         "team": "France",
@@ -293,10 +365,10 @@
       },
       {
         "team": "Tunisia + Algeria",
-        "halvesRecorded": 4,
-        "passes": 131,
-        "possessionPercent": 182.4,
-        "shotsOnGoal": 10
+        "halvesRecorded": 6,
+        "passes": 212,
+        "possessionPercent": 279.6,
+        "shotsOnGoal": 17
       },
       {
         "team": "Italy",
@@ -306,25 +378,18 @@
         "shotsOnGoal": 11
       },
       {
-        "team": "Poland",
-        "halvesRecorded": 2,
-        "passes": 99,
-        "possessionPercent": 105.8,
-        "shotsOnGoal": 3
-      },
-      {
-        "team": "World XI",
-        "halvesRecorded": 2,
-        "passes": 61,
-        "possessionPercent": 89.8,
+        "team": "Egypt",
+        "halvesRecorded": 4,
+        "passes": 151,
+        "possessionPercent": 204.6,
         "shotsOnGoal": 6
       },
       {
-        "team": "Egypt",
-        "halvesRecorded": 2,
-        "passes": 58,
-        "possessionPercent": 108.3,
-        "shotsOnGoal": 5
+        "team": "Poland",
+        "halvesRecorded": 4,
+        "passes": 168,
+        "possessionPercent": 161.2,
+        "shotsOnGoal": 12
       },
       {
         "team": "Germany",
@@ -335,17 +400,17 @@
       },
       {
         "team": "Spain",
-        "halvesRecorded": 1,
-        "passes": 50,
-        "possessionPercent": 47.8,
-        "shotsOnGoal": 1
+        "halvesRecorded": 3,
+        "passes": 118,
+        "possessionPercent": 143.3,
+        "shotsOnGoal": 2
       },
       {
         "team": "Netherlands",
-        "halvesRecorded": 0,
-        "passes": 0,
-        "possessionPercent": 0,
-        "shotsOnGoal": 0
+        "halvesRecorded": 2,
+        "passes": 144,
+        "possessionPercent": 104.5,
+        "shotsOnGoal": 13
       }
     ]
   },
@@ -2033,6 +2098,925 @@
           "goals": 0,
           "assists": 0,
           "kicks": 20,
+          "passes": 2,
+          "shots": 0
+        }
+      ]
+    },
+    {
+      "matchNumber": 7,
+      "halfNumber": 1,
+      "teamA": "Egypt",
+      "teamB": "Poland",
+      "scoreA": 1,
+      "scoreB": 0,
+      "gameTime": "9:18",
+      "goals": [
+        {
+          "score": "1:0",
+          "scorer": "ToughBaby",
+          "assist": "ShadiOzz",
+          "ownGoal": false
+        }
+      ],
+      "stats": {
+        "possessionA": 51.7,
+        "possessionB": 48.3,
+        "kicksA": 115,
+        "kicksB": 121,
+        "passesA": 51,
+        "passesB": 59,
+        "shotsA": 1,
+        "shotsB": 4
+      },
+      "players": [
+        {
+          "name": "MRN",
+          "team": "Egypt",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 15,
+          "passes": 5,
+          "shots": 0
+        },
+        {
+          "name": "Virgil Van Dijk",
+          "team": "Egypt",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 16,
+          "passes": 6,
+          "shots": 0
+        },
+        {
+          "name": "ShadiOzz",
+          "team": "Egypt",
+          "goals": 0,
+          "assists": 1,
+          "kicks": 18,
+          "passes": 11,
+          "shots": 1
+        },
+        {
+          "name": "tiki",
+          "team": "Egypt",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 12,
+          "passes": 5,
+          "shots": 0
+        },
+        {
+          "name": "YaYa",
+          "team": "Egypt",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 21,
+          "passes": 10,
+          "shots": 0
+        },
+        {
+          "name": "ToughBaby",
+          "team": "Egypt",
+          "goals": 1,
+          "assists": 0,
+          "kicks": 33,
+          "passes": 14,
+          "shots": 0
+        },
+        {
+          "name": "zen!x",
+          "team": "Poland",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 25,
+          "passes": 14,
+          "shots": 2
+        },
+        {
+          "name": "dreamz",
+          "team": "Poland",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 13,
+          "passes": 5,
+          "shots": 0
+        },
+        {
+          "name": "grmii",
+          "team": "Poland",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 24,
+          "passes": 15,
+          "shots": 0
+        },
+        {
+          "name": "luur",
+          "team": "Poland",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 22,
+          "passes": 13,
+          "shots": 1
+        },
+        {
+          "name": "Piątek",
+          "team": "Poland",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 10,
+          "passes": 5,
+          "shots": 1
+        },
+        {
+          "name": "Monk",
+          "team": "Poland",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 27,
+          "passes": 7,
+          "shots": 0
+        }
+      ]
+    },
+    {
+      "matchNumber": 7,
+      "halfNumber": 2,
+      "teamA": "Poland",
+      "teamB": "Egypt",
+      "scoreA": 4,
+      "scoreB": 0,
+      "gameTime": "9:33",
+      "goals": [
+        {
+          "score": "1:0",
+          "scorer": "zaQu",
+          "assist": "zen!x",
+          "ownGoal": false
+        },
+        {
+          "score": "2:0",
+          "scorer": "zen!x",
+          "assist": "grmii",
+          "ownGoal": false
+        },
+        {
+          "score": "3:0",
+          "scorer": "zen!x",
+          "assist": "grmii",
+          "ownGoal": false
+        },
+        {
+          "score": "4:0",
+          "scorer": "zen!x",
+          "assist": "zaQu",
+          "ownGoal": false
+        }
+      ],
+      "stats": {
+        "possessionA": 55.4,
+        "possessionB": 44.6,
+        "kicksA": 144,
+        "kicksB": 117,
+        "passesA": 69,
+        "passesB": 42,
+        "shotsA": 9,
+        "shotsB": 0
+      },
+      "players": [
+        {
+          "name": "dreamz",
+          "team": "Poland",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 10,
+          "passes": 4,
+          "shots": 0
+        },
+        {
+          "name": "KVAS",
+          "team": "Poland",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 29,
+          "passes": 14,
+          "shots": 1
+        },
+        {
+          "name": "luur",
+          "team": "Poland",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 20,
+          "passes": 11,
+          "shots": 0
+        },
+        {
+          "name": "zaQu",
+          "team": "Poland",
+          "goals": 1,
+          "assists": 1,
+          "kicks": 21,
+          "passes": 12,
+          "shots": 2
+        },
+        {
+          "name": "grmii",
+          "team": "Poland",
+          "goals": 0,
+          "assists": 2,
+          "kicks": 30,
+          "passes": 18,
+          "shots": 0
+        },
+        {
+          "name": "zen!x",
+          "team": "Poland",
+          "goals": 3,
+          "assists": 1,
+          "kicks": 24,
+          "passes": 7,
+          "shots": 6
+        },
+        {
+          "name": "Monk",
+          "team": "Poland",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 10,
+          "passes": 3,
+          "shots": 0
+        },
+        {
+          "name": "ToughBaby",
+          "team": "Egypt",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 41,
+          "passes": 13,
+          "shots": 0
+        },
+        {
+          "name": "ShadiOzz",
+          "team": "Egypt",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 29,
+          "passes": 11,
+          "shots": 0
+        },
+        {
+          "name": "YaYa",
+          "team": "Egypt",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 22,
+          "passes": 5,
+          "shots": 0
+        },
+        {
+          "name": "tiki",
+          "team": "Egypt",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 15,
+          "passes": 9,
+          "shots": 0
+        },
+        {
+          "name": "MRN",
+          "team": "Egypt",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 10,
+          "passes": 4,
+          "shots": 0
+        }
+      ]
+    },
+    {
+      "matchNumber": 8,
+      "halfNumber": 1,
+      "teamA": "Spain",
+      "teamB": "Netherlands",
+      "scoreA": 0,
+      "scoreB": 1,
+      "gameTime": "9:02",
+      "goals": [
+        {
+          "score": "0:1",
+          "scorer": "yonko",
+          "assist": "Isagi Yoichi",
+          "ownGoal": false
+        }
+      ],
+      "stats": {
+        "possessionA": 49.7,
+        "possessionB": 50.3,
+        "kicksA": 108,
+        "kicksB": 142,
+        "passesA": 41,
+        "passesB": 75,
+        "shotsA": 1,
+        "shotsB": 5
+      },
+      "players": [
+        {
+          "name": "II Mbappe II",
+          "team": "Spain",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 19,
+          "passes": 8,
+          "shots": 0
+        },
+        {
+          "name": "$limani",
+          "team": "Spain",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 21,
+          "passes": 11,
+          "shots": 0
+        },
+        {
+          "name": "dikkebienozz",
+          "team": "Spain",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 16,
+          "passes": 4,
+          "shots": 0
+        },
+        {
+          "name": "Johnny Sins",
+          "team": "Spain",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 17,
+          "passes": 5,
+          "shots": 1
+        },
+        {
+          "name": "Pedri",
+          "team": "Spain",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 25,
+          "passes": 11,
+          "shots": 0
+        },
+        {
+          "name": "Pitarch (Androide)",
+          "team": "Spain",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 10,
+          "passes": 2,
+          "shots": 0
+        },
+        {
+          "name": "Shinsuke Nakamura",
+          "team": "Netherlands",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 29,
+          "passes": 15,
+          "shots": 0
+        },
+        {
+          "name": "Isagi Yoichi",
+          "team": "Netherlands",
+          "goals": 0,
+          "assists": 1,
+          "kicks": 25,
+          "passes": 11,
+          "shots": 1
+        },
+        {
+          "name": "yonko",
+          "team": "Netherlands",
+          "goals": 1,
+          "assists": 0,
+          "kicks": 13,
+          "passes": 4,
+          "shots": 3
+        },
+        {
+          "name": "poppa",
+          "team": "Netherlands",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 20,
+          "passes": 8,
+          "shots": 1
+        },
+        {
+          "name": "tsukuyomi.",
+          "team": "Netherlands",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 43,
+          "passes": 27,
+          "shots": 0
+        },
+        {
+          "name": "Timber",
+          "team": "Netherlands",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 12,
+          "passes": 10,
+          "shots": 0
+        }
+      ]
+    },
+    {
+      "matchNumber": 8,
+      "halfNumber": 2,
+      "teamA": "Netherlands",
+      "teamB": "Spain",
+      "scoreA": 1,
+      "scoreB": 0,
+      "gameTime": "8:17",
+      "goals": [
+        {
+          "score": "1:0",
+          "scorer": "yonko",
+          "assist": "tsukuyomi.",
+          "ownGoal": false
+        }
+      ],
+      "stats": {
+        "possessionA": 54.2,
+        "possessionB": 45.8,
+        "kicksA": 159,
+        "kicksB": 115,
+        "passesA": 69,
+        "passesB": 27,
+        "shotsA": 8,
+        "shotsB": 0
+      },
+      "players": [
+        {
+          "name": "Nympex",
+          "team": "Netherlands",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 12,
+          "passes": 6,
+          "shots": 0
+        },
+        {
+          "name": "Shinsuke Nakamura",
+          "team": "Netherlands",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 47,
+          "passes": 17,
+          "shots": 3
+        },
+        {
+          "name": "yonko",
+          "team": "Netherlands",
+          "goals": 1,
+          "assists": 0,
+          "kicks": 18,
+          "passes": 6,
+          "shots": 3
+        },
+        {
+          "name": "Isagi Yoichi",
+          "team": "Netherlands",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 23,
+          "passes": 14,
+          "shots": 1
+        },
+        {
+          "name": "poppa",
+          "team": "Netherlands",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 20,
+          "passes": 8,
+          "shots": 0
+        },
+        {
+          "name": "tsukuyomi.",
+          "team": "Netherlands",
+          "goals": 0,
+          "assists": 1,
+          "kicks": 39,
+          "passes": 18,
+          "shots": 1
+        },
+        {
+          "name": "$limani",
+          "team": "Spain",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 24,
+          "passes": 6,
+          "shots": 0
+        },
+        {
+          "name": "Chie",
+          "team": "Spain",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 13,
+          "passes": 3,
+          "shots": 0
+        },
+        {
+          "name": "II Mbappe II",
+          "team": "Spain",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 19,
+          "passes": 3,
+          "shots": 0
+        },
+        {
+          "name": "m1dnam",
+          "team": "Spain",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 18,
+          "passes": 6,
+          "shots": 0
+        },
+        {
+          "name": "Pedri",
+          "team": "Spain",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 25,
+          "passes": 3,
+          "shots": 0
+        },
+        {
+          "name": "Johnny Sins",
+          "team": "Spain",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 14,
+          "passes": 5,
+          "shots": 0
+        },
+        {
+          "name": "Pitarch (Androide)",
+          "team": "Spain",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 2,
+          "passes": 1,
+          "shots": 0
+        }
+      ]
+    },
+    {
+      "matchNumber": 9,
+      "halfNumber": 1,
+      "teamA": "Tunisia + Algeria",
+      "teamB": "England",
+      "scoreA": 0,
+      "scoreB": 2,
+      "gameTime": "7:58",
+      "goals": [
+        {
+          "score": "0:1",
+          "scorer": "Wakanda",
+          "assist": "vvv",
+          "ownGoal": false
+        },
+        {
+          "score": "0:2",
+          "scorer": "Wakanda",
+          "assist": null,
+          "ownGoal": false
+        }
+      ],
+      "stats": {
+        "possessionA": 46.3,
+        "possessionB": 53.7,
+        "kicksA": 114,
+        "kicksB": 138,
+        "passesA": 46,
+        "passesB": 64,
+        "shotsA": 3,
+        "shotsB": 3
+      },
+      "players": [
+        {
+          "name": "SUCA",
+          "team": "Tunisia + Algeria",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 13,
+          "passes": 5,
+          "shots": 1
+        },
+        {
+          "name": "𝕐𝔼𝔼𝕋 💚[Chat OFF]",
+          "team": "Tunisia + Algeria",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 14,
+          "passes": 3,
+          "shots": 1
+        },
+        {
+          "name": "Himothy",
+          "team": "Tunisia + Algeria",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 14,
+          "passes": 7,
+          "shots": 0
+        },
+        {
+          "name": "Zalofa",
+          "team": "Tunisia + Algeria",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 24,
+          "passes": 10,
+          "shots": 0
+        },
+        {
+          "name": "Kaka\"",
+          "team": "Tunisia + Algeria",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 28,
+          "passes": 11,
+          "shots": 1
+        },
+        {
+          "name": "Praetor.",
+          "team": "Tunisia + Algeria",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 21,
+          "passes": 10,
+          "shots": 0
+        },
+        {
+          "name": "arsha - haxballradar.com/",
+          "team": "England",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 14,
+          "passes": 6,
+          "shots": 2
+        },
+        {
+          "name": "atrocity exhibition",
+          "team": "England",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 10,
+          "passes": 5,
+          "shots": 0
+        },
+        {
+          "name": "vvv",
+          "team": "England",
+          "goals": 0,
+          "assists": 1,
+          "kicks": 31,
+          "passes": 15,
+          "shots": 0
+        },
+        {
+          "name": "Wakanda",
+          "team": "England",
+          "goals": 2,
+          "assists": 0,
+          "kicks": 29,
+          "passes": 14,
+          "shots": 0
+        },
+        {
+          "name": "cytro",
+          "team": "England",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 27,
+          "passes": 9,
+          "shots": 1
+        },
+        {
+          "name": "Blazing",
+          "team": "England",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 27,
+          "passes": 15,
+          "shots": 0
+        }
+      ]
+    },
+    {
+      "matchNumber": 9,
+      "halfNumber": 2,
+      "teamA": "England",
+      "teamB": "Tunisia + Algeria",
+      "scoreA": 3,
+      "scoreB": 1,
+      "gameTime": "8:34",
+      "goals": [
+        {
+          "score": "1:0",
+          "scorer": "cytro",
+          "assist": "W",
+          "ownGoal": false
+        },
+        {
+          "score": "2:0",
+          "scorer": "Luisdiaz",
+          "assist": "W",
+          "ownGoal": false
+        },
+        {
+          "score": "2:1",
+          "scorer": "Zalofa",
+          "assist": "santos",
+          "ownGoal": false
+        },
+        {
+          "score": "3:1",
+          "scorer": "Himothy",
+          "assist": null,
+          "ownGoal": true
+        }
+      ],
+      "stats": {
+        "possessionA": 49.1,
+        "possessionB": 50.9,
+        "kicksA": 141,
+        "kicksB": 113,
+        "passesA": 66,
+        "passesB": 35,
+        "shotsA": 6,
+        "shotsB": 4
+      },
+      "players": [
+        {
+          "name": "evilpedri",
+          "team": "England",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 10,
+          "passes": 4,
+          "shots": 1
+        },
+        {
+          "name": "atrocity exhibition",
+          "team": "England",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 16,
+          "passes": 9,
+          "shots": 1
+        },
+        {
+          "name": "Blazing",
+          "team": "England",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 25,
+          "passes": 12,
+          "shots": 0
+        },
+        {
+          "name": "Luisdiaz",
+          "team": "England",
+          "goals": 1,
+          "assists": 0,
+          "kicks": 19,
+          "passes": 8,
+          "shots": 1
+        },
+        {
+          "name": "cytro",
+          "team": "England",
+          "goals": 1,
+          "assists": 0,
+          "kicks": 20,
+          "passes": 7,
+          "shots": 3
+        },
+        {
+          "name": "W",
+          "team": "England",
+          "goals": 0,
+          "assists": 2,
+          "kicks": 21,
+          "passes": 12,
+          "shots": 0
+        },
+        {
+          "name": "cYn",
+          "team": "England",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 26,
+          "passes": 13,
+          "shots": 0
+        },
+        {
+          "name": "SVimes",
+          "team": "England",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 4,
+          "passes": 1,
+          "shots": 0
+        },
+        {
+          "name": "Kaka\"",
+          "team": "Tunisia + Algeria",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 23,
+          "passes": 5,
+          "shots": 0
+        },
+        {
+          "name": "Himothy",
+          "team": "Tunisia + Algeria",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 18,
+          "passes": 4,
+          "shots": 0,
+          "ownGoals": 1
+        },
+        {
+          "name": "SUCA",
+          "team": "Tunisia + Algeria",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 16,
+          "passes": 6,
+          "shots": 1
+        },
+        {
+          "name": "Zalofa",
+          "team": "Tunisia + Algeria",
+          "goals": 1,
+          "assists": 0,
+          "kicks": 21,
+          "passes": 7,
+          "shots": 3
+        },
+        {
+          "name": "_Braga_",
+          "team": "Tunisia + Algeria",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 7,
+          "passes": 1,
+          "shots": 0
+        },
+        {
+          "name": "𝕐𝔼𝔼𝕋 💚[Chat OFF]",
+          "team": "Tunisia + Algeria",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 9,
+          "passes": 5,
+          "shots": 0
+        },
+        {
+          "name": "chiggas",
+          "team": "Tunisia + Algeria",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 12,
+          "passes": 5,
+          "shots": 0
+        },
+        {
+          "name": "Nijad=Rodrygo",
+          "team": "Tunisia + Algeria",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 1,
+          "passes": 0,
+          "shots": 0
+        },
+        {
+          "name": "santos",
+          "team": "Tunisia + Algeria",
+          "goals": 0,
+          "assists": 1,
+          "kicks": 6,
           "passes": 2,
           "shots": 0
         }
