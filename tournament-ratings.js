@@ -4,7 +4,7 @@
   const SOFT_CAP_RATING = 90;
   const MAX_DISPLAY_RATING = 95;
   const ELITE_CURVE_RATE = 0.12;
-  const TEAM_COMPETITIVE_SPREAD = 0.95;
+  const TEAM_COMPETITIVE_SPREAD = 1.05;
   const PLAYER_COMPETITIVE_SPREAD = 0.85;
   const ACTIVE_TEAM_RATING_FLOOR = 65;
   const TEAM_BASELINE_RATING = 70;
@@ -601,10 +601,10 @@
       const gdPerGame = team.matchesPlayed ? ((team.goalsFor - team.goalsAgainst) / team.matchesPlayed) : 0;
       const avgOpponentStrength = team.matchesPlayed ? (team.opponentStrengthTotal / team.matchesPlayed) : 0;
 
-      const resultScore = clamp(35 + (pointsPerGame * 30), 0, 100);
+      const resultScore = clamp(40 + (pointsPerGame * 30), 0, 100);
       const expectationScore = clamp(50 + (outcomeVsExpectationPerGame * 40), 0, 100);
       const scheduleScore = clamp(35 + ((avgOpponentStrength / Math.max(maxObservedStrength, 0.001)) * 65), 0, 100);
-      const goalDifferenceScore = clamp(50 + (gdPerGame * 14), 0, 100);
+      const goalDifferenceScore = clamp(50 + (gdPerGame * 22), 0, 100);
       const statsScore = clamp(
         50
           + ((shotsPerHalf - avgShots) * 6)
@@ -615,15 +615,15 @@
       );
 
       const weightedComposite = weightedAverage([
-        { value: resultScore, weight: 0.48 },
-        { value: expectationScore, weight: 0.10 },
-        { value: scheduleScore, weight: 0.16 },
-        { value: goalDifferenceScore, weight: 0.15 },
-        { value: statsScore, weight: 0.11 }
+        { value: resultScore, weight: 0.55 },
+        { value: goalDifferenceScore, weight: 0.25 },
+        { value: expectationScore, weight: 0.05 },
+        { value: scheduleScore, weight: 0.05 },
+        { value: statsScore, weight: 0.10 }
       ]);
 
-      const confidence = getConfidenceFromMatches(team.matchesPlayed);
-      const blendedRating = TEAM_BASELINE_RATING + ((weightedComposite - TEAM_BASELINE_RATING) * confidence);
+      const activityFactor = clamp(team.matchesPlayed / 3, 0, 1);
+      const blendedRating = (TEAM_BASELINE_RATING * (1 - activityFactor)) + (weightedComposite * activityFactor);
 
       team.rawTeamRating = blendedRating;
     });
