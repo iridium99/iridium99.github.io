@@ -1440,47 +1440,50 @@
         // NEW
         const worldCupGroups = {
             groupA: [
-                { team: "Spain", MP: 1, W: 1, D: 0, L: 0, GF: 1, GA: 0, GD: 1, Pts: 3 },
+                { team: "Netherlands", MP: 1, W: 1, D: 0, L: 0, GF: 2, GA: 0, GD: 2, Pts: 3 },
+                { team: "Spain", MP: 2, W: 1, D: 0, L: 1, GF: 1, GA: 2, GD: -1, Pts: 3 },
                 { team: "Italy", MP: 1, W: 0, D: 1, L: 0, GF: 1, GA: 1, GD: 0, Pts: 1 },
                 { team: "World XI", MP: 1, W: 0, D: 1, L: 0, GF: 1, GA: 1, GD: 0, Pts: 1 },
-                { team: "Germany", MP: 1, W: 0, D: 0, L: 1, GF: 0, GA: 1, GD: -1, Pts: 0 },
-                { team: "Netherlands", MP: 0, W: 0, D: 0, L: 0, GF: 0, GA: 0, GD: 0, Pts: 0 }
+                { team: "Germany", MP: 1, W: 0, D: 0, L: 1, GF: 0, GA: 1, GD: -1, Pts: 0 }
             ],
             groupB: [
-                { team: "Egypt", MP: 1, W: 1, D: 0, L: 0, GF: 5, GA: 0, GD: 5, Pts: 3 },
+                { team: "England", MP: 3, W: 1, D: 2, L: 0, GF: 6, GA: 2, GD: 4, Pts: 5 },
+                { team: "Poland", MP: 2, W: 1, D: 1, L: 0, GF: 4, GA: 1, GD: 3, Pts: 4 },
+                { team: "Egypt", MP: 2, W: 1, D: 0, L: 1, GF: 6, GA: 4, GD: 2, Pts: 3 },
                 { team: "France", MP: 2, W: 0, D: 2, L: 0, GF: 1, GA: 1, GD: 0, Pts: 2 },
-                { team: "England", MP: 2, W: 0, D: 2, L: 0, GF: 1, GA: 1, GD: 0, Pts: 2 },
-                { team: "Poland", MP: 1, W: 0, D: 1, L: 0, GF: 0, GA: 0, GD: 0, Pts: 1 },
-                { team: "Tunisia + Algeria", MP: 2, W: 0, D: 1, L: 1, GF: 0, GA: 5, GD: -5, Pts: 1 }
+                { team: "Tunisia + Algeria", MP: 3, W: 0, D: 1, L: 2, GF: 1, GA: 10, GD: -9, Pts: 1 }
             ]
         };
 
         // NEW
         const teamStats = [
-            { team: "Spain", halves: 1, passes: 50, possession: 47.8, shots: 1 },
+            { team: "Spain", halves: 3, passes: 118, possession: 143.3, shots: 2 },
             { team: "Germany", halves: 1, passes: 51, possession: 52.2, shots: 3 },
-            { team: "Egypt", halves: 2, passes: 58, possession: 108.3, shots: 5 },
-            { team: "Tunisia + Algeria", halves: 4, passes: 131, possession: 182.4, shots: 10 },
-            { team: "Netherlands", halves: 0, passes: 0, possession: 0, shots: 0 },
+            { team: "Egypt", halves: 4, passes: 151, possession: 204.6, shots: 6 },
+            { team: "Tunisia and Algeria", halves: 6, passes: 212, possession: 279.6, shots: 17 },
+            { team: "Netherlands", halves: 2, passes: 144, possession: 104.5, shots: 13 },
             { team: "Italy", halves: 2, passes: 120, possession: 110.1, shots: 11 },
             { team: "World XI", halves: 2, passes: 61, possession: 89.8, shots: 6 },
             { team: "France", halves: 4, passes: 168, possession: 194.8, shots: 13 },
-            { team: "England", halves: 4, passes: 277, possession: 208.7, shots: 17 },
-            { team: "Poland", halves: 2, passes: 99, possession: 105.8, shots: 3 }
+            { team: "England", halves: 6, passes: 407, possession: 311.5, shots: 26 },
+            { team: "Poland", halves: 4, passes: 227, possession: 209.5, shots: 16 }
         ];
 
         // NEW
         const playerStats = {
             cleanSheets: [
-                { player: "atrocity exhibition", value: 3 },
-                { player: "Zenon", value: 3 },
+                { player: "atrocity exhibition", value: 4 },
                 { player: "ShadiOzz", value: 2 },
                 { player: "Mbappe", value: 2 },
-                { player: "luur", value: 2 },
-                { player: "Praetor", value: 2 },
+                { player: "luur", value: 3 },
                 { player: "Misimaro", value: 1 },
                 { player: "ShIeLd", value: 1 },
-                { player: "kakii", value: 1 }
+                { player: "kakii", value: 1 },
+                { player: "Zenon", value: 3 },
+                { player: "Praetor", value: 2 },
+                { player: "MRN", value: 1 },
+                { player: "Timber", value: 1 },
+                { player: "Nympex", value: 1 }
             ],
             mvps: [
                 { player: "A7mdBibo", value: 1 },
@@ -1488,7 +1491,10 @@
                 { player: "BananaJoe", value: 1 },
                 { player: "cYn", value: 1 },
                 { player: "Toshiba", value: 1 },
-                { player: "FullMetal", value: 1 }
+                { player: "FullMetal", value: 1 },
+                { player: "zenix", value: 1 },
+                { player: "yonko", value: 1 },
+                { player: "Wakanda", value: 1 }
             ],
             goals: [
                 { player: "A7mdBibo", value: 1 },
@@ -1497,7 +1503,15 @@
                 { player: "Kong", value: 1 },
                 { player: "BananaJoe", value: 1 },
                 { player: "Toshiba", value: 1 },
-                { player: "LuisDiaz", value: 1 }
+                { player: "Luisdiaz", value: 2 },
+                { player: "zaQu", value: 1 },
+                { player: "zenix", value: 3 },
+                { player: "ToughBaby", value: 1 },
+                { player: "yonko", value: 2 },
+                { player: "Wakanda", value: 1 },
+                { player: "cytro", value: 1 },
+                { player: "zalofa", value: 1 },
+                { player: "atrocity exhibition", value: 1 }
             ],
             assists: [
                 { player: "MRN", value: 2 },
@@ -1506,7 +1520,14 @@
                 { player: "Lookman", value: 1 },
                 { player: "Kong", value: 1 },
                 { player: "Virgil Van Dijk", value: 1 },
-                { player: "Wakanda", value: 1 }
+                { player: "Wakanda", value: 4 },
+                { player: "zenix", value: 1 },
+                { player: "grmii", value: 1 },
+                { player: "zaQu", value: 1 },
+                { player: "ShadiOzz", value: 1 },
+                { player: "tsukuyomi", value: 1 },
+                { player: "santos", value: 1 },
+                { player: "Luisdiaz", value: 1 }
             ],
             ownGoals: [
                 { player: "Saygex", value: 1 },
