@@ -5,11 +5,11 @@
   const MAX_DISPLAY_RATING = 95;
   const ELITE_CURVE_RATE = 0.12;
   const TEAM_COMPETITIVE_SPREAD = 0.95;
-  const PLAYER_COMPETITIVE_SPREAD = 0.62;
+  const PLAYER_COMPETITIVE_SPREAD = 0.85;
   const ACTIVE_TEAM_RATING_FLOOR = 65;
   const TEAM_BASELINE_RATING = 70;
   const TEAM_MATCHES_FOR_FULL_CONFIDENCE = 4;
-  const TEAM_CONFIDENCE_FLOOR = 0.6;
+  const TEAM_CONFIDENCE_FLOOR = 0.8;
   const TEAM_CONFIDENCE_SPAN = 0.4;
 
   const TEAM_STRENGTHS = {
@@ -23,6 +23,102 @@
     'World XI': 0.048,
     'Tunisia + Algeria': 0.042,
     France: 0.038
+  };
+
+  // Source-of-truth override for current tournament state, kept in sync with index data.
+  const STATS_OVERRIDE = {
+    worldCupGroups: {
+      groupA: [
+        { team: 'Netherlands', MP: 1, W: 1, D: 0, L: 0, GF: 2, GA: 0, GD: 2, Pts: 3 },
+        { team: 'Spain', MP: 2, W: 1, D: 0, L: 1, GF: 1, GA: 2, GD: -1, Pts: 3 },
+        { team: 'Italy', MP: 1, W: 0, D: 1, L: 0, GF: 1, GA: 1, GD: 0, Pts: 1 },
+        { team: 'World XI', MP: 1, W: 0, D: 1, L: 0, GF: 1, GA: 1, GD: 0, Pts: 1 },
+        { team: 'Germany', MP: 1, W: 0, D: 0, L: 1, GF: 0, GA: 1, GD: -1, Pts: 0 }
+      ],
+      groupB: [
+        { team: 'England', MP: 3, W: 1, D: 2, L: 0, GF: 6, GA: 2, GD: 4, Pts: 5 },
+        { team: 'Poland', MP: 2, W: 1, D: 1, L: 0, GF: 4, GA: 1, GD: 3, Pts: 4 },
+        { team: 'Egypt', MP: 2, W: 1, D: 0, L: 1, GF: 6, GA: 4, GD: 2, Pts: 3 },
+        { team: 'France', MP: 2, W: 0, D: 2, L: 0, GF: 1, GA: 1, GD: 0, Pts: 2 },
+        { team: 'Tunisia + Algeria', MP: 3, W: 0, D: 1, L: 2, GF: 1, GA: 10, GD: -9, Pts: 1 }
+      ]
+    },
+    teamStats: [
+      { team: 'Spain', halves: 3, passes: 118, possession: 143.3, shots: 2 },
+      { team: 'Germany', halves: 1, passes: 51, possession: 52.2, shots: 3 },
+      { team: 'Egypt', halves: 4, passes: 151, possession: 204.6, shots: 6 },
+      { team: 'Tunisia and Algeria', halves: 6, passes: 212, possession: 279.6, shots: 17 },
+      { team: 'Netherlands', halves: 2, passes: 144, possession: 104.5, shots: 13 },
+      { team: 'Italy', halves: 2, passes: 120, possession: 110.1, shots: 11 },
+      { team: 'World XI', halves: 2, passes: 61, possession: 89.8, shots: 6 },
+      { team: 'France', halves: 4, passes: 168, possession: 194.8, shots: 13 },
+      { team: 'England', halves: 6, passes: 407, possession: 311.5, shots: 26 },
+      { team: 'Poland', halves: 4, passes: 227, possession: 209.5, shots: 16 }
+    ],
+    playerStats: {
+      cleanSheets: [
+        { player: 'atrocity exhibition', value: 4 },
+        { player: 'luur', value: 3 },
+        { player: 'Zenon', value: 3 },
+        { player: 'ShadiOzz', value: 2 },
+        { player: 'Mbappe', value: 2 },
+        { player: 'Praetor', value: 2 },
+        { player: 'Misimaro', value: 1 },
+        { player: 'ShIeLd', value: 1 },
+        { player: 'kakii', value: 1 },
+        { player: 'MRN', value: 1 },
+        { player: 'Timber', value: 1 },
+        { player: 'Nympex', value: 1 }
+      ],
+      mvps: [
+        { player: 'A7mdBibo', value: 1 },
+        { player: 'Pedri', value: 1 },
+        { player: 'BananaJoe', value: 1 },
+        { player: 'cYn', value: 1 },
+        { player: 'Toshiba', value: 1 },
+        { player: 'FullMetal', value: 1 },
+        { player: 'zenix', value: 1 },
+        { player: 'yonko', value: 1 },
+        { player: 'Wakanda', value: 1 }
+      ],
+      goals: [
+        { player: 'zenix', value: 3 },
+        { player: 'Luisdiaz', value: 2 },
+        { player: 'yonko', value: 2 },
+        { player: 'A7mdBibo', value: 1 },
+        { player: 'SUCA', value: 1 },
+        { player: 'Tiki', value: 1 },
+        { player: 'Kong', value: 1 },
+        { player: 'BananaJoe', value: 1 },
+        { player: 'Toshiba', value: 1 },
+        { player: 'zaQu', value: 1 },
+        { player: 'ToughBaby', value: 1 },
+        { player: 'Wakanda', value: 1 },
+        { player: 'cytro', value: 1 },
+        { player: 'zalofa', value: 1 },
+        { player: 'atrocity exhibition', value: 1 }
+      ],
+      assists: [
+        { player: 'Wakanda', value: 4 },
+        { player: 'MRN', value: 2 },
+        { player: 'A7mdBibo', value: 1 },
+        { player: 'aaron', value: 1 },
+        { player: 'Lookman', value: 1 },
+        { player: 'Kong', value: 1 },
+        { player: 'Virgil Van Dijk', value: 1 },
+        { player: 'zenix', value: 1 },
+        { player: 'grmii', value: 1 },
+        { player: 'zaQu', value: 1 },
+        { player: 'ShadiOzz', value: 1 },
+        { player: 'tsukuyomi', value: 1 },
+        { player: 'santos', value: 1 },
+        { player: 'Luisdiaz', value: 1 }
+      ],
+      ownGoals: [
+        { player: 'Saygex', value: 1 },
+        { player: 'SergioRamoss', value: 1 }
+      ]
+    }
   };
 
   const WEIGHTS = {
@@ -126,6 +222,35 @@
     }, { weight: 0, value: 0 });
 
     return totals.weight > 0 ? (totals.value / totals.weight) : 0;
+  }
+
+  function toLeaderboard(rows, key) {
+    return (rows || []).map(row => ({
+      player: row.player,
+      [key]: toNumber(row.value)
+    }));
+  }
+
+  function buildCurrentStateOverride(baseCurrentState) {
+    return {
+      ...(baseCurrentState || {}),
+      groupTables: {
+        'Group A': (STATS_OVERRIDE.worldCupGroups.groupA || []).map(row => ({ ...row })),
+        'Group B': (STATS_OVERRIDE.worldCupGroups.groupB || []).map(row => ({ ...row }))
+      },
+      teamRawStats: (STATS_OVERRIDE.teamStats || []).map(team => ({
+        team: team.team,
+        halvesRecorded: toNumber(team.halves),
+        passes: toNumber(team.passes),
+        possessionPercent: toNumber(team.possession),
+        shotsOnGoal: toNumber(team.shots)
+      })),
+      goalsLeaderboard: toLeaderboard(STATS_OVERRIDE.playerStats.goals, 'goals'),
+      assistsLeaderboard: toLeaderboard(STATS_OVERRIDE.playerStats.assists, 'assists'),
+      mvpLeaderboard: toLeaderboard(STATS_OVERRIDE.playerStats.mvps, 'mvps'),
+      cleanSheetsLeaderboard: toLeaderboard(STATS_OVERRIDE.playerStats.cleanSheets, 'cleanSheets'),
+      ownGoalsLeaderboard: toLeaderboard(STATS_OVERRIDE.playerStats.ownGoals, 'ownGoals')
+    };
   }
 
   function buildAliasMap() {
@@ -444,29 +569,16 @@
         const goals = toNumber(playerEntry.goals) + (goalByPlayer.get(canonical) || 0);
         const assists = toNumber(playerEntry.assists) + (assistByPlayer.get(canonical) || 0);
         const shots = toNumber(playerEntry.shots);
-        const passes = toNumber(playerEntry.passes);
-        const kicks = toNumber(playerEntry.kicks);
         const ownGoals = toNumber(playerEntry.ownGoals) + (ownGoalByPlayer.get(canonical) || 0);
         const cleanSheet = (normalizeName(playerTeam) === normalizeName(teamA) && scoreB === 0)
           || (normalizeName(playerTeam) === normalizeName(teamB) && scoreA === 0) ? 1 : 0;
 
-        const teamScoreContext = normalizeName(playerTeam) === normalizeName(teamA) ? scoreTeamA : scoreTeamB;
-        const mvpCount = mvpMap.get(norm) || 0;
-        const mvpBonus = mvpCount > 0 ? (WEIGHTS.player.mvpBase + ((teamScoreContext - 50) * WEIGHTS.player.mvpTeamScoreFactor)) : 0;
-
-        let rating = teamScoreContext
-          + (WEIGHTS.player.goals * goals)
-          + (WEIGHTS.player.assists * assists)
-          + (WEIGHTS.player.shots * shots)
-          + (WEIGHTS.player.passes * passes)
-          + (WEIGHTS.player.kicks * kicks)
-          + (WEIGHTS.player.cleanSheets * cleanSheet)
-          + mvpBonus
-          - (WEIGHTS.player.ownGoals * ownGoals);
-
-        if (state.goalkeepers.has(norm)) {
-          rating += WEIGHTS.player.goalkeeperCleanSheetBonus * cleanSheet;
-        }
+        const rating = 72
+          + (goals * 7)
+          + (assists * 4.5)
+          + (shots * 1)
+          + (cleanSheet * 4)
+          - (ownGoals * 10);
 
         player.matchesPlayed += 1;
         player.matchRatings.push(clamp(rating, 0, MAX_DISPLAY_RATING));
@@ -503,8 +615,8 @@
       );
 
       const weightedComposite = weightedAverage([
-        { value: resultScore, weight: 0.40 },
-        { value: expectationScore, weight: 0.18 },
+        { value: resultScore, weight: 0.48 },
+        { value: expectationScore, weight: 0.10 },
         { value: scheduleScore, weight: 0.16 },
         { value: goalDifferenceScore, weight: 0.15 },
         { value: statsScore, weight: 0.11 }
@@ -547,7 +659,10 @@
 
     state.results = {
       playersTop10: playerRows.sort((a, b) => b.tournamentRating - a.tournamentRating).slice(0, 10),
-      teamsTop10: teamRows.sort((a, b) => b.teamRating - a.teamRating).slice(0, 10)
+      teamsTop10: teamRows
+        .filter(team => team.matchesPlayed > 0)
+        .sort((a, b) => b.teamRating - a.teamRating)
+        .slice(0, 10)
     };
   }
 
@@ -629,6 +744,7 @@
 
     const response = await fetch(SEED_URL, { cache: 'no-store' });
     state.seed = await response.json();
+    state.seed.currentState = buildCurrentStateOverride(state.seed?.currentState);
 
     const gkList = state.seed?.currentState?.goalkeepers || [];
     gkList.forEach(name => state.goalkeepers.add(normalizeName(name)));
@@ -651,5 +767,4 @@
     console.error('World Cup top 10 injection failed', error);
   });
 })();
-
 
