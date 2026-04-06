@@ -144,7 +144,7 @@
       v4ks: 'V4ks',
       vaks: 'V4ks',
       wpi: 'Wakanda',
-      w: 'Wakanda',
+      W: 'Wakanda',
       wakanda: 'Wakanda',
       zenix: 'Zenix',
       zenix: 'Zenix',
