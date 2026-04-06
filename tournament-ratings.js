@@ -6,8 +6,8 @@
   const ELITE_CURVE_RATE = 0.12;
   const TEAM_COMPETITIVE_SPREAD = 0.95;
   const PLAYER_COMPETITIVE_SPREAD = 0.62;
-  const ACTIVE_TEAM_RATING_FLOOR = 75;
-  const TEAM_BASELINE_RATING = 75;
+  const ACTIVE_TEAM_RATING_FLOOR = 65;
+  const TEAM_BASELINE_RATING = 70;
   const TEAM_MATCHES_FOR_FULL_CONFIDENCE = 4;
   const TEAM_CONFIDENCE_FLOOR = 0.6;
   const TEAM_CONFIDENCE_SPAN = 0.4;
@@ -50,12 +50,12 @@
     tournament: {
       base: 72,
       pointsPerGame: 6,
-      goalDifferencePerGame: 2,
-      outcomeVsExpectationPerGame: 12,
+      goalDifferencePerGame: 3,
+      outcomeVsExpectationPerGame: 8,
       averageTeamScoreDelta: 1.2,
-      shotsPerHalfDelta: 0.7,
-      possessionPerHalfDelta: 0.45,
-      passesPerHalfDelta: 0.35
+      shotsPerHalfDelta: 1.0,
+      possessionPerHalfDelta: 0.7,
+      passesPerHalfDelta: 0.5
     }
   };
 
@@ -489,8 +489,8 @@
       const gdPerGame = team.matchesPlayed ? ((team.goalsFor - team.goalsAgainst) / team.matchesPlayed) : 0;
       const avgOpponentStrength = team.matchesPlayed ? (team.opponentStrengthTotal / team.matchesPlayed) : 0;
 
-      const resultScore = clamp(35 + (pointsPerGame * 22), 0, 100);
-      const expectationScore = clamp(50 + (outcomeVsExpectationPerGame * 30), 0, 100);
+      const resultScore = clamp(35 + (pointsPerGame * 30), 0, 100);
+      const expectationScore = clamp(50 + (outcomeVsExpectationPerGame * 40), 0, 100);
       const scheduleScore = clamp(35 + ((avgOpponentStrength / Math.max(maxObservedStrength, 0.001)) * 65), 0, 100);
       const goalDifferenceScore = clamp(50 + (gdPerGame * 14), 0, 100);
       const statsScore = clamp(
@@ -504,10 +504,10 @@
 
       const weightedComposite = weightedAverage([
         { value: resultScore, weight: 0.40 },
-        { value: expectationScore, weight: 0.28 },
+        { value: expectationScore, weight: 0.18 },
         { value: scheduleScore, weight: 0.16 },
-        { value: goalDifferenceScore, weight: 0.10 },
-        { value: statsScore, weight: 0.06 }
+        { value: goalDifferenceScore, weight: 0.15 },
+        { value: statsScore, weight: 0.11 }
       ]);
 
       const confidence = getConfidenceFromMatches(team.matchesPlayed);
