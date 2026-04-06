@@ -6,7 +6,8 @@
   const ELITE_CURVE_RATE = 0.12;
   const TEAM_COMPETITIVE_SPREAD = 0.95;
   const PLAYER_COMPETITIVE_SPREAD = 0.62;
-  const ACTIVE_TEAM_RATING_FLOOR = 60;
+  const ACTIVE_TEAM_RATING_FLOOR = 75;
+  const TEAM_BASELINE_RATING = 75;
   const TEAM_MATCHES_FOR_FULL_CONFIDENCE = 4;
   const TEAM_CONFIDENCE_FLOOR = 0.6;
   const TEAM_CONFIDENCE_SPAN = 0.4;
@@ -509,7 +510,7 @@
       ]);
 
       const confidence = getConfidenceFromMatches(team.matchesPlayed);
-      const blendedRating = 60 + ((weightedComposite - 60) * confidence);
+      const blendedRating = TEAM_BASELINE_RATING + ((weightedComposite - TEAM_BASELINE_RATING) * confidence);
 
       team.rawTeamRating = blendedRating;
     });
@@ -649,5 +650,6 @@
     console.error('World Cup top 10 injection failed', error);
   });
 })();
+
 
 
