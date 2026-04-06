@@ -214,6 +214,19 @@
     return cleanRawName || 'Unknown';
   }
 
+  function getTeamFlag(teamName) {
+    const teams = Array.isArray(window.teams) ? window.teams : [];
+    const match = teams.find(team => team.name === teamName);
+    return (match && match.flag) ? match.flag : '';
+  }
+
+  function getPlayerFlag(playerName) {
+    const normalized = normalizeName(scrubPlayerName(playerName));
+    const rosterEntry = state.roster.get(normalized);
+    if (!rosterEntry) return '';
+    return getTeamFlag(rosterEntry.team);
+  }
+
   function matchKey(match) {
     return `${toNumber(match.matchNumber)}-${toNumber(match.halfNumber)}`;
   }
@@ -531,8 +544,8 @@
     });
 
     state.results = {
-      playersTop5: playerRows.sort((a, b) => b.tournamentRating - a.tournamentRating).slice(0, 5),
-      teamsTop5: teamRows.sort((a, b) => b.teamRating - a.teamRating).slice(0, 5)
+      playersTop10: playerRows.sort((a, b) => b.tournamentRating - a.tournamentRating).slice(0, 10),
+      teamsTop10: teamRows.sort((a, b) => b.teamRating - a.teamRating).slice(0, 10)
     };
   }
 
@@ -540,39 +553,44 @@
     const statsRow = document.querySelector('#world-cup-container .world-cup-stats-row');
     if (!statsRow || !state.results) return;
 
-    const players = state.results.playersTop5;
-    const teams = state.results.teamsTop5;
+    const players = state.results.playersTop10;
+    const teams = state.results.teamsTop10;
 
-    let playersCard = document.getElementById('world-cup-top5-players-card');
+    let playersCard = document.getElementById('world-cup-top10-players-card');
     if (!playersCard) {
       playersCard = document.createElement('div');
-      playersCard.id = 'world-cup-top5-players-card';
+      playersCard.id = 'world-cup-top10-players-card';
       playersCard.className = 'world-cup-card';
     }
 
-    let teamsCard = document.getElementById('world-cup-top5-teams-card');
+    let teamsCard = document.getElementById('world-cup-top10-teams-card');
     if (!teamsCard) {
       teamsCard = document.createElement('div');
-      teamsCard.id = 'world-cup-top5-teams-card';
+      teamsCard.id = 'world-cup-top10-teams-card';
       teamsCard.className = 'world-cup-card';
     }
 
     playersCard.innerHTML = `
-      <h2 class="world-cup-title">Top 5 Players</h2>
+      <h2 class="world-cup-title">Top 10 Players</h2>
       <div class="world-cup-table-wrap">
         <table class="world-cup-stat-table">
           <thead>
             <tr><th>Player</th><th>Rating</th></tr>
           </thead>
           <tbody>
-            ${players.map((player) => `<tr><td>${scrubPlayerName(player.canonical) || 'Unknown'}</td><td>${round1(player.tournamentRating).toFixed(1)}</td></tr>`).join('')}
+            ${players.map((player) => {
+              const cleanName = scrubPlayerName(player.canonical) || 'Unknown';
+              const flag = getPlayerFlag(cleanName);
+              const playerLabel = flag ? `${flag} ${cleanName}` : cleanName;
+              return `<tr><td>${playerLabel}</td><td>${round1(player.tournamentRating).toFixed(1)}</td></tr>`;
+            }).join('')}
           </tbody>
         </table>
       </div>
     `;
 
     teamsCard.innerHTML = `
-      <h2 class="world-cup-title">Top 5 Teams</h2>
+      <h2 class="world-cup-title">Top 10 Teams</h2>
       <div class="world-cup-table-wrap">
         <table class="world-cup-stat-table">
           <thead>
@@ -586,7 +604,7 @@
     `;
 
     // Keep these two cards at the end of the stats row:
-    // Goals, Assists, MVPs, Clean Sheets, Own Goals, Top 5 Players, Top 5 Teams
+    // Goals, Assists, MVPs, Clean Sheets, Own Goals, Top 10 Players, Top 10 Teams
     statsRow.appendChild(playersCard);
     statsRow.appendChild(teamsCard);
   }
@@ -594,8 +612,8 @@
   function injectStyles() {
     const style = document.createElement('style');
     style.textContent = `
-      #world-cup-top5-players-card,
-      #world-cup-top5-teams-card {
+      #world-cup-top10-players-card,
+      #world-cup-top10-teams-card {
         min-width: 0;
       }
     `;
@@ -628,7 +646,7 @@
   }
 
   init().catch(error => {
-    console.error('World Cup top 5 injection failed', error);
+    console.error('World Cup top 10 injection failed', error);
   });
 })();
 
