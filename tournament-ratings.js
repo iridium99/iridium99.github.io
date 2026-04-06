@@ -144,6 +144,7 @@
       v4ks: 'V4ks',
       vaks: 'V4ks',
       wpi: 'Wakanda',
+      w: 'Wakanda',
       wakanda: 'Wakanda',
       zenix: 'Zenix',
       zenix: 'Zenix',
@@ -650,6 +651,5 @@
     console.error('World Cup top 10 injection failed', error);
   });
 })();
-
 
 
