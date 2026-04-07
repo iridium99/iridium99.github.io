@@ -31,9 +31,9 @@
       groupA: [
         { team: 'Netherlands', MP: 1, W: 1, D: 0, L: 0, GF: 2, GA: 0, GD: 2, Pts: 3 },
         { team: 'Spain', MP: 2, W: 1, D: 0, L: 1, GF: 1, GA: 2, GD: -1, Pts: 3 },
-        { team: 'Italy', MP: 1, W: 0, D: 1, L: 0, GF: 1, GA: 1, GD: 0, Pts: 1 },
+        { team: 'Italy', MP: 2, W: 0, D: 2, L: 0, GF: 1, GA: 1, GD: 0, Pts: 2 },
         { team: 'World XI', MP: 1, W: 0, D: 1, L: 0, GF: 1, GA: 1, GD: 0, Pts: 1 },
-        { team: 'Germany', MP: 1, W: 0, D: 0, L: 1, GF: 0, GA: 1, GD: -1, Pts: 0 }
+        { team: 'Germany', MP: 2, W: 0, D: 1, L: 1, GF: 0, GA: 1, GD: -1, Pts: 1 }
       ],
       groupB: [
         { team: 'England', MP: 3, W: 1, D: 2, L: 0, GF: 6, GA: 2, GD: 4, Pts: 5 },
@@ -45,11 +45,11 @@
     },
     teamStats: [
       { team: 'Spain', halves: 3, passes: 118, possession: 143.3, shots: 2 },
-      { team: 'Germany', halves: 1, passes: 51, possession: 52.2, shots: 3 },
+      { team: 'Germany', halves: 3, passes: 147, possession: 147.1, shots: 6 },
       { team: 'Egypt', halves: 4, passes: 151, possession: 204.6, shots: 6 },
       { team: 'Tunisia and Algeria', halves: 6, passes: 212, possession: 279.6, shots: 17 },
       { team: 'Netherlands', halves: 2, passes: 144, possession: 104.5, shots: 13 },
-      { team: 'Italy', halves: 2, passes: 120, possession: 110.1, shots: 11 },
+      { team: 'Italy', halves: 4, passes: 214, possession: 215.2, shots: 18 },
       { team: 'World XI', halves: 2, passes: 61, possession: 89.8, shots: 6 },
       { team: 'France', halves: 4, passes: 168, possession: 194.8, shots: 13 },
       { team: 'England', halves: 6, passes: 407, possession: 311.5, shots: 26 },
@@ -59,12 +59,13 @@
       cleanSheets: [
         { player: 'atrocity exhibition', value: 4 },
         { player: 'luur', value: 3 },
+        { player: 'ShIeLd', value: 3 },
         { player: 'Zenon', value: 3 },
         { player: 'ShadiOzz', value: 2 },
         { player: 'Mbappe', value: 2 },
+        { player: 'Naeh', value: 2 },
         { player: 'Praetor', value: 2 },
         { player: 'Misimaro', value: 1 },
-        { player: 'ShIeLd', value: 1 },
         { player: 'kakii', value: 1 },
         { player: 'MRN', value: 1 },
         { player: 'Timber', value: 1 },
@@ -77,6 +78,7 @@
         { player: 'cYn', value: 1 },
         { player: 'Toshiba', value: 1 },
         { player: 'FullMetal', value: 1 },
+        { player: 'Perkz', value: 1 },
         { player: 'zenix', value: 1 },
         { player: 'yonko', value: 1 },
         { player: 'Wakanda', value: 1 }
@@ -85,10 +87,10 @@
         { player: 'zenix', value: 3 },
         { player: 'Luisdiaz', value: 2 },
         { player: 'yonko', value: 2 },
+        { player: 'Kong', value: 2 },
         { player: 'A7mdBibo', value: 1 },
         { player: 'SUCA', value: 1 },
         { player: 'Tiki', value: 1 },
-        { player: 'Kong', value: 1 },
         { player: 'BananaJoe', value: 1 },
         { player: 'Toshiba', value: 1 },
         { player: 'zaQu', value: 1 },
