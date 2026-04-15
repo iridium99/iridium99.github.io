@@ -1143,6 +1143,36 @@
             50%  { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
+
+        /* Table toggle button styles */
+        .stat-table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .stat-table-toggle-btn {
+            padding: 6px 12px;
+            background: var(--primary);
+            color: white;
+            border: 1px solid var(--primary);
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .stat-table-toggle-btn:hover {
+            background: rgba(74, 144, 217, 0.8);
+            box-shadow: 0 0 15px rgba(74, 144, 217, 0.5);
+        }
+
+        .stat-row-count {
+            font-size: 12px;
+            color: #a0a0a0;
+        }
     </style>
 </head>
 <body>
@@ -1440,101 +1470,158 @@
         // NEW
         const worldCupGroups = {
             groupA: [
-                { team: "Netherlands", MP: 1, W: 1, D: 0, L: 0, GF: 2, GA: 0, GD: 2, Pts: 3 },
-                { team: "Spain", MP: 2, W: 1, D: 0, L: 1, GF: 1, GA: 2, GD: -1, Pts: 3 },
-                { team: "Italy", MP: 2, W: 0, D: 2, L: 0, GF: 1, GA: 1, GD: 0, Pts: 2 },
-                { team: "World XI", MP: 1, W: 0, D: 1, L: 0, GF: 1, GA: 1, GD: 0, Pts: 1 },
-                { team: "Germany", MP: 2, W: 0, D: 1, L: 1, GF: 0, GA: 1, GD: -1, Pts: 1 }
+                { team: "Netherlands", MP: 4, W: 4, D: 0, L: 0, GF: 14, GA: 0, GD: 14, Pts: 12 },
+                { team: "Spain", MP: 4, W: 2, D: 0, L: 2, GF: 3, GA: 3, GD: 0, Pts: 6 },
+                { team: "Italy", MP: 4, W: 1, D: 2, L: 1, GF: 2, GA: 5, GD: -3, Pts: 5 },
+                { team: "Germany", MP: 4, W: 1, D: 1, L: 2, GF: 5, GA: 2, GD: 3, Pts: 4 },
+                { team: "World XI", MP: 4, W: 0, D: 1, L: 3, GF: 1, GA: 15, GD: -14, Pts: 1 }
             ],
             groupB: [
-                { team: "England", MP: 3, W: 1, D: 2, L: 0, GF: 6, GA: 2, GD: 4, Pts: 5 },
-                { team: "Poland", MP: 2, W: 1, D: 1, L: 0, GF: 4, GA: 1, GD: 3, Pts: 4 },
-                { team: "Egypt", MP: 2, W: 1, D: 0, L: 1, GF: 6, GA: 4, GD: 2, Pts: 3 },
-                { team: "France", MP: 2, W: 0, D: 2, L: 0, GF: 1, GA: 1, GD: 0, Pts: 2 },
-                { team: "Tunisia + Algeria", MP: 3, W: 0, D: 1, L: 2, GF: 1, GA: 10, GD: -9, Pts: 1 }
+                { team: "Poland + Balkans", MP: 4, W: 3, D: 1, L: 0, GF: 13, GA: 2, GD: 11, Pts: 10 },
+                { team: "England / UK", MP: 4, W: 2, D: 2, L: 0, GF: 11, GA: 2, GD: 9, Pts: 8 },
+                { team: "Egypt", MP: 4, W: 2, D: 0, L: 2, GF: 8, GA: 10, GD: -2, Pts: 6 },
+                { team: "France", MP: 4, W: 0, D: 2, L: 2, GF: 3, GA: 9, GD: -6, Pts: 2 },
+                { team: "Tunisia + Algeria", MP: 4, W: 0, D: 1, L: 3, GF: 1, GA: 13, GD: -12, Pts: 1 }
             ]
         };
 
         // NEW
         const teamStats = [
-            { team: "Spain", halves: 3, passes: 118, possession: 143.3, shots: 2 },
-            { team: "Germany", halves: 3, passes: 147, possession: 147.1, shots: 6 },
-            { team: "Egypt", halves: 4, passes: 151, possession: 204.6, shots: 6 },
+            { team: "Spain", halves: 7, passes: 295, possession: 344.9, shots: 18 },
+            { team: "Germany", halves: 7, passes: 356, possession: 350.6, shots: 31 },
+            { team: "Egypt", halves: 8, passes: 332, possession: 414.4, shots: 14 },
             { team: "Tunisia and Algeria", halves: 6, passes: 212, possession: 279.6, shots: 17 },
-            { team: "Netherlands", halves: 2, passes: 144, possession: 104.5, shots: 13 },
-            { team: "Italy", halves: 4, passes: 214, possession: 215.2, shots: 18 },
-            { team: "World XI", halves: 2, passes: 61, possession: 89.8, shots: 6 },
-            { team: "France", halves: 4, passes: 168, possession: 194.8, shots: 13 },
-            { team: "England", halves: 6, passes: 407, possession: 311.5, shots: 26 },
-            { team: "Poland", halves: 4, passes: 227, possession: 209.5, shots: 16 }
+            { team: "Netherlands", halves: 8, passes: 528, possession: 423.5, shots: 56 },
+            { team: "Italy", halves: 8, passes: 400, possession: 409.5, shots: 24 },
+            { team: "World XI", halves: 8, passes: 280, possession: 371.4, shots: 15 },
+            { team: "France", halves: 8, passes: 320, possession: 378.0, shots: 20 },
+            { team: "England / UK", halves: 8, passes: 525, possession: 408.0, shots: 34 },
+            { team: "Poland + Balkans", halves: 6, passes: 343, possession: 320.0, shots: 34 }
         ];
 
         // NEW
         const playerStats = {
             cleanSheets: [
+                { player: "Mbappe", value: 5 },
+                { player: "ShIeLd", value: 5 },
+                { player: "Nympex", value: 5 },
                 { player: "atrocity exhibition", value: 4 },
-                { player: "luur", value: 3 },
-                { player: "ShIeLd", value: 3 },
-                { player: "Zenon", value: 3 },
-                { player: "ShadiOzz", value: 2 },
-                { player: "Mbappe", value: 2 },
-                { player: "Naeh", value: 2 },
+                { player: "luur", value: 4 },
+                { player: "Zenon", value: 4 },
+                { player: "Naeh", value: 4 },
+                { player: "ShadiOzz", value: 3 },
+                { player: "Timber", value: 3 },
                 { player: "Praetor", value: 2 },
+                { player: "evilpedri", value: 2 },
+                { player: "Wizop", value: 2 },
                 { player: "Misimaro", value: 1 },
                 { player: "kakii", value: 1 },
                 { player: "MRN", value: 1 },
-                { player: "Timber", value: 1 },
-                { player: "Nympex", value: 1 }
+                { player: "Refix", value: 1 }
             ],
             mvps: [
-                { player: "A7mdBibo", value: 1 },
+                { player: "A7mdBibo", value: 2 },
                 { player: "Pedri", value: 1 },
                 { player: "BananaJoe", value: 1 },
                 { player: "cYn", value: 1 },
                 { player: "Toshiba", value: 1 },
                 { player: "FullMetal", value: 1 },
-                { player: "Perkz", value: 1 },
                 { player: "zenix", value: 1 },
-                { player: "yonko", value: 1 },
-                { player: "Wakanda", value: 1 }
+                { player: "yonko", value: 2 },
+                { player: "Wakanda", value: 1 },
+                { player: "Perkz", value: 1 },
+                { player: "Razor", value: 1 },
+                { player: "Shinsuke Nakamura", value: 1 },
+                { player: "cytro", value: 1 },
+                { player: "Johnny Sins", value: 1 },
+                { player: "Refix", value: 1 },
+                { player: "Isagi Yoichi", value: 1 },
+                { player: "Triple G", value: 1 }
             ],
             goals: [
-                { player: "zenix", value: 3 },
-                { player: "Luisdiaz", value: 2 },
-                { player: "yonko", value: 2 },
+                { player: "zenix", value: 6 },
+                { player: "yonko", value: 5 },
+                { player: "Luisdiaz", value: 3 },
+                { player: "Wakanda", value: 3 },
+                { player: "Refix", value: 3 },
+                { player: "A7mdBibo", value: 3 },
                 { player: "Kong", value: 2 },
-                { player: "A7mdBibo", value: 1 },
+                { player: "Gnagna", value: 2 },
+                { player: "Shinsuke Nakamura", value: 2 },
+                { player: "tsukuyomi", value: 2 },
+                { player: "Isagi Yoichi", value: 2 },
                 { player: "SUCA", value: 1 },
                 { player: "Tiki", value: 1 },
                 { player: "BananaJoe", value: 1 },
                 { player: "Toshiba", value: 1 },
                 { player: "zaQu", value: 1 },
                 { player: "ToughBaby", value: 1 },
-                { player: "Wakanda", value: 1 },
                 { player: "cytro", value: 1 },
                 { player: "zalofa", value: 1 },
-                { player: "atrocity exhibition", value: 1 }
+                { player: "atrocity exhibition", value: 1 },
+                { player: "luur", value: 1 },
+                { player: "DOOM", value: 1 },
+                { player: "Razor", value: 1 },
+                { player: "Macallan 18", value: 1 },
+                { player: "Arshavin", value: 1 },
+                { player: "Johnny Sins", value: 1 },
+                { player: "Pitarch", value: 1 },
+                { player: "drkuu", value: 1 },
+                { player: "Perkz", value: 1 },
+                { player: "poppa", value: 1 },
+                { player: "blue", value: 1 }
             ],
             assists: [
                 { player: "Wakanda", value: 4 },
+                { player: "poppa", value: 3 },
                 { player: "MRN", value: 2 },
+                { player: "tsukuyomi", value: 2 },
+                { player: "Kong", value: 2 },
+                { player: "cytro", value: 2 },
+                { player: "Shinsuke Nakamura", value: 2 },
                 { player: "A7mdBibo", value: 1 },
                 { player: "aaron", value: 1 },
                 { player: "Lookman", value: 1 },
-                { player: "Kong", value: 1 },
                 { player: "Virgil Van Dijk", value: 1 },
                 { player: "zenix", value: 1 },
                 { player: "grmii", value: 1 },
                 { player: "zaQu", value: 1 },
                 { player: "ShadiOzz", value: 1 },
-                { player: "tsukuyomi", value: 1 },
                 { player: "santos", value: 1 },
-                { player: "Luisdiaz", value: 1 }
+                { player: "Luisdiaz", value: 1 },
+                { player: "DOOM", value: 1 },
+                { player: "Razor", value: 1 },
+                { player: "Spero", value: 1 },
+                { player: "Toshiba", value: 1 },
+                { player: "Macallan 18", value: 1 },
+                { player: "ToughBaby", value: 1 },
+                { player: "Vonmacron", value: 1 },
+                { player: "SVimes", value: 1 },
+                { player: "Blazing", value: 1 },
+                { player: "Slimani", value: 1 },
+                { player: "Johnny Sins", value: 1 },
+                { player: "Perkz", value: 1 },
+                { player: "Passi", value: 1 },
+                { player: "Isagi Yoichi", value: 1 },
+                { player: "yonko", value: 1 },
+                { player: "Triple G", value: 1 }
             ],
             ownGoals: [
                 { player: "Saygex", value: 1 },
-                { player: "SergioRamoss", value: 1 }
+                { player: "SergioRamoss", value: 1 },
+                { player: "ToughBaby", value: 1 }
             ]
+        };
+
+        // Track which stat tables are expanded to show full list
+        const expandedStatTables = {
+            'Goals': false,
+            'Assists': false,
+            'Clean Sheets': false
+        };
+
+        const expandedLeaderboardTables = {
+            'Goals + Assists': false
         };
 
         // NEW
@@ -1550,7 +1637,7 @@
                 players: ["Pedri", "Mbappe", "Slimani", "Chie", "Pitarch", "Sergicanos", "m1dnam", "Johnny Sins", "Berniee", "Mata"]
             },
             {
-                name: "Poland",
+                name: "Poland + Balkans",
                 flag: "🇵🇱",
                 players: ["Monk", "Razor", "Luur", "Doom", "Dreamz", "Grmii", "Piątek", "Spero", "Zenix", "V4ks", "ZaQu"]
             },
@@ -1560,7 +1647,7 @@
                 players: ["Shield", "Bananajoe", "Fad", "Lookman", "Blue", "Gini", "Santi", "Triple G", "Isagi Yoichi", "Valotii", "Sergio Ramos"]
             },
             {
-                name: "England",
+                name: "England / UK",
                 flag: "🏴",
                 players: ["SVimes", "Wakanda", "LuisDiaz", "Arshavin", "Cytro", "Blazing", "Evil Pedri", "cYn", "vvv", "Berbatov", "Atrocity Exhibition"]
             },
@@ -2107,9 +2194,34 @@
 
         // NEW
         function renderWorldCupStatTable(title, rows, metricLabel) {
+            // Check if this table should show filtered or full data
+            const isExpanded = expandedStatTables[title] || false;
+            const shouldFilter = ['Goals', 'Assists', 'Clean Sheets'].includes(title);
+            
+            // Filter rows if applicable
+            let displayRows = rows;
+            if (shouldFilter && !isExpanded) {
+                displayRows = rows.filter(row => row.value > 1);
+            }
+            
+            const filteredCount = shouldFilter ? rows.filter(row => row.value > 1).length : 0;
+            const totalCount = rows.length;
+            const showToggleButton = shouldFilter && filteredCount < totalCount;
+            const isFullyExpanded = isExpanded && shouldFilter;
+
             return `
                 <div class="world-cup-card">
-                    <h2 class="world-cup-title">${title}</h2>
+                    <div class="stat-table-header">
+                        <h2 class="world-cup-title">${title}</h2>
+                        ${showToggleButton ? `
+                            <div style="display: flex; gap: 10px; align-items: center;">
+                                <span class="stat-row-count">${isFullyExpanded ? totalCount : filteredCount}/${totalCount}</span>
+                                <button class="stat-table-toggle-btn" data-stat-table="${title}">
+                                    ${isFullyExpanded ? 'Hide Others' : 'Show All'}
+                                </button>
+                            </div>
+                        ` : ''}
+                    </div>
                     <div class="world-cup-table-wrap">
                         <table class="world-cup-stat-table">
                             <thead>
@@ -2119,9 +2231,72 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                ${rows.map((row) => {
+                                ${displayRows.map((row) => {
                                     const medalClass = getWorldCupMedalClass(rows, row.value, metricLabel);
                                     return `<tr class="${medalClass}"><td>${row.player}</td><td>${row.value}</td></tr>`;
+                                }).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+
+        // NEW
+        function getGoalsAssistsLeaderboardRows() {
+            const combined = new Map();
+
+            playerStats.goals.forEach(row => {
+                const current = combined.get(row.player) || { player: row.player, goals: 0, assists: 0 };
+                current.goals += row.value;
+                combined.set(row.player, current);
+            });
+
+            playerStats.assists.forEach(row => {
+                const current = combined.get(row.player) || { player: row.player, goals: 0, assists: 0 };
+                current.assists += row.value;
+                combined.set(row.player, current);
+            });
+
+            return [...combined.values()]
+                .map(row => ({ ...row, total: row.goals + row.assists }))
+                .sort((a, b) => b.total - a.total || b.goals - a.goals || b.assists - a.assists || a.player.localeCompare(b.player));
+        }
+
+        // NEW
+        function renderGoalsAssistsLeaderboard() {
+            const rows = getGoalsAssistsLeaderboardRows();
+            const isExpanded = expandedLeaderboardTables['Goals + Assists'] || false;
+            const visibleRows = isExpanded ? rows : rows.slice(0, 10);
+            const hiddenCount = Math.max(rows.length - visibleRows.length, 0);
+
+            return `
+                <div class="world-cup-card">
+                    <div class="stat-table-header">
+                        <h2 class="world-cup-title">Goals + Assists</h2>
+                        ${hiddenCount > 0 ? `
+                            <div style="display:flex;gap:10px;align-items:center;">
+                                <span class="stat-row-count">${visibleRows.length}/${rows.length}</span>
+                                <button class="stat-table-toggle-btn" data-leaderboard-table="Goals + Assists">
+                                    ${isExpanded ? 'Show Top 10' : 'Show All'}
+                                </button>
+                            </div>
+                        ` : ''}
+                    </div>
+                    <div class="world-cup-table-wrap">
+                        <table class="world-cup-stat-table">
+                            <thead>
+                                <tr>
+                                    <th>Player</th>
+                                    <th>Goals</th>
+                                    <th>Assists</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${visibleRows.map((row, index) => {
+                                    const rowClass = index < 3 ? `medal-${['gold', 'silver', 'bronze'][index]}` : '';
+                                    return `<tr class="${rowClass}"><td>${row.player}</td><td>${row.goals}</td><td>${row.assists}</td><td>${row.total}</td></tr>`;
                                 }).join('')}
                             </tbody>
                         </table>
@@ -2138,6 +2313,7 @@
             }
 
             const tbdTeamMarkup = '<div class="team world-cup-bracket-tbd">TBD</div>';
+            const bracketTeamMarkup = (teamName) => `<div class="team">${teamName}</div>`;
 
             const rawButtonClass = worldCupViewMode === 'raw' ? 'active' : '';
             const perGameButtonClass = worldCupViewMode === 'per-game' ? 'active' : '';
@@ -2157,23 +2333,23 @@
                                 <div class="bracket">
                                     <div class="round">
                                         <div class="match">
-                                            ${tbdTeamMarkup}
-                                            ${tbdTeamMarkup}
+                                            ${bracketTeamMarkup('Netherlands')}
+                                            ${bracketTeamMarkup('France')}
                                         </div>
 
                                         <div class="match">
-                                            ${tbdTeamMarkup}
-                                            ${tbdTeamMarkup}
+                                            ${bracketTeamMarkup('Spain')}
+                                            ${bracketTeamMarkup('Egypt')}
                                         </div>
 
                                         <div class="match">
-                                            ${tbdTeamMarkup}
-                                            ${tbdTeamMarkup}
+                                            ${bracketTeamMarkup('England / UK')}
+                                            ${bracketTeamMarkup('Italy')}
                                         </div>
 
                                         <div class="match">
-                                            ${tbdTeamMarkup}
-                                            ${tbdTeamMarkup}
+                                            ${bracketTeamMarkup('Poland + Balkans')}
+                                            ${bracketTeamMarkup('Germany')}
                                         </div>
                                     </div>
 
@@ -2244,6 +2420,7 @@
                     </div>
 
                     <div class="world-cup-stats-row">
+                        ${renderGoalsAssistsLeaderboard()}
                         ${renderWorldCupStatTable('Goals', playerStats.goals, 'Goals')}
                         ${renderWorldCupStatTable('Assists', playerStats.assists, 'Assists')}
                         ${renderWorldCupStatTable('MVPs', playerStats.mvps, 'MVPs')}
@@ -2268,6 +2445,23 @@
                     } else {
                         setWorldCupSort(selectedKey);
                     }
+                });
+            });
+
+            // Add event listeners for stat table toggle buttons
+            container.querySelectorAll('[data-stat-table]').forEach(button => {
+                button.addEventListener('click', () => {
+                    const tableTitle = button.getAttribute('data-stat-table');
+                    expandedStatTables[tableTitle] = !expandedStatTables[tableTitle];
+                    renderWorldCupTab();
+                });
+            });
+
+            container.querySelectorAll('[data-leaderboard-table]').forEach(button => {
+                button.addEventListener('click', () => {
+                    const tableTitle = button.getAttribute('data-leaderboard-table');
+                    expandedLeaderboardTables[tableTitle] = !expandedLeaderboardTables[tableTitle];
+                    renderWorldCupTab();
                 });
             });
         }
