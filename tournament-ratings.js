@@ -12,6 +12,7 @@
   const TEAM_CONFIDENCE_FLOOR = 0.8;
   const TEAM_CONFIDENCE_SPAN = 0.4;
   const PLAYER_RELIABILITY_GAMES = 2.5;
+  const TOP10_PLAYER_MIN_MATCHES = 3;
 
   const TEAM_STRENGTHS = {
     England: 0.200,
@@ -727,8 +728,13 @@
       player.tournamentRating = toRating1(applySoftCapCurve(reliabilityAdjustedPlayerRating));
     });
 
+    const sortedPlayerRows = [...playerRows].sort((a, b) => b.tournamentRating - a.tournamentRating);
+
     state.results = {
-      playersTop10: playerRows.sort((a, b) => b.tournamentRating - a.tournamentRating).slice(0, 10),
+      playersAll: sortedPlayerRows,
+      playersTop10: sortedPlayerRows
+        .filter(player => player.matchesPlayed >= TOP10_PLAYER_MIN_MATCHES)
+        .slice(0, 10),
       teamsTop10: teamRows
         .filter(team => team.matchesPlayed > 0)
         .sort((a, b) => b.teamRating - a.teamRating)
