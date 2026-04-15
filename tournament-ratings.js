@@ -790,10 +790,20 @@
       </div>
     `;
 
-    // Keep these two cards at the end of the stats row:
-    // Goals, Assists, MVPs, Clean Sheets, Own Goals, Top 10 Players, Top 10 Teams
-    statsRow.appendChild(playersCard);
-    statsRow.appendChild(teamsCard);
+    const statCards = Array.from(statsRow.querySelectorAll('.world-cup-card'));
+    const ownGoalsCard = statCards.find(card => {
+      const title = card.querySelector('.world-cup-title');
+      return title && title.textContent === 'Own Goals';
+    });
+
+    // Swap positions so Top 10 Teams takes Own Goals slot and Own Goals shifts to the end.
+    if (ownGoalsCard) {
+      statsRow.insertBefore(teamsCard, ownGoalsCard);
+      statsRow.insertBefore(playersCard, ownGoalsCard);
+    } else {
+      statsRow.appendChild(playersCard);
+      statsRow.appendChild(teamsCard);
+    }
   }
 
   function injectStyles() {
@@ -837,4 +847,5 @@
     console.error('World Cup top 10 injection failed', error);
   });
 })();
+
 
