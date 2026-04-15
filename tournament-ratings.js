@@ -5,12 +5,13 @@
   const MAX_DISPLAY_RATING = 95;
   const ELITE_CURVE_RATE = 0.12;
   const TEAM_COMPETITIVE_SPREAD = 1.05;
-  const PLAYER_COMPETITIVE_SPREAD = 0.85;
+  const PLAYER_COMPETITIVE_SPREAD = 1.8;
   const ACTIVE_TEAM_RATING_FLOOR = 65;
   const TEAM_BASELINE_RATING = 70;
   const TEAM_MATCHES_FOR_FULL_CONFIDENCE = 4;
   const TEAM_CONFIDENCE_FLOOR = 0.8;
   const TEAM_CONFIDENCE_SPAN = 0.4;
+  const PLAYER_RELIABILITY_GAMES = 1.5;
 
   const TEAM_STRENGTHS = {
     England: 0.200,
@@ -262,6 +263,20 @@
     return TEAM_CONFIDENCE_FLOOR + (TEAM_CONFIDENCE_SPAN * clamp(safeMatches / TEAM_MATCHES_FOR_FULL_CONFIDENCE, 0, 1));
   }
 
+  function getMissingDataFallbackTeamRating(teamName) {
+    const strengths = Object.values(TEAM_STRENGTHS).filter(Number.isFinite);
+    const minStrength = strengths.length ? Math.min(...strengths) : 0;
+    const maxStrength = strengths.length ? Math.max(...strengths) : 1;
+    const teamStrength = toNumber(TEAM_STRENGTHS[teamName], (minStrength + maxStrength) / 2);
+    const normalizedStrength = maxStrength > minStrength
+      ? (teamStrength - minStrength) / (maxStrength - minStrength)
+      : 0.5;
+
+    // Fallback is only used when a team has no match data at all.
+    // Spread by team strength so missing teams do not collapse to one value.
+    return toRating1(TEAM_BASELINE_RATING + ((normalizedStrength - 0.5) * 6));
+  }
+
   function weightedAverage(items) {
     const totals = items.reduce((accumulator, item) => {
       accumulator.weight += item.weight;
@@ -309,9 +324,9 @@
       mbappe: 'Mbappe',
       slimani: 'Slimani',
       limani: 'Slimani',
+      neuer: 'Mbappe',
       drku: 'Drkuu',
       drkuu: 'Drkuu',
-      triplag: 'Triple G',
       sergioramoss: 'Sergio Ramos',
       sergioramos: 'Sergio Ramos',
       v4ks: 'V4ks',
@@ -332,11 +347,9 @@
       vanNistelrooy: 'Van Nistelrooy',
       tikiahmadfutuh: 'Tiki',
       safff: 'SAFF',
-      kak: 'Kaka',
       praetor: 'Praetor',
       'praetor.': 'Praetor',
-      vonmacron: 'Von',
-      sandiego: 'Nosso',
+      vonmacron: 'Vonmacron',
       bern: 'Berniee',
       col268: 'Col',
       maksredondo: 'MaksLuburic',
@@ -344,10 +357,12 @@
       shush: 'Shush',
       nxen: 'Nxen',
       arshahaxballradarcom: 'Arshavin',
-      kiyoharusaeyama: 'Blazing',
+      kiyoharusaeyama: 'Wakanda',
       mohamedsalah: 'ZaQu',
       burakt09: 'Burak',
       perkzbutdiffpcandlag: 'Perkz',
+      alexanderisak: 'Razor',
+      alexisak: 'Razor',
       pitarchpitbull: 'Pitarch',
       virgilvandijk: 'VVD',
       yeet: 'YEET',
@@ -614,19 +629,20 @@
         }
         seen.add(`${norm}-${playerTeam}`);
 
-        const goals = toNumber(playerEntry.goals) + (goalByPlayer.get(canonical) || 0);
-        const assists = toNumber(playerEntry.assists) + (assistByPlayer.get(canonical) || 0);
+        // Avoid double-counting when both player rows and goal events include the same actions.
+        const goals = Math.max(toNumber(playerEntry.goals), (goalByPlayer.get(canonical) || 0));
+        const assists = Math.max(toNumber(playerEntry.assists), (assistByPlayer.get(canonical) || 0));
         const shots = toNumber(playerEntry.shots);
-        const ownGoals = toNumber(playerEntry.ownGoals) + (ownGoalByPlayer.get(canonical) || 0);
+        const ownGoals = Math.max(toNumber(playerEntry.ownGoals), (ownGoalByPlayer.get(canonical) || 0));
         const cleanSheet = (normalizeName(playerTeam) === normalizeName(teamA) && scoreB === 0)
           || (normalizeName(playerTeam) === normalizeName(teamB) && scoreA === 0) ? 1 : 0;
 
         const rating = 72
-          + (goals * 7)
-          + (assists * 4.5)
-          + (shots * 1)
-          + (cleanSheet * 4)
-          - (ownGoals * 10);
+          + (goals * 6)
+          + (assists * 4)
+          + (shots * 0.6)
+          + (cleanSheet * 2.5)
+          - (ownGoals * 7);
 
         player.matchesPlayed += 1;
         player.matchRatings.push(clamp(rating, 0, MAX_DISPLAY_RATING));
@@ -683,10 +699,14 @@
     teamRows.forEach(team => {
       const spreadAdjustedTeamRating = compressTowardMean(team.rawTeamRating, meanRawTeamRating, TEAM_COMPETITIVE_SPREAD);
       const curvedTeamRating = applySoftCapCurve(spreadAdjustedTeamRating);
-      const floorAdjustedTeamRating = team.matchesPlayed > 0
-        ? Math.max(ACTIVE_TEAM_RATING_FLOOR, curvedTeamRating)
-        : curvedTeamRating;
-      team.teamRating = toRating1(floorAdjustedTeamRating);
+      const hasComputedData = team.matchesPlayed > 0 && team.halvesRecorded > 0;
+
+      if (hasComputedData) {
+        // Use the computed score directly when real match data exists.
+        team.teamRating = toRating1(curvedTeamRating);
+      } else {
+        team.teamRating = getMissingDataFallbackTeamRating(team.team);
+      }
     });
 
     const playerRows = Array.from(playerMap.values())
@@ -702,7 +722,9 @@
 
     playerRows.forEach(player => {
       const spreadAdjustedPlayerRating = compressTowardMean(player.rawTournamentRating, meanRawPlayerRating, PLAYER_COMPETITIVE_SPREAD);
-      player.tournamentRating = toRating1(applySoftCapCurve(spreadAdjustedPlayerRating));
+      const reliability = clamp(player.matchesPlayed / (player.matchesPlayed + PLAYER_RELIABILITY_GAMES), 0, 1);
+      const reliabilityAdjustedPlayerRating = meanRawPlayerRating + ((spreadAdjustedPlayerRating - meanRawPlayerRating) * reliability);
+      player.tournamentRating = toRating1(applySoftCapCurve(reliabilityAdjustedPlayerRating));
     });
 
     state.results = {
