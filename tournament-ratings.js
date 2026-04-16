@@ -15,8 +15,8 @@
   const TOP10_PLAYER_MIN_MATCHES = 3;
 
   const TEAM_STRENGTHS = {
-    England: 0.200,
-    Poland: 0.205,
+    'England / UK': 0.200,
+    'Poland + Balkans': 0.205,
     Germany: 0.167,
     Netherlands: 0.170,
     Spain: 0.125,
@@ -25,6 +25,14 @@
     'World XI': 0.048,
     'Tunisia + Algeria': 0.042,
     France: 0.038
+  };
+
+  const TEAM_NAME_ALIASES = {
+    england: 'England / UK',
+    englanduk: 'England / UK',
+    poland: 'Poland + Balkans',
+    polandbalkans: 'Poland + Balkans',
+    tunisiaandalgeria: 'Tunisia + Algeria'
   };
 
   // Source-of-truth override for current tournament state, kept in sync with index data.
@@ -420,6 +428,13 @@
     return getTeamFlag(rosterEntry.team);
   }
 
+  function canonicalizeTeamName(rawTeamName) {
+    const cleanTeamName = String(rawTeamName || '').trim();
+    if (!cleanTeamName) return '';
+    const normalized = normalizeName(cleanTeamName);
+    return TEAM_NAME_ALIASES[normalized] || cleanTeamName;
+  }
+
   function buildPlayerCountryLookup() {
     const sourcePlayers = Array.isArray(window.allPlayers)
       ? window.allPlayers
@@ -589,8 +604,8 @@
       ? (toNumber(stats.passesA) - toNumber(stats.passesB))
       : (toNumber(stats.passesB) - toNumber(stats.passesA));
 
-    const teamName = side === 'A' ? match.teamA : match.teamB;
-    const opponent = side === 'A' ? match.teamB : match.teamA;
+    const teamName = canonicalizeTeamName(side === 'A' ? match.teamA : match.teamB);
+    const opponent = canonicalizeTeamName(side === 'A' ? match.teamB : match.teamA);
     const strength = TEAM_STRENGTHS[teamName] ?? 0;
     const opponentStrength = TEAM_STRENGTHS[opponent] ?? 0;
     const expected = strength + opponentStrength > 0 ? strength / (strength + opponentStrength) : 0.5;
@@ -680,8 +695,8 @@
     matches.forEach(match => {
       applyKnownCorrection(match);
 
-      const teamA = match.teamA;
-      const teamB = match.teamB;
+      const teamA = canonicalizeTeamName(match.teamA);
+      const teamB = canonicalizeTeamName(match.teamB);
       const scoreA = toNumber(match.scoreA);
       const scoreB = toNumber(match.scoreB);
       const scoreTeamA = teamScore(match, 'A');
@@ -753,7 +768,7 @@
       const seen = new Set();
       (match.players || []).forEach(playerEntry => {
         const canonical = canonicalizePlayerName(playerEntry.name || 'Unknown');
-        const playerTeam = playerEntry.team || null;
+        const playerTeam = canonicalizeTeamName(playerEntry.team || null);
         const player = ensurePlayerRecord(playerMap, canonical, playerTeam);
         const norm = normalizeName(canonical);
         if (seen.has(`${norm}-${playerTeam}`)) {
