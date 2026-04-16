@@ -551,7 +551,10 @@
   }
 
   function renderTeamsTop10Rows(teams) {
-    return (teams || []).map(team => `<tr><td>${team.team}</td><td>${round1(team.teamRating).toFixed(1)}</td></tr>`).join('');
+    return (teams || []).map(team => {
+      const displayTeamName = canonicalizeTeamName(team.team);
+      return `<tr><td>${displayTeamName}</td><td>${round1(team.teamRating).toFixed(1)}</td></tr>`;
+    }).join('');
   }
 
   function renderCountriesTop10Rows(countries) {
@@ -1109,8 +1112,3 @@
     console.error('World Cup top 10 injection failed', error);
   });
 })();
-
-
-
-
-
