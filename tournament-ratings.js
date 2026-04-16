@@ -495,13 +495,16 @@
       const assists = assistsMap.get(normalized) || 0;
       const mvps = mvpsMap.get(normalized) || 0;
       const cleanSheets = cleanSheetsMap.get(normalized) || 0;
+      const contributionScore = (goals * 1.0) + (assists * 0.7) + (mvps * 2.0) + (cleanSheets * 1.0);
 
       countryRecord.goals += goals;
       countryRecord.assists += assists;
       countryRecord.mvps += mvps;
       countryRecord.cleanSheets += cleanSheets;
-      countryRecord.playerCount += 1;
-      countryRecord.totalScore += (goals * 1.0) + (assists * 0.7) + (mvps * 2.0) + (cleanSheets * 1.0);
+      if (contributionScore > 0) {
+        countryRecord.playerCount += 1;
+      }
+      countryRecord.totalScore += contributionScore;
     });
 
     const countriesTop10 = Array.from(countryMap.entries())
@@ -915,7 +918,7 @@
       </div>
     `;
 
-    const teamsHeaderLabel = topTeamsViewMode === 'teams' ? 'Country Ratings' : 'Player Contribution Score';
+    const teamsHeaderLabel = topTeamsViewMode === 'teams' ? 'Country Ratings' : 'Player Impact';
     const teamsInfoText = topTeamsViewMode === 'teams'
       ? 'Team ratings mostly reward results first (wins, draws, losses), then goal difference and team performance stats (possession, passes, shots). More games means the rating reflects real form better.'
       : 'Country score = goals (x1.0) + assists (x0.7) + MVPs (x2.0) + clean sheets (x1.0), summed across all players from that country.';
@@ -1086,6 +1089,7 @@
     console.error('World Cup top 10 injection failed', error);
   });
 })();
+
 
 
 
