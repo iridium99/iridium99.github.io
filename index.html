@@ -2270,6 +2270,11 @@
             const visibleRows = isExpanded ? rows : rows.slice(0, 10);
             const hiddenCount = Math.max(rows.length - visibleRows.length, 0);
 
+            const totalsByRank = [...new Set(rows.map(row => row.total))].sort((a, b) => b - a);
+            const goldTotal = totalsByRank[0];
+            const silverTotal = totalsByRank.length > 1 ? totalsByRank[1] : null;
+            const bronzeTotal = totalsByRank.length > 2 ? totalsByRank[2] : null;
+
             return `
                 <div class="world-cup-card">
                     <div class="stat-table-header">
@@ -2278,7 +2283,7 @@
                             <div style="display:flex;gap:10px;align-items:center;">
                                 <span class="stat-row-count">${visibleRows.length}/${rows.length}</span>
                                 <button class="stat-table-toggle-btn" data-leaderboard-table="Goals + Assists">
-                                    ${isExpanded ? 'Show Top 10' : 'Show All'}
+                                    ${isExpanded ? 'Hide Others' : 'Show All'}
                                 </button>
                             </div>
                         ` : ''}
@@ -2294,8 +2299,15 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                ${visibleRows.map((row, index) => {
-                                    const rowClass = index < 3 ? `medal-${['gold', 'silver', 'bronze'][index]}` : '';
+                                ${visibleRows.map((row) => {
+                                    let rowClass = '';
+                                    if (row.total === goldTotal) {
+                                        rowClass = 'medal-gold';
+                                    } else if (silverTotal !== null && row.total === silverTotal) {
+                                        rowClass = 'medal-silver';
+                                    } else if (bronzeTotal !== null && row.total === bronzeTotal) {
+                                        rowClass = 'medal-bronze';
+                                    }
                                     return `<tr class="${rowClass}"><td>${row.player}</td><td>${row.goals}</td><td>${row.assists}</td><td>${row.total}</td></tr>`;
                                 }).join('')}
                             </tbody>
