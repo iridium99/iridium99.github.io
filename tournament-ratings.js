@@ -459,6 +459,8 @@
       (Array.isArray(window.teams) ? window.teams : []).map(team => [normalizeName(team.name), team.name])
     );
     const teamAliases = {
+      poland: 'Poland + Balkans',
+      england: 'England / UK',
       tunisiaandalgeria: 'Tunisia + Algeria',
       englanduk: 'England / UK',
       polandbalkans: 'Poland + Balkans'
@@ -1092,6 +1094,7 @@
     console.error('World Cup top 10 injection failed', error);
   });
 })();
+
 
 
 
