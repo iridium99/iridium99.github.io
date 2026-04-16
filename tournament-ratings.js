@@ -471,70 +471,43 @@
     const assistsMap = buildLeaderboardStatMap(state.seed?.currentState?.assistsLeaderboard, 'assists');
     const mvpsMap = buildLeaderboardStatMap(state.seed?.currentState?.mvpLeaderboard, 'mvps');
     const cleanSheetsMap = buildLeaderboardStatMap(state.seed?.currentState?.cleanSheetsLeaderboard, 'cleanSheets');
-    const teamNameByNormalized = new Map(
-      (Array.isArray(window.teams) ? window.teams : []).map(team => [normalizeName(team.name), team.name])
-    );
-    const teamAliases = {
-      poland: 'Poland + Balkans',
-      england: 'England / UK',
-      tunisiaandalgeria: 'Tunisia + Algeria',
-      englanduk: 'England / UK',
-      polandbalkans: 'Poland + Balkans'
-    };
-
+    const tournamentTeams = Array.isArray(window.teams) ? window.teams : [];
     const countryMap = new Map();
-    const contributorNormalizedSet = new Set();
-    const sortedPlayerByNormalized = new Map();
 
-    (sortedPlayerRows || []).forEach(player => {
-      const normalized = normalizeName(scrubPlayerName(player.canonical || 'Unknown'));
-      if (!normalized || sortedPlayerByNormalized.has(normalized)) return;
-      sortedPlayerByNormalized.set(normalized, player);
-    });
-
-    [goalsMap, assistsMap, mvpsMap, cleanSheetsMap].forEach(statMap => {
-      statMap.forEach((value, normalized) => {
-        if (toNumber(value) > 0) contributorNormalizedSet.add(normalized);
+    tournamentTeams.forEach(team => {
+      const teamName = canonicalizeTeamName(team.name);
+      countryMap.set(teamName, {
+        totalScore: 0,
+        goals: 0,
+        assists: 0,
+        mvps: 0,
+        cleanSheets: 0,
+        playerCount: 0
       });
-    });
 
-    contributorNormalizedSet.forEach(normalized => {
-      const rosterEntry = state.roster.get(normalized);
-      const sortedEntry = sortedPlayerByNormalized.get(normalized);
-      const rawTeamName = String((rosterEntry && rosterEntry.team) || (sortedEntry && sortedEntry.team) || '').trim();
-      const normalizedTeamName = normalizeName(rawTeamName);
-      const country = teamNameByNormalized.get(normalizedTeamName)
-        || teamAliases[normalizedTeamName]
-        || canonicalizeTeamName(rawTeamName)
-        || rawTeamName
-        || 'Unknown';
+      const seenPlayers = new Set();
+      (team.players || []).forEach(playerName => {
+        const canonical = canonicalizePlayerName(playerName || 'Unknown');
+        const normalized = normalizeName(canonical);
+        if (!normalized || seenPlayers.has(normalized)) return;
+        seenPlayers.add(normalized);
 
-      if (!countryMap.has(country)) {
-        countryMap.set(country, {
-          totalScore: 0,
-          goals: 0,
-          assists: 0,
-          mvps: 0,
-          cleanSheets: 0,
-          playerCount: 0
-        });
-      }
+        const goals = goalsMap.get(normalized) || 0;
+        const assists = assistsMap.get(normalized) || 0;
+        const mvps = mvpsMap.get(normalized) || 0;
+        const cleanSheets = cleanSheetsMap.get(normalized) || 0;
+        const contributionScore = (goals * 1.0) + (assists * 0.7) + (mvps * 2.0) + (cleanSheets * 1.0);
 
-      const countryRecord = countryMap.get(country);
-      const goals = goalsMap.get(normalized) || 0;
-      const assists = assistsMap.get(normalized) || 0;
-      const mvps = mvpsMap.get(normalized) || 0;
-      const cleanSheets = cleanSheetsMap.get(normalized) || 0;
-      const contributionScore = (goals * 1.0) + (assists * 0.7) + (mvps * 2.0) + (cleanSheets * 1.0);
-
-      countryRecord.goals += goals;
-      countryRecord.assists += assists;
-      countryRecord.mvps += mvps;
-      countryRecord.cleanSheets += cleanSheets;
-      if (contributionScore > 0) {
-        countryRecord.playerCount += 1;
-      }
-      countryRecord.totalScore += contributionScore;
+        const countryRecord = countryMap.get(teamName);
+        countryRecord.goals += goals;
+        countryRecord.assists += assists;
+        countryRecord.mvps += mvps;
+        countryRecord.cleanSheets += cleanSheets;
+        if (contributionScore > 0) {
+          countryRecord.playerCount += 1;
+        }
+        countryRecord.totalScore += contributionScore;
+      });
     });
 
     const countriesTop10 = Array.from(countryMap.entries())
@@ -1122,4 +1095,5 @@
     console.error('World Cup top 10 injection failed', error);
   });
 })();
+
 
