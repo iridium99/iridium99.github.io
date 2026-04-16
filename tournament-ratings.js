@@ -13,6 +13,7 @@
   const TEAM_CONFIDENCE_SPAN = 0.4;
   const PLAYER_RELIABILITY_GAMES = 2.5;
   const TOP10_PLAYER_MIN_MATCHES = 3;
+  const DEBUG_COUNTRY_TRACE = true;
 
   const TEAM_STRENGTHS = {
     'England / UK': 0.200,
@@ -482,20 +483,29 @@
     };
 
     const countryMap = new Map();
-    const processedPlayers = new Set();
+    const contributorNormalizedSet = new Set();
+    const sortedPlayerByNormalized = new Map();
 
     (sortedPlayerRows || []).forEach(player => {
-      const cleanName = scrubPlayerName(player.canonical || 'Unknown');
-      const normalized = normalizeName(cleanName);
-      if (!normalized) return;
-      if (processedPlayers.has(normalized)) return;
-      processedPlayers.add(normalized);
+      const normalized = normalizeName(scrubPlayerName(player.canonical || 'Unknown'));
+      if (!normalized || sortedPlayerByNormalized.has(normalized)) return;
+      sortedPlayerByNormalized.set(normalized, player);
+    });
 
+    [goalsMap, assistsMap, mvpsMap, cleanSheetsMap].forEach(statMap => {
+      statMap.forEach((value, normalized) => {
+        if (toNumber(value) > 0) contributorNormalizedSet.add(normalized);
+      });
+    });
+
+    contributorNormalizedSet.forEach(normalized => {
       const rosterEntry = state.roster.get(normalized);
-      const rawTeamName = String((rosterEntry && rosterEntry.team) || player.team || '').trim();
+      const sortedEntry = sortedPlayerByNormalized.get(normalized);
+      const rawTeamName = String((rosterEntry && rosterEntry.team) || (sortedEntry && sortedEntry.team) || '').trim();
       const normalizedTeamName = normalizeName(rawTeamName);
       const country = teamNameByNormalized.get(normalizedTeamName)
         || teamAliases[normalizedTeamName]
+        || canonicalizeTeamName(rawTeamName)
         || rawTeamName
         || 'Unknown';
 
@@ -1112,3 +1122,4 @@
     console.error('World Cup top 10 injection failed', error);
   });
 })();
+
