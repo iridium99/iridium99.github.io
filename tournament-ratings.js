@@ -465,11 +465,14 @@
     };
 
     const countryMap = new Map();
+    const processedPlayers = new Set();
 
     (sortedPlayerRows || []).forEach(player => {
       const cleanName = scrubPlayerName(player.canonical || 'Unknown');
       const normalized = normalizeName(cleanName);
       if (!normalized) return;
+      if (processedPlayers.has(normalized)) return;
+      processedPlayers.add(normalized);
 
       const rosterEntry = state.roster.get(normalized);
       const rawTeamName = String((rosterEntry && rosterEntry.team) || player.team || '').trim();
