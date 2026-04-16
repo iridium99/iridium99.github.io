@@ -214,6 +214,19 @@
     }
   };
 
+  const MANUAL_PLAYER_IMPACT = [
+    { country: 'Netherlands', totalScore: 34.3, playerCount: 7 },
+    { country: 'England / UK', totalScore: 27.3, playerCount: 9 },
+    { country: 'Poland + Balkans', totalScore: 22.5, playerCount: 7 },
+    { country: 'Egypt', totalScore: 20.6, playerCount: 7 },
+    { country: 'Italy', totalScore: 17.1, playerCount: 6 },
+    { country: 'Germany', totalScore: 16.4, playerCount: 6 },
+    { country: 'Spain', totalScore: 12.4, playerCount: 5 },
+    { country: 'France', totalScore: 9.1, playerCount: 4 },
+    { country: 'World XI', totalScore: 3.0, playerCount: 2 },
+    { country: 'Tunisia + Algeria', totalScore: 2.7, playerCount: 3 }
+  ];
+
   const state = {
     seed: null,
     roster: new Map(),
@@ -467,64 +480,21 @@
   }
 
   function computeCountryContributions(sortedPlayerRows) {
-    const goalsMap = buildLeaderboardStatMap(state.seed?.currentState?.goalsLeaderboard, 'goals');
-    const assistsMap = buildLeaderboardStatMap(state.seed?.currentState?.assistsLeaderboard, 'assists');
-    const mvpsMap = buildLeaderboardStatMap(state.seed?.currentState?.mvpLeaderboard, 'mvps');
-    const cleanSheetsMap = buildLeaderboardStatMap(state.seed?.currentState?.cleanSheetsLeaderboard, 'cleanSheets');
-    const tournamentTeams = Array.isArray(window.teams) ? window.teams : [];
-    const countryMap = new Map();
+    const countriesTop10 = MANUAL_PLAYER_IMPACT.map(item => ({
+      country: item.country,
+      totalScore: round1(item.totalScore),
+      playerCount: item.playerCount
+    }));
 
-    tournamentTeams.forEach(team => {
-      const teamName = canonicalizeTeamName(team.name);
-      countryMap.set(teamName, {
-        totalScore: 0,
-        goals: 0,
-        assists: 0,
-        mvps: 0,
-        cleanSheets: 0,
-        playerCount: 0
-      });
-
-      const seenPlayers = new Set();
-      (team.players || []).forEach(playerName => {
-        const canonical = canonicalizePlayerName(playerName || 'Unknown');
-        const normalized = normalizeName(canonical);
-        if (!normalized || seenPlayers.has(normalized)) return;
-        seenPlayers.add(normalized);
-
-        const goals = goalsMap.get(normalized) || 0;
-        const assists = assistsMap.get(normalized) || 0;
-        const mvps = mvpsMap.get(normalized) || 0;
-        const cleanSheets = cleanSheetsMap.get(normalized) || 0;
-        const contributionScore = (goals * 1.0) + (assists * 0.7) + (mvps * 2.0) + (cleanSheets * 1.0);
-
-        const countryRecord = countryMap.get(teamName);
-        countryRecord.goals += goals;
-        countryRecord.assists += assists;
-        countryRecord.mvps += mvps;
-        countryRecord.cleanSheets += cleanSheets;
-        if (contributionScore > 0) {
-          countryRecord.playerCount += 1;
-        }
-        countryRecord.totalScore += contributionScore;
-      });
-    });
-
-    const countriesTop10 = Array.from(countryMap.entries())
-      .map(([country, values]) => ({
-        country,
-        totalScore: round1(values.totalScore),
-        goals: values.goals,
-        assists: values.assists,
-        mvps: values.mvps,
-        cleanSheets: values.cleanSheets,
-        playerCount: values.playerCount
-      }))
-      .sort((a, b) => b.totalScore - a.totalScore || b.playerCount - a.playerCount || a.country.localeCompare(b.country))
-      .slice(0, 10);
+    const countryStats = Object.fromEntries(
+      MANUAL_PLAYER_IMPACT.map(item => [item.country, {
+        totalScore: round1(item.totalScore),
+        playerCount: item.playerCount
+      }])
+    );
 
     return {
-      countryStats: Object.fromEntries(countryMap.entries()),
+      countryStats,
       countriesTop10
     };
   }
@@ -927,7 +897,7 @@
     const teamsHeaderLabel = topTeamsViewMode === 'teams' ? 'Country Ratings' : 'Player Impact';
     const teamsInfoText = topTeamsViewMode === 'teams'
       ? 'Team ratings mostly reward results first (wins, draws, losses), then goal difference and team performance stats (possession, passes, shots). More games means the rating reflects real form better.'
-      : 'Country score = goals (x1.0) + assists (x0.7) + MVPs (x2.0) + clean sheets (x1.0), summed across all players from that country.';
+      : 'Static manual view: the country score is hand-counted and the player total is fixed for display.';
     const teamsTableHeader = topTeamsViewMode === 'teams'
       ? '<tr><th>Team</th><th>Rating</th></tr>'
       : '<tr><th>Country</th><th>Score</th><th>Players</th></tr>';
