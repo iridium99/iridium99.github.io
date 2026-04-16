@@ -455,7 +455,14 @@
     const assistsMap = buildLeaderboardStatMap(state.seed?.currentState?.assistsLeaderboard, 'assists');
     const mvpsMap = buildLeaderboardStatMap(state.seed?.currentState?.mvpLeaderboard, 'mvps');
     const cleanSheetsMap = buildLeaderboardStatMap(state.seed?.currentState?.cleanSheetsLeaderboard, 'cleanSheets');
-    const countryLookup = buildPlayerCountryLookup();
+    const teamNameByNormalized = new Map(
+      (Array.isArray(window.teams) ? window.teams : []).map(team => [normalizeName(team.name), team.name])
+    );
+    const teamAliases = {
+      tunisiaandalgeria: 'Tunisia + Algeria',
+      englanduk: 'England / UK',
+      polandbalkans: 'Poland + Balkans'
+    };
 
     const countryMap = new Map();
 
@@ -464,7 +471,13 @@
       const normalized = normalizeName(cleanName);
       if (!normalized) return;
 
-      const country = (countryLookup.get(normalized) || String(player.team || '').trim() || 'Unknown') || 'Unknown';
+      const rosterEntry = state.roster.get(normalized);
+      const rawTeamName = String((rosterEntry && rosterEntry.team) || player.team || '').trim();
+      const normalizedTeamName = normalizeName(rawTeamName);
+      const country = teamNameByNormalized.get(normalizedTeamName)
+        || teamAliases[normalizedTeamName]
+        || rawTeamName
+        || 'Unknown';
 
       if (!countryMap.has(country)) {
         countryMap.set(country, {
@@ -902,7 +915,7 @@
       </div>
     `;
 
-    const teamsHeaderLabel = topTeamsViewMode === 'teams' ? 'Top 10 Teams' : 'Top 10 Countries';
+    const teamsHeaderLabel = topTeamsViewMode === 'teams' ? 'Country Ratings' : 'Player Contribution Score';
     const teamsInfoText = topTeamsViewMode === 'teams'
       ? 'Team ratings mostly reward results first (wins, draws, losses), then goal difference and team performance stats (possession, passes, shots). More games means the rating reflects real form better.'
       : 'Country score = goals (x1.0) + assists (x0.7) + MVPs (x2.0) + clean sheets (x1.0), summed across all players from that country.';
