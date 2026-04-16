@@ -213,6 +213,8 @@
     results: null
   };
 
+  let topTeamsViewMode = 'teams';
+
   function normalizeName(value) {
     return (value || '')
       .normalize('NFD')
@@ -416,6 +418,114 @@
     const rosterEntry = state.roster.get(normalized);
     if (!rosterEntry) return '';
     return getTeamFlag(rosterEntry.team);
+  }
+
+  function buildPlayerCountryLookup() {
+    const sourcePlayers = Array.isArray(window.allPlayers)
+      ? window.allPlayers
+      : (typeof allPlayers !== 'undefined' && Array.isArray(allPlayers) ? allPlayers : []);
+
+    const lookup = new Map();
+    sourcePlayers.forEach(player => {
+      const displayName = scrubPlayerName(player.display_name || player.name || '');
+      const canonicalName = canonicalizePlayerName(displayName);
+      const normalized = normalizeName(canonicalName);
+      if (!normalized) return;
+
+      const country = String(player.country || player.nation || 'Unknown').trim() || 'Unknown';
+      lookup.set(normalized, country);
+    });
+
+    return lookup;
+  }
+
+  function buildLeaderboardStatMap(rows, key) {
+    const map = new Map();
+    (rows || []).forEach(row => {
+      const canonical = canonicalizePlayerName(row.player || 'Unknown');
+      const normalized = normalizeName(canonical);
+      if (!normalized) return;
+      map.set(normalized, (map.get(normalized) || 0) + toNumber(row[key]));
+    });
+    return map;
+  }
+
+  function computeCountryContributions(sortedPlayerRows) {
+    const goalsMap = buildLeaderboardStatMap(state.seed?.currentState?.goalsLeaderboard, 'goals');
+    const assistsMap = buildLeaderboardStatMap(state.seed?.currentState?.assistsLeaderboard, 'assists');
+    const mvpsMap = buildLeaderboardStatMap(state.seed?.currentState?.mvpLeaderboard, 'mvps');
+    const cleanSheetsMap = buildLeaderboardStatMap(state.seed?.currentState?.cleanSheetsLeaderboard, 'cleanSheets');
+    const countryLookup = buildPlayerCountryLookup();
+
+    const countryMap = new Map();
+
+    (sortedPlayerRows || []).forEach(player => {
+      const cleanName = scrubPlayerName(player.canonical || 'Unknown');
+      const normalized = normalizeName(cleanName);
+      if (!normalized) return;
+
+      const country = (countryLookup.get(normalized) || String(player.team || '').trim() || 'Unknown') || 'Unknown';
+
+      if (!countryMap.has(country)) {
+        countryMap.set(country, {
+          totalScore: 0,
+          goals: 0,
+          assists: 0,
+          mvps: 0,
+          cleanSheets: 0,
+          playerCount: 0
+        });
+      }
+
+      const countryRecord = countryMap.get(country);
+      const goals = goalsMap.get(normalized) || 0;
+      const assists = assistsMap.get(normalized) || 0;
+      const mvps = mvpsMap.get(normalized) || 0;
+      const cleanSheets = cleanSheetsMap.get(normalized) || 0;
+
+      countryRecord.goals += goals;
+      countryRecord.assists += assists;
+      countryRecord.mvps += mvps;
+      countryRecord.cleanSheets += cleanSheets;
+      countryRecord.playerCount += 1;
+      countryRecord.totalScore += (goals * 1.0) + (assists * 0.7) + (mvps * 2.0) + (cleanSheets * 1.0);
+    });
+
+    const countriesTop10 = Array.from(countryMap.entries())
+      .map(([country, values]) => ({
+        country,
+        totalScore: round1(values.totalScore),
+        goals: values.goals,
+        assists: values.assists,
+        mvps: values.mvps,
+        cleanSheets: values.cleanSheets,
+        playerCount: values.playerCount
+      }))
+      .sort((a, b) => b.totalScore - a.totalScore || b.playerCount - a.playerCount || a.country.localeCompare(b.country))
+      .slice(0, 10);
+
+    return {
+      countryStats: Object.fromEntries(countryMap.entries()),
+      countriesTop10
+    };
+  }
+
+  function cycleTopTeamsViewMode() {
+    topTeamsViewMode = topTeamsViewMode === 'teams' ? 'countries' : 'teams';
+  }
+
+  function renderTeamsTop10Rows(teams) {
+    return (teams || []).map(team => `<tr><td>${team.team}</td><td>${round1(team.teamRating).toFixed(1)}</td></tr>`).join('');
+  }
+
+  function renderCountriesTop10Rows(countries) {
+    return (countries || []).map(country => `
+      <tr>
+        <td>${country.country || 'Unknown'}</td>
+        <td>${round1(country.totalScore).toFixed(1)}</td>
+        <td>${country.playerCount}</td>
+      </tr>
+    `).join('');
   }
 
   function matchKey(match) {
@@ -729,6 +839,7 @@
     });
 
     const sortedPlayerRows = [...playerRows].sort((a, b) => b.tournamentRating - a.tournamentRating);
+    const countryContribution = computeCountryContributions(sortedPlayerRows);
 
     state.results = {
       playersAll: sortedPlayerRows,
@@ -738,7 +849,9 @@
       teamsTop10: teamRows
         .filter(team => team.matchesPlayed > 0)
         .sort((a, b) => b.teamRating - a.teamRating)
-        .slice(0, 10)
+        .slice(0, 10),
+      countryStats: countryContribution.countryStats,
+      countriesTop10: countryContribution.countriesTop10
     };
   }
 
@@ -748,6 +861,7 @@
 
     const players = state.results.playersTop10;
     const teams = state.results.teamsTop10;
+    const countries = state.results.countriesTop10 || [];
 
     let playersCard = document.getElementById('world-cup-top10-players-card');
     if (!playersCard) {
@@ -764,7 +878,13 @@
     }
 
     playersCard.innerHTML = `
-      <h2 class="world-cup-title">Top 10 Players</h2>
+      <div class="world-cup-info-header">
+        <h2 class="world-cup-title">Top 10 Players</h2>
+        <button class="world-cup-info-btn" type="button" data-info-target="players-rating-info" aria-expanded="false" aria-label="How player rating is calculated">i</button>
+      </div>
+      <p id="players-rating-info" class="world-cup-info-text" hidden>
+        Ratings are based on match impact: results, goal difference, goals/assists/clean sheets, and team stats like possession, passes, and shots. More matches = more reliable rating.
+      </p>
       <div class="world-cup-table-wrap">
         <table class="world-cup-stat-table">
           <thead>
@@ -782,19 +902,61 @@
       </div>
     `;
 
+    const teamsHeaderLabel = topTeamsViewMode === 'teams' ? 'Top 10 Teams' : 'Top 10 Countries';
+    const teamsInfoText = topTeamsViewMode === 'teams'
+      ? 'Team ratings mostly reward results first (wins, draws, losses), then goal difference and team performance stats (possession, passes, shots). More games means the rating reflects real form better.'
+      : 'Country score = goals (x1.0) + assists (x0.7) + MVPs (x2.0) + clean sheets (x1.0), summed across all players from that country.';
+    const teamsTableHeader = topTeamsViewMode === 'teams'
+      ? '<tr><th>Team</th><th>Rating</th></tr>'
+      : '<tr><th>Country</th><th>Score</th><th>Players</th></tr>';
+    const teamsTableRows = topTeamsViewMode === 'teams'
+      ? renderTeamsTop10Rows(teams)
+      : renderCountriesTop10Rows(countries);
+
     teamsCard.innerHTML = `
-      <h2 class="world-cup-title">Top 10 Teams</h2>
+      <div class="world-cup-info-header">
+        <h2 class="world-cup-title">${teamsHeaderLabel}</h2>
+        <div class="world-cup-top-teams-controls">
+          <button class="world-cup-nav-btn" type="button" data-top-teams-nav="left" aria-label="Show previous view">&#8592;</button>
+          <button class="world-cup-nav-btn" type="button" data-top-teams-nav="right" aria-label="Show next view">&#8594;</button>
+          <button class="world-cup-info-btn" type="button" data-info-target="teams-rating-info" aria-expanded="false" aria-label="How this ranking is calculated">i</button>
+        </div>
+      </div>
+      <p id="teams-rating-info" class="world-cup-info-text" hidden>
+        ${teamsInfoText}
+      </p>
       <div class="world-cup-table-wrap">
         <table class="world-cup-stat-table">
           <thead>
-            <tr><th>Team</th><th>Rating</th></tr>
+            ${teamsTableHeader}
           </thead>
           <tbody>
-            ${teams.map((team) => `<tr><td>${team.team}</td><td>${round1(team.teamRating).toFixed(1)}</td></tr>`).join('')}
+            ${teamsTableRows}
           </tbody>
         </table>
       </div>
     `;
+
+    [playersCard, teamsCard].forEach(card => {
+      card.querySelectorAll('.world-cup-info-btn').forEach(button => {
+        button.addEventListener('click', () => {
+          const targetId = button.getAttribute('data-info-target');
+          const infoEl = card.querySelector(`#${targetId}`);
+          if (!infoEl) return;
+
+          const willOpen = infoEl.hidden;
+          infoEl.hidden = !willOpen;
+          button.setAttribute('aria-expanded', String(willOpen));
+        });
+      });
+    });
+
+    teamsCard.querySelectorAll('[data-top-teams-nav]').forEach(button => {
+      button.addEventListener('click', () => {
+        cycleTopTeamsViewMode();
+        renderInlineCards();
+      });
+    });
 
     const statCards = Array.from(statsRow.querySelectorAll('.world-cup-card'));
     const ownGoalsCard = statCards.find(card => {
@@ -818,6 +980,64 @@
       #world-cup-top10-players-card,
       #world-cup-top10-teams-card {
         min-width: 0;
+      }
+
+      .world-cup-info-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        margin-bottom: 8px;
+      }
+
+      .world-cup-info-btn {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        border: 1px solid rgba(255, 215, 0, 0.8);
+        background: rgba(255, 215, 0, 0.12);
+        color: #ffd700;
+        font-size: 12px;
+        font-weight: 700;
+        cursor: pointer;
+        line-height: 1;
+      }
+
+      .world-cup-info-btn:hover {
+        background: rgba(255, 215, 0, 0.2);
+      }
+
+      .world-cup-info-text {
+        margin: 0 0 10px;
+        padding: 8px 10px;
+        border-radius: 8px;
+        font-size: 12px;
+        line-height: 1.4;
+        color: #d9dee8;
+        background: rgba(255, 255, 255, 0.06);
+      }
+
+      .world-cup-top-teams-controls {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .world-cup-nav-btn {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        border: 1px solid rgba(255, 215, 0, 0.8);
+        background: rgba(255, 215, 0, 0.12);
+        color: #ffd700;
+        font-size: 12px;
+        font-weight: 700;
+        cursor: pointer;
+        line-height: 1;
+      }
+
+      .world-cup-nav-btn:hover {
+        background: rgba(255, 215, 0, 0.2);
       }
     `;
     document.head.appendChild(style);
@@ -853,5 +1073,6 @@
     console.error('World Cup top 10 injection failed', error);
   });
 })();
+
 
 
