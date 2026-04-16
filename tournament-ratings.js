@@ -897,7 +897,7 @@
     const teamsHeaderLabel = topTeamsViewMode === 'teams' ? 'Country Ratings' : 'Player Impact';
     const teamsInfoText = topTeamsViewMode === 'teams'
       ? 'Team ratings mostly reward results first (wins, draws, losses), then goal difference and team performance stats (possession, passes, shots). More games means the rating reflects real form better.'
-      : 'Static manual view: the country score is hand-counted and the player total is fixed for display.';
+      : 'Player Impact = goals (x1.0) + assists (x0.7) + MVPs (x2.0) + clean sheets (x1.0), summed across all players from that country. This highlights countries with strong overall contributions, even if they don\'t have a top-rated player.';
     const teamsTableHeader = topTeamsViewMode === 'teams'
       ? '<tr><th>Team</th><th>Rating</th></tr>'
       : '<tr><th>Country</th><th>Score</th><th>Players</th></tr>';
