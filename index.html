@@ -2046,8 +2046,22 @@
 
         // NEW
         function renderWorldCupBracketGroup(groupName, rows) {
-            const quarterFinalOne = `${rows[0].team} vs ${rows[3].team}`;
-            const quarterFinalTwo = `${rows[1].team} vs ${rows[2].team}`;
+            const formatQuarterFinal = (teamA, teamB) => {
+                const isEgyptSpain =
+                    (teamA === 'Egypt' && teamB === 'Spain') ||
+                    (teamA === 'Spain' && teamB === 'Egypt');
+
+                if (isEgyptSpain) {
+                    return 'Egypt 2–2 Spain (5–3 pens)';
+                }
+
+                return `${teamA} vs ${teamB}`;
+            };
+
+            const quarterFinalOneFixture = `${rows[0].team} vs ${rows[3].team}`;
+            const quarterFinalTwoFixture = `${rows[1].team} vs ${rows[2].team}`;
+            const quarterFinalOne = formatQuarterFinal(rows[0].team, rows[3].team);
+            const quarterFinalTwo = formatQuarterFinal(rows[1].team, rows[2].team);
             return `
                 <div class="world-cup-card world-cup-round">
                     <h2 class="world-cup-title">${groupName}</h2>
@@ -2058,8 +2072,8 @@
                     </div>
                     <div class="world-cup-match">
                         <div class="world-cup-match-title">Semi Final</div>
-                        <div>Winner of ${quarterFinalOne}</div>
-                        <div>vs Winner of ${quarterFinalTwo}</div>
+                        <div>Winner of ${quarterFinalOneFixture}</div>
+                        <div>vs Winner of ${quarterFinalTwoFixture}</div>
                     </div>
                     <div class="world-cup-match">
                         <div class="world-cup-match-title">Group Winner</div>
