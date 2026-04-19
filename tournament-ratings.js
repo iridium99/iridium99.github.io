@@ -15,6 +15,23 @@
   const TOP10_PLAYER_MIN_MATCHES = 3;
   const DEBUG_COUNTRY_TRACE = true;
 
+  const IMPACT_WEIGHTS = {
+    total: {
+      goals: 1.0,
+      assists: 0.7,
+      mvps: 2.0,
+      cleanSheets: 1.0
+    },
+    knockout: {
+      goals: 1.5,
+      assists: 1.0,
+      mvps: 2.5,
+      cleanSheets: 1.5
+    }
+  };
+
+  const IMPACT_MODES = ['total', 'ko', 'clutch'];
+
   const TEAM_STRENGTHS = {
     'England / UK': 0.200,
     'Poland + Balkans': 0.205,
@@ -236,6 +253,7 @@
   };
 
   let topTeamsViewMode = 'teams';
+  let impactLeaderboardViewMode = 'total';
 
   function normalizeName(value) {
     return (value || '')
@@ -524,6 +542,134 @@
     return `${toNumber(match.matchNumber)}-${toNumber(match.halfNumber)}`;
   }
 
+  function ensureImpactRecord(map, canonical, team) {
+    if (!map.has(canonical)) {
+      map.set(canonical, {
+        player: canonical,
+        team: team || '',
+        goals_group: 0,
+        assists_group: 0,
+        mvp_group: 0,
+        cs_group: 0,
+        goals_ko: 0,
+        assists_ko: 0,
+        mvp_ko: 0,
+        cs_ko: 0
+      });
+    }
+
+    const record = map.get(canonical);
+    if (!record.team && team) {
+      record.team = team;
+    }
+    return record;
+  }
+
+  function computeGroupStageMatchCount(groupTables) {
+    const groups = Object.values(groupTables || {});
+    if (!groups.length) return 0;
+
+    return groups.reduce((sum, rows) => {
+      const teamsCount = Array.isArray(rows) ? rows.length : 0;
+      if (teamsCount < 2) return sum;
+      return sum + ((teamsCount * (teamsCount - 1)) / 2);
+    }, 0);
+  }
+
+  function normalizeStageLabel(stageValue) {
+    const stage = normalizeName(stageValue);
+    if (!stage) return '';
+    if (stage.includes('group')) return 'group';
+    if (stage.includes('knockout') || stage.includes('ko') || stage.includes('quarter') || stage.includes('semi') || stage.includes('final')) {
+      return 'ko';
+    }
+    return '';
+  }
+
+  function getMatchStage(match, groupStageMatchCount) {
+    const explicitStage = normalizeStageLabel(match?.stage);
+    if (explicitStage) {
+      return explicitStage;
+    }
+
+    if (typeof match?.isKnockout === 'boolean') {
+      return match.isKnockout ? 'ko' : 'group';
+    }
+
+    if (groupStageMatchCount > 0) {
+      return toNumber(match?.matchNumber) <= groupStageMatchCount ? 'group' : 'ko';
+    }
+
+    return 'group';
+  }
+
+  function extractMvpNames(match) {
+    const names = [];
+    const visit = (value) => {
+      if (value == null) return;
+
+      if (typeof value === 'string') {
+        const clean = scrubPlayerName(value);
+        if (clean) names.push(clean);
+        return;
+      }
+
+      if (Array.isArray(value)) {
+        value.forEach(visit);
+        return;
+      }
+
+      if (typeof value === 'object') {
+        if (typeof value.player === 'string') visit(value.player);
+        if (typeof value.name === 'string') visit(value.name);
+        if (value.mvp) visit(value.mvp);
+        if (value.mvps) visit(value.mvps);
+        return;
+      }
+    };
+
+    visit(match?.mvp);
+    visit(match?.mvps);
+    visit(match?.mvpA);
+    visit(match?.mvpB);
+    visit(match?.mvpTeamA);
+    visit(match?.mvpTeamB);
+    visit(match?.mvpPlayer);
+    visit(match?.mvpPlayers);
+
+    return Array.from(new Set(names.map(name => canonicalizePlayerName(name))));
+  }
+
+  function computeImpactScore(record, mode) {
+    const groupScore =
+      (record.goals_group * IMPACT_WEIGHTS.total.goals) +
+      (record.assists_group * IMPACT_WEIGHTS.total.assists) +
+      (record.mvp_group * IMPACT_WEIGHTS.total.mvps) +
+      (record.cs_group * IMPACT_WEIGHTS.total.cleanSheets);
+
+    const koScore =
+      (record.goals_ko * IMPACT_WEIGHTS.knockout.goals) +
+      (record.assists_ko * IMPACT_WEIGHTS.knockout.assists) +
+      (record.mvp_ko * IMPACT_WEIGHTS.knockout.mvps) +
+      (record.cs_ko * IMPACT_WEIGHTS.knockout.cleanSheets);
+
+    if (mode === 'ko') return koScore;
+    if (mode === 'clutch') return groupScore + koScore;
+
+    return (
+      ((record.goals_group + record.goals_ko) * IMPACT_WEIGHTS.total.goals) +
+      ((record.assists_group + record.assists_ko) * IMPACT_WEIGHTS.total.assists) +
+      ((record.mvp_group + record.mvp_ko) * IMPACT_WEIGHTS.total.mvps) +
+      ((record.cs_group + record.cs_ko) * IMPACT_WEIGHTS.total.cleanSheets)
+    );
+  }
+
+  function cycleImpactLeaderboardViewMode() {
+    const currentIndex = IMPACT_MODES.indexOf(impactLeaderboardViewMode);
+    const safeIndex = currentIndex === -1 ? 0 : currentIndex;
+    impactLeaderboardViewMode = IMPACT_MODES[(safeIndex + 1) % IMPACT_MODES.length];
+  }
+
   function loadLiveEvents() {
     try {
       const raw = localStorage.getItem(LIVE_EVENTS_KEY);
@@ -643,13 +789,33 @@
     Object.keys(TEAM_STRENGTHS).forEach(teamName => ensureTeamRecord(teamMap, teamName));
 
     const playerMap = new Map();
+    const impactMap = new Map();
     const mvpMap = new Map();
     (state.seed?.currentState?.mvpLeaderboard || []).forEach(item => {
       mvpMap.set(normalizeName(item.player), toNumber(item.mvps));
     });
 
+    const groupStageMatchCount = computeGroupStageMatchCount(state.seed?.currentState?.groupTables || {});
+    const stageMvpMap = {
+      group: new Map(),
+      ko: new Map()
+    };
+
+    // Preferred source for stage MVP split: explicit stage MVP leaderboards when available.
+    (state.seed?.currentState?.mvpLeaderboardGroup || []).forEach(item => {
+      const canonical = canonicalizePlayerName(item.player || 'Unknown');
+      stageMvpMap.group.set(canonical, (stageMvpMap.group.get(canonical) || 0) + toNumber(item.mvps));
+    });
+    (state.seed?.currentState?.mvpLeaderboardKnockout || []).forEach(item => {
+      const canonical = canonicalizePlayerName(item.player || 'Unknown');
+      stageMvpMap.ko.set(canonical, (stageMvpMap.ko.get(canonical) || 0) + toNumber(item.mvps));
+    });
+
     matches.forEach(match => {
       applyKnownCorrection(match);
+
+      const stage = getMatchStage(match, groupStageMatchCount);
+      const stageSuffix = stage === 'ko' ? 'ko' : 'group';
 
       const teamA = canonicalizeTeamName(match.teamA);
       const teamB = canonicalizeTeamName(match.teamB);
@@ -726,6 +892,7 @@
         const canonical = canonicalizePlayerName(playerEntry.name || 'Unknown');
         const playerTeam = canonicalizeTeamName(playerEntry.team || null);
         const player = ensurePlayerRecord(playerMap, canonical, playerTeam);
+        const impact = ensureImpactRecord(impactMap, canonical, playerTeam);
         const norm = normalizeName(canonical);
         if (seen.has(`${norm}-${playerTeam}`)) {
           return;
@@ -740,6 +907,10 @@
         const cleanSheet = (normalizeName(playerTeam) === normalizeName(teamA) && scoreB === 0)
           || (normalizeName(playerTeam) === normalizeName(teamB) && scoreA === 0) ? 1 : 0;
 
+        impact[`goals_${stageSuffix}`] += goals;
+        impact[`assists_${stageSuffix}`] += assists;
+        impact[`cs_${stageSuffix}`] += cleanSheet;
+
         const rating = 72
           + (goals * 6)
           + (assists * 4)
@@ -749,6 +920,29 @@
 
         player.matchesPlayed += 1;
         player.matchRatings.push(clamp(rating, 0, MAX_DISPLAY_RATING));
+      });
+
+      const matchMvps = extractMvpNames(match);
+      matchMvps.forEach(mvpName => {
+        stageMvpMap[stageSuffix].set(mvpName, (stageMvpMap[stageSuffix].get(mvpName) || 0) + 1);
+      });
+    });
+
+    // Legacy fallback: when stage MVPs are unavailable and no knockout stage exists yet,
+    // retain current total MVP leaderboard by assigning to group stage.
+    const hasStageMvpData = stageMvpMap.group.size > 0 || stageMvpMap.ko.size > 0;
+    const hasKnockoutMatches = matches.some(match => getMatchStage(match, groupStageMatchCount) === 'ko');
+    if (!hasStageMvpData && !hasKnockoutMatches) {
+      (state.seed?.currentState?.mvpLeaderboard || []).forEach(item => {
+        const canonical = canonicalizePlayerName(item.player || 'Unknown');
+        stageMvpMap.group.set(canonical, (stageMvpMap.group.get(canonical) || 0) + toNumber(item.mvps));
+      });
+    }
+
+    ['group', 'ko'].forEach(stage => {
+      stageMvpMap[stage].forEach((mvps, playerName) => {
+        const impact = ensureImpactRecord(impactMap, playerName, '');
+        impact[`mvp_${stage}`] += toNumber(mvps);
       });
     });
 
@@ -833,6 +1027,48 @@
     const sortedPlayerRows = [...playerRows].sort((a, b) => b.tournamentRating - a.tournamentRating);
     const countryContribution = computeCountryContributions(sortedPlayerRows);
 
+    const impactRows = Array.from(impactMap.values()).map(record => {
+      const normalizedTeam = canonicalizeTeamName(record.team || '');
+      const total_goals = record.goals_group + record.goals_ko;
+      const total_assists = record.assists_group + record.assists_ko;
+      const total_mvps = record.mvp_group + record.mvp_ko;
+      const total_cs = record.cs_group + record.cs_ko;
+
+      return {
+        ...record,
+        team: normalizedTeam,
+        total_goals,
+        total_assists,
+        total_mvps,
+        total_cs,
+        impact_total: round1(computeImpactScore(record, 'total')),
+        impact_ko: round1(computeImpactScore(record, 'ko')),
+        impact_clutch: round1(computeImpactScore(record, 'clutch'))
+      };
+    }).filter(row => {
+      return (row.total_goals + row.total_assists + row.total_mvps + row.total_cs) > 0;
+    });
+
+    const compareImpact = (key) => (a, b) => {
+      const diff = toNumber(b[key]) - toNumber(a[key]);
+      if (diff !== 0) return diff;
+
+      const tieBreak =
+        (toNumber(b.total_goals) - toNumber(a.total_goals)) ||
+        (toNumber(b.total_assists) - toNumber(a.total_assists)) ||
+        (toNumber(b.total_mvps) - toNumber(a.total_mvps)) ||
+        (toNumber(b.total_cs) - toNumber(a.total_cs));
+      if (tieBreak !== 0) return tieBreak;
+
+      return String(a.player || '').localeCompare(String(b.player || ''));
+    };
+
+    const impactLeaderboards = {
+      total: [...impactRows].sort(compareImpact('impact_total')),
+      ko: [...impactRows].sort(compareImpact('impact_ko')),
+      clutch: [...impactRows].sort(compareImpact('impact_clutch'))
+    };
+
     state.results = {
       playersAll: sortedPlayerRows,
       playersTop10: sortedPlayerRows
@@ -843,8 +1079,26 @@
         .sort((a, b) => b.teamRating - a.teamRating)
         .slice(0, 10),
       countryStats: countryContribution.countryStats,
-      countriesTop10: countryContribution.countriesTop10
+      countriesTop10: countryContribution.countriesTop10,
+      impactRows,
+      impactLeaderboards
     };
+  }
+
+  function renderImpactLeaderboardRows(rows, metricKey) {
+    return (rows || []).map((row, index) => {
+      const playerFlag = getPlayerFlag(row.player);
+      const playerLabel = playerFlag ? `${playerFlag} ${row.player}` : row.player;
+      const metricValue = round1(toNumber(row[metricKey])).toFixed(1);
+      return `
+        <tr>
+          <td>${index + 1}</td>
+          <td>${playerLabel}</td>
+          <td>${row.team || '-'}</td>
+          <td>${metricValue}</td>
+        </tr>
+      `;
+    }).join('');
   }
 
   function renderInlineCards() {
@@ -867,6 +1121,13 @@
       teamsCard = document.createElement('div');
       teamsCard.id = 'world-cup-top10-teams-card';
       teamsCard.className = 'world-cup-card';
+    }
+
+    let impactCard = document.getElementById('world-cup-impact-card');
+    if (!impactCard) {
+      impactCard = document.createElement('div');
+      impactCard.id = 'world-cup-impact-card';
+      impactCard.className = 'world-cup-card';
     }
 
     playersCard.innerHTML = `
@@ -929,7 +1190,52 @@
       </div>
     `;
 
-    [playersCard, teamsCard].forEach(card => {
+    const impactConfig = {
+      total: {
+        title: 'Total Impact',
+        metricKey: 'impact_total',
+        info: 'Impact_total = (goals_group + goals_ko) x 1.0 + (assists_group + assists_ko) x 0.7 + (mvp_group + mvp_ko) x 2.0 + (cs_group + cs_ko) x 1.0'
+      },
+      ko: {
+        title: 'Knockout Impact',
+        metricKey: 'impact_ko',
+        info: 'Impact_KO = goals_ko x 1.5 + assists_ko x 1.0 + mvp_ko x 2.5 + cs_ko x 1.5'
+      },
+      clutch: {
+        title: 'Clutch Index',
+        metricKey: 'impact_clutch',
+        info: 'Impact_clutch = group weighted impact + knockout weighted impact (KO weighted higher)'
+      }
+    };
+
+    const selectedImpact = impactConfig[impactLeaderboardViewMode] || impactConfig.total;
+    const selectedImpactRows = (state.results.impactLeaderboards?.[impactLeaderboardViewMode] || []).slice(0, 10);
+
+    impactCard.innerHTML = `
+      <div class="world-cup-info-header">
+        <h2 class="world-cup-title">${selectedImpact.title}</h2>
+        <div class="world-cup-top-teams-controls">
+          <button class="world-cup-nav-btn" type="button" data-impact-nav="left" aria-label="Show previous impact leaderboard">&#8592;</button>
+          <button class="world-cup-nav-btn" type="button" data-impact-nav="right" aria-label="Show next impact leaderboard">&#8594;</button>
+          <button class="world-cup-info-btn" type="button" data-info-target="impact-rating-info" aria-expanded="false" aria-label="How this impact score is calculated">i</button>
+        </div>
+      </div>
+      <p id="impact-rating-info" class="world-cup-info-text" hidden>
+        ${selectedImpact.info}
+      </p>
+      <div class="world-cup-table-wrap">
+        <table class="world-cup-stat-table">
+          <thead>
+            <tr><th>#</th><th>Player</th><th>Team</th><th>Score</th></tr>
+          </thead>
+          <tbody>
+            ${renderImpactLeaderboardRows(selectedImpactRows, selectedImpact.metricKey)}
+          </tbody>
+        </table>
+      </div>
+    `;
+
+    [playersCard, teamsCard, impactCard].forEach(card => {
       card.querySelectorAll('.world-cup-info-btn').forEach(button => {
         button.addEventListener('click', () => {
           const targetId = button.getAttribute('data-info-target');
@@ -950,6 +1256,13 @@
       });
     });
 
+    impactCard.querySelectorAll('[data-impact-nav]').forEach(button => {
+      button.addEventListener('click', () => {
+        cycleImpactLeaderboardViewMode();
+        renderInlineCards();
+      });
+    });
+
     const statCards = Array.from(statsRow.querySelectorAll('.world-cup-card'));
     const ownGoalsCard = statCards.find(card => {
       const title = card.querySelector('.world-cup-title');
@@ -960,9 +1273,11 @@
     if (ownGoalsCard) {
       statsRow.insertBefore(teamsCard, ownGoalsCard);
       statsRow.insertBefore(playersCard, ownGoalsCard);
+      statsRow.insertBefore(impactCard, ownGoalsCard);
     } else {
       statsRow.appendChild(playersCard);
       statsRow.appendChild(teamsCard);
+      statsRow.appendChild(impactCard);
     }
   }
 
