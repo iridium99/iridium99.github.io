@@ -1589,10 +1589,10 @@
                 { team: "Egypt", halves: 10, passes: 441, possession: 518.5, shots: 21 },
                 { team: "Tunisia and Algeria", halves: 6, passes: 212, possession: 279.6, shots: 17 },
                 { team: "Netherlands", halves: 8, passes: 528, possession: 423.5, shots: 56 },
-                { team: "Italy", halves: 8, passes: 400, possession: 409.5, shots: 24 },
+                { team: "Italy", halves: 10, passes: 494, possession: 514.6, shots: 30 },
                 { team: "World XI", halves: 8, passes: 280, possession: 371.4, shots: 15 },
                 { team: "France", halves: 8, passes: 320, possession: 378.0, shots: 20 },
-                { team: "England / UK", halves: 8, passes: 525, possession: 408.0, shots: 34 },
+                { team: "England / UK", halves: 10, passes: 650, possession: 502.9, shots: 55 },
                 { team: "Poland + Balkans", halves: 6, passes: 343, possession: 320.0, shots: 34 }
             ]
         };
@@ -1716,21 +1716,32 @@
             knockout: {
                 goals: [
                     { player: 'Johnny Sins', value: 1 },
-                    { player: 'ToughBaby', value: 1 }
+                    { player: 'ToughBaby', value: 1 },
+                    { player: 'cytro', value: 1 },
+                    { player: 'Berbatov', value: 1 },
+                    { player: 'Wakanda', value: 1 }
                 ],
                 assists: [
                     { player: '.oskar', value: 1 },
                     { player: 'Kong', value: 1 },
                     { player: 'A7mdBibo', value: 1 },
-                    { player: 'm1dnam', value: 1 }
+                    { player: 'm1dnam', value: 1 },
+                    { player: 'Berbatov', value: 1 },
+                    { player: 'cYn', value: 1 },
+                    { player: 'cytro', value: 2 }
                 ],
                 mvps: [
-                    { player: 'ToughBaby', value: 1 }
+                    { player: 'ToughBaby', value: 1 },
+                    { player: 'cytro', value: 1 }
                 ],
-                cleanSheets: [],
+                cleanSheets: [
+                    { player: 'atrocity exhibition', value: 1 },
+                    { player: 'evilpedri', value: 1 }
+                ],
                 ownGoals: [
                     { player: 'Szcesny', value: 1 },
-                    { player: 'ToughBaby', value: 1 }
+                    { player: 'ToughBaby', value: 1 },
+                    { player: 'Fad', value: 1 }
                 ]
             }
         };
@@ -2558,6 +2569,10 @@
                     home: { label: 'Spain 2 (3)', status: 'lost' },
                     away: { label: 'Egypt 2 (5)', status: 'winner' }
                 },
+                englandItalyQuarterFinal: {
+                    home: { label: 'England / UK 4', status: 'winner' },
+                    away: { label: 'Italy 0', status: 'lost' }
+                },
                 topSemiFinalSlot: { label: 'Egypt', status: 'winner' }
             };
 
@@ -2608,8 +2623,8 @@
                                         </div>
 
                                         <div class="match">
-                                            ${bracketTeamMarkup('England / UK')}
-                                            ${bracketTeamMarkup('Italy')}
+                                            ${bracketTeamMarkup(knockoutBracket.englandItalyQuarterFinal.home)}
+                                            ${bracketTeamMarkup(knockoutBracket.englandItalyQuarterFinal.away)}
                                         </div>
 
                                         <div class="match">
