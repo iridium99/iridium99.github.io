@@ -457,25 +457,26 @@
         }
 
         .world-cup-team-stats-layout {
-            display: grid;
-            grid-template-columns: minmax(0, 1.45fr) minmax(300px, 0.55fr);
+            display: flex;
+            flex-direction: row;
             gap: 10px;
-            align-items: start;
+            align-items: flex-start;
         }
 
         .world-cup-team-stats-card {
-            width: 100%;
-            max-width: 780px;
-        }
-
-        .world-cup-team-stats-card .world-cup-table-wrap {
+            flex: 1 1 58%;
+            min-width: 0;
             max-width: 760px;
         }
 
-        .world-cup-side-rankings {
-            display: grid;
-            gap: 8px;
-            min-width: 0;
+        .world-cup-team-stats-card .world-cup-table-wrap {
+            max-width: 740px;
+        }
+
+        .world-cup-rankings-slot {
+            flex: 0 1 21%;
+            min-width: 260px;
+            max-width: 320px;
         }
 
         .world-cup-stats-row .world-cup-card {
@@ -550,6 +551,16 @@
 
         .world-cup-bracket-wrapper .team:last-child {
             border-bottom: none;
+        }
+
+        .world-cup-bracket-wrapper .team.world-cup-bracket-winner {
+            color: #f8fafc;
+            font-weight: 700;
+        }
+
+        .world-cup-bracket-wrapper .team.world-cup-bracket-loser {
+            color: #cbd5e1;
+            opacity: 0.5;
         }
 
         .world-cup-bracket-wrapper .team.world-cup-bracket-tbd {
@@ -644,7 +655,7 @@
             }
 
             .world-cup-team-stats-layout {
-                grid-template-columns: 1fr;
+                flex-direction: column;
             }
 
             .world-cup-team-stats-card {
@@ -653,6 +664,12 @@
 
             .world-cup-team-stats-card .world-cup-table-wrap {
                 max-width: 100%;
+            }
+
+            .world-cup-rankings-slot {
+                min-width: 0;
+                max-width: 100%;
+                width: 100%;
             }
         }
         
@@ -1566,17 +1583,17 @@
             { team: "England / UK", halves: 8, passes: 525, possession: 408.0, shots: 34 },
             { team: "Poland + Balkans", halves: 6, passes: 343, possession: 320.0, shots: 34 }
             ],
-            knockout: [
-                { team: "Spain", halves: 2, passes: 100, possession: 95.9, shots: 9 },
-                { team: "Germany", halves: 0, passes: 0, possession: 0.0, shots: 0 },
-                { team: "Egypt", halves: 2, passes: 109, possession: 104.1, shots: 7 },
-                { team: "Tunisia and Algeria", halves: 0, passes: 0, possession: 0.0, shots: 0 },
-                { team: "Netherlands", halves: 0, passes: 0, possession: 0.0, shots: 0 },
-                { team: "Italy", halves: 0, passes: 0, possession: 0.0, shots: 0 },
-                { team: "World XI", halves: 0, passes: 0, possession: 0.0, shots: 0 },
-                { team: "France", halves: 0, passes: 0, possession: 0.0, shots: 0 },
-                { team: "England / UK", halves: 0, passes: 0, possession: 0.0, shots: 0 },
-                { team: "Poland + Balkans", halves: 0, passes: 0, possession: 0.0, shots: 0 }
+            overall: [
+                { team: "Spain", halves: 9, passes: 395, possession: 440.8, shots: 27 },
+                { team: "Germany", halves: 7, passes: 356, possession: 350.6, shots: 31 },
+                { team: "Egypt", halves: 10, passes: 441, possession: 518.5, shots: 21 },
+                { team: "Tunisia and Algeria", halves: 6, passes: 212, possession: 279.6, shots: 17 },
+                { team: "Netherlands", halves: 8, passes: 528, possession: 423.5, shots: 56 },
+                { team: "Italy", halves: 8, passes: 400, possession: 409.5, shots: 24 },
+                { team: "World XI", halves: 8, passes: 280, possession: 371.4, shots: 15 },
+                { team: "France", halves: 8, passes: 320, possession: 378.0, shots: 20 },
+                { team: "England / UK", halves: 8, passes: 525, possession: 408.0, shots: 34 },
+                { team: "Poland + Balkans", halves: 6, passes: 343, possession: 320.0, shots: 34 }
             ]
         };
 
@@ -2196,27 +2213,33 @@
         // NEW
         function getWorldCupTeamStatsByStage() {
             const groupRows = worldCupTeamStatsByStage.group || [];
-            const knockoutRows = worldCupTeamStatsByStage.knockout || [];
+            const overallRows = worldCupTeamStatsByStage.overall || [];
 
             if (worldCupTeamStageMode === 'group') {
                 return [...groupRows];
             }
 
-            if (worldCupTeamStageMode === 'knockout') {
-                return [...knockoutRows];
+            if (worldCupTeamStageMode === 'overall') {
+                return [...overallRows];
             }
 
-            const combined = new Map();
-            [...groupRows, ...knockoutRows].forEach(row => {
-                const current = combined.get(row.team) || { team: row.team, halves: 0, passes: 0, possession: 0, shots: 0 };
-                current.halves += row.halves;
-                current.passes += row.passes;
-                current.possession += row.possession;
-                current.shots += row.shots;
-                combined.set(row.team, current);
-            });
+            if (worldCupTeamStageMode === 'knockout') {
+                const overallByTeam = new Map(overallRows.map(row => [row.team, row]));
+                return groupRows
+                    .map(groupRow => {
+                        const overallRow = overallByTeam.get(groupRow.team) || groupRow;
+                        return {
+                            team: groupRow.team,
+                            halves: Math.max(0, overallRow.halves - groupRow.halves),
+                            passes: Math.max(0, overallRow.passes - groupRow.passes),
+                            possession: Math.max(0, Number((overallRow.possession - groupRow.possession).toFixed(1))),
+                            shots: Math.max(0, overallRow.shots - groupRow.shots)
+                        };
+                    })
+                    .filter(row => row.team !== 'Tunisia and Algeria' && row.team !== 'World XI');
+            }
 
-            return [...combined.values()];
+            return [...overallRows];
         }
 
         // NEW
@@ -2401,16 +2424,17 @@
             // Check if this table should show filtered or full data
             const isExpanded = expandedStatTables[title] || false;
             const shouldFilter = ['Goals', 'Assists', 'Clean Sheets'].includes(title);
+            const allowExpandToggle = worldCupPlayerStatsStageMode !== 'knockout';
             
             // Filter rows if applicable
             let displayRows = rows;
-            if (shouldFilter && !isExpanded) {
+            if (shouldFilter && allowExpandToggle && !isExpanded) {
                 displayRows = rows.filter(row => row.value > 1);
             }
             
             const filteredCount = shouldFilter ? rows.filter(row => row.value > 1).length : 0;
             const totalCount = rows.length;
-            const showToggleButton = shouldFilter && filteredCount < totalCount;
+            const showToggleButton = allowExpandToggle && shouldFilter && filteredCount < totalCount;
             const isFullyExpanded = isExpanded && shouldFilter;
 
             return `
@@ -2473,6 +2497,7 @@
             const isExpanded = expandedLeaderboardTables['Goals + Assists'] || false;
             const visibleRows = isExpanded ? rows : rows.slice(0, 10);
             const hiddenCount = Math.max(rows.length - visibleRows.length, 0);
+            const showToggleButton = worldCupPlayerStatsStageMode !== 'knockout' && hiddenCount > 0;
 
             const totalsByRank = [...new Set(rows.map(row => row.total))].sort((a, b) => b - a);
             const goldTotal = totalsByRank[0];
@@ -2483,7 +2508,7 @@
                 <div class="world-cup-card">
                     <div class="stat-table-header">
                         <h2 class="world-cup-title">Goals + Assists</h2>
-                        ${hiddenCount > 0 ? `
+                        ${showToggleButton ? `
                             <div style="display:flex;gap:10px;align-items:center;">
                                 <span class="stat-row-count">${visibleRows.length}/${rows.length}</span>
                                 <button class="stat-table-toggle-btn" data-leaderboard-table="Goals + Assists">
@@ -2528,8 +2553,25 @@
                 return;
             }
 
+            const knockoutBracket = {
+                spainEgyptQuarterFinal: {
+                    home: { label: 'Spain 2 (3)', status: 'lost' },
+                    away: { label: 'Egypt 2 (5)', status: 'winner' }
+                },
+                topSemiFinalSlot: { label: 'Egypt', status: 'winner' }
+            };
+
             const tbdTeamMarkup = '<div class="team world-cup-bracket-tbd">TBD</div>';
-            const bracketTeamMarkup = (teamName) => `<div class="team">${teamName}</div>`;
+            const bracketTeamMarkup = (teamEntry) => {
+                if (typeof teamEntry === 'string') {
+                    return `<div class="team">${teamEntry}</div>`;
+                }
+
+                const statusClass = teamEntry.status === 'lost'
+                    ? ' world-cup-bracket-loser'
+                    : (teamEntry.status === 'winner' ? ' world-cup-bracket-winner' : '');
+                return `<div class="team${statusClass}">${teamEntry.label}</div>`;
+            };
 
             const rawButtonClass = worldCupViewMode === 'raw' ? 'active' : '';
             const perGameButtonClass = worldCupViewMode === 'per-game' ? 'active' : '';
@@ -2561,8 +2603,8 @@
                                         </div>
 
                                         <div class="match">
-                                            ${bracketTeamMarkup('Spain')}
-                                            ${bracketTeamMarkup('Egypt')}
+                                            ${bracketTeamMarkup(knockoutBracket.spainEgyptQuarterFinal.home)}
+                                            ${bracketTeamMarkup(knockoutBracket.spainEgyptQuarterFinal.away)}
                                         </div>
 
                                         <div class="match">
@@ -2578,7 +2620,7 @@
 
                                     <div class="round">
                                         <div class="match">
-                                            ${tbdTeamMarkup}
+                                            ${bracketTeamMarkup(knockoutBracket.topSemiFinalSlot)}
                                             ${tbdTeamMarkup}
                                         </div>
 
@@ -2647,7 +2689,8 @@
                                 </table>
                             </div>
                         </div>
-                        <div class="world-cup-side-rankings" id="world-cup-side-rankings"></div>
+                        <div class="world-cup-rankings-slot" id="world-cup-country-rankings-slot"></div>
+                        <div class="world-cup-rankings-slot" id="world-cup-top-players-slot"></div>
                     </div>
 
                     <div class="world-cup-card" style="padding:10px 12px;">
