@@ -1077,10 +1077,11 @@
   }
 
   function renderInlineCards() {
-    const sideRankings = document.querySelector('#world-cup-container #world-cup-side-rankings');
+    const countryRankingsSlot = document.querySelector('#world-cup-container #world-cup-country-rankings-slot');
+    const topPlayersSlot = document.querySelector('#world-cup-container #world-cup-top-players-slot');
     const statsRow = document.querySelector('#world-cup-container .world-cup-stats-row');
     if (!state.results) return;
-    if (!sideRankings && !statsRow) return;
+    if (!countryRankingsSlot && !topPlayersSlot && !statsRow) return;
 
     const players = state.results.playersTop10;
     const teams = state.results.teamsTop10;
@@ -1181,10 +1182,11 @@
       });
     });
 
-    if (sideRankings) {
-      sideRankings.innerHTML = '';
-      sideRankings.appendChild(teamsCard);
-      sideRankings.appendChild(playersCard);
+    if (countryRankingsSlot && topPlayersSlot) {
+      countryRankingsSlot.innerHTML = '';
+      topPlayersSlot.innerHTML = '';
+      countryRankingsSlot.appendChild(teamsCard);
+      topPlayersSlot.appendChild(playersCard);
       return;
     }
 
