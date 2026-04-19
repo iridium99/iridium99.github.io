@@ -30,8 +30,6 @@
     }
   };
 
-  const IMPACT_MODES = ['total', 'ko', 'clutch'];
-
   const TEAM_STRENGTHS = {
     'England / UK': 0.200,
     'Poland + Balkans': 0.205,
@@ -253,7 +251,6 @@
   };
 
   let topTeamsViewMode = 'teams';
-  let impactLeaderboardViewMode = 'total';
 
   function normalizeName(value) {
     return (value || '')
@@ -662,12 +659,6 @@
       ((record.mvp_group + record.mvp_ko) * IMPACT_WEIGHTS.total.mvps) +
       ((record.cs_group + record.cs_ko) * IMPACT_WEIGHTS.total.cleanSheets)
     );
-  }
-
-  function cycleImpactLeaderboardViewMode() {
-    const currentIndex = IMPACT_MODES.indexOf(impactLeaderboardViewMode);
-    const safeIndex = currentIndex === -1 ? 0 : currentIndex;
-    impactLeaderboardViewMode = IMPACT_MODES[(safeIndex + 1) % IMPACT_MODES.length];
   }
 
   function loadLiveEvents() {
@@ -1085,25 +1076,11 @@
     };
   }
 
-  function renderImpactLeaderboardRows(rows, metricKey) {
-    return (rows || []).map((row, index) => {
-      const playerFlag = getPlayerFlag(row.player);
-      const playerLabel = playerFlag ? `${playerFlag} ${row.player}` : row.player;
-      const metricValue = round1(toNumber(row[metricKey])).toFixed(1);
-      return `
-        <tr>
-          <td>${index + 1}</td>
-          <td>${playerLabel}</td>
-          <td>${row.team || '-'}</td>
-          <td>${metricValue}</td>
-        </tr>
-      `;
-    }).join('');
-  }
-
   function renderInlineCards() {
+    const sideRankings = document.querySelector('#world-cup-container #world-cup-side-rankings');
     const statsRow = document.querySelector('#world-cup-container .world-cup-stats-row');
-    if (!statsRow || !state.results) return;
+    if (!state.results) return;
+    if (!sideRankings && !statsRow) return;
 
     const players = state.results.playersTop10;
     const teams = state.results.teamsTop10;
@@ -1121,13 +1098,6 @@
       teamsCard = document.createElement('div');
       teamsCard.id = 'world-cup-top10-teams-card';
       teamsCard.className = 'world-cup-card';
-    }
-
-    let impactCard = document.getElementById('world-cup-impact-card');
-    if (!impactCard) {
-      impactCard = document.createElement('div');
-      impactCard.id = 'world-cup-impact-card';
-      impactCard.className = 'world-cup-card';
     }
 
     playersCard.innerHTML = `
@@ -1190,52 +1160,7 @@
       </div>
     `;
 
-    const impactConfig = {
-      total: {
-        title: 'Total Impact',
-        metricKey: 'impact_total',
-        info: 'Impact_total = (goals_group + goals_ko) x 1.0 + (assists_group + assists_ko) x 0.7 + (mvp_group + mvp_ko) x 2.0 + (cs_group + cs_ko) x 1.0'
-      },
-      ko: {
-        title: 'Knockout Impact',
-        metricKey: 'impact_ko',
-        info: 'Impact_KO = goals_ko x 1.5 + assists_ko x 1.0 + mvp_ko x 2.5 + cs_ko x 1.5'
-      },
-      clutch: {
-        title: 'Clutch Index',
-        metricKey: 'impact_clutch',
-        info: 'Impact_clutch = group weighted impact + knockout weighted impact (KO weighted higher)'
-      }
-    };
-
-    const selectedImpact = impactConfig[impactLeaderboardViewMode] || impactConfig.total;
-    const selectedImpactRows = (state.results.impactLeaderboards?.[impactLeaderboardViewMode] || []).slice(0, 10);
-
-    impactCard.innerHTML = `
-      <div class="world-cup-info-header">
-        <h2 class="world-cup-title">${selectedImpact.title}</h2>
-        <div class="world-cup-top-teams-controls">
-          <button class="world-cup-nav-btn" type="button" data-impact-nav="left" aria-label="Show previous impact leaderboard">&#8592;</button>
-          <button class="world-cup-nav-btn" type="button" data-impact-nav="right" aria-label="Show next impact leaderboard">&#8594;</button>
-          <button class="world-cup-info-btn" type="button" data-info-target="impact-rating-info" aria-expanded="false" aria-label="How this impact score is calculated">i</button>
-        </div>
-      </div>
-      <p id="impact-rating-info" class="world-cup-info-text" hidden>
-        ${selectedImpact.info}
-      </p>
-      <div class="world-cup-table-wrap">
-        <table class="world-cup-stat-table">
-          <thead>
-            <tr><th>#</th><th>Player</th><th>Team</th><th>Score</th></tr>
-          </thead>
-          <tbody>
-            ${renderImpactLeaderboardRows(selectedImpactRows, selectedImpact.metricKey)}
-          </tbody>
-        </table>
-      </div>
-    `;
-
-    [playersCard, teamsCard, impactCard].forEach(card => {
+    [playersCard, teamsCard].forEach(card => {
       card.querySelectorAll('.world-cup-info-btn').forEach(button => {
         button.addEventListener('click', () => {
           const targetId = button.getAttribute('data-info-target');
@@ -1256,12 +1181,12 @@
       });
     });
 
-    impactCard.querySelectorAll('[data-impact-nav]').forEach(button => {
-      button.addEventListener('click', () => {
-        cycleImpactLeaderboardViewMode();
-        renderInlineCards();
-      });
-    });
+    if (sideRankings) {
+      sideRankings.innerHTML = '';
+      sideRankings.appendChild(teamsCard);
+      sideRankings.appendChild(playersCard);
+      return;
+    }
 
     const statCards = Array.from(statsRow.querySelectorAll('.world-cup-card'));
     const ownGoalsCard = statCards.find(card => {
@@ -1269,15 +1194,12 @@
       return title && title.textContent === 'Own Goals';
     });
 
-    // Swap positions so Top 10 Teams takes Own Goals slot and Own Goals shifts to the end.
     if (ownGoalsCard) {
       statsRow.insertBefore(teamsCard, ownGoalsCard);
       statsRow.insertBefore(playersCard, ownGoalsCard);
-      statsRow.insertBefore(impactCard, ownGoalsCard);
     } else {
       statsRow.appendChild(playersCard);
       statsRow.appendChild(teamsCard);
-      statsRow.appendChild(impactCard);
     }
   }
 
@@ -1380,5 +1302,6 @@
     console.error('World Cup top 10 injection failed', error);
   });
 })();
+
 
 
