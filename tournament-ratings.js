@@ -87,9 +87,9 @@
         { player: 'ShIeLd', value: 5 },
         { player: 'Nympex', value: 5 },
         { player: 'atrocity exhibition', value: 4 },
-        { player: 'luur', value: 4 },
+        { player: 'luur', value: 6 },
         { player: 'Zenon', value: 4 },
-        { player: 'Naeh', value: 4 },
+        { player: 'Naeh', value: 6 },
         { player: 'ShadiOzz', value: 3 },
         { player: 'Timber', value: 3 },
         { player: 'Praetor', value: 2 },
@@ -117,7 +117,8 @@
         { player: 'Johnny Sins', value: 1 },
         { player: 'Refix', value: 1 },
         { player: 'Isagi Yoichi', value: 1 },
-        { player: 'Triple G', value: 1 }
+        { player: 'Triple G', value: 1 },
+        { player: 'drkuu', value: 1 }
       ],
       goals: [
         { player: 'zenix', value: 6 },
@@ -1304,6 +1305,5 @@
     console.error('World Cup top 10 injection failed', error);
   });
 })();
-
 
 
