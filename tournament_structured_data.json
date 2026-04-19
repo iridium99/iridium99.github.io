@@ -708,7 +708,7 @@
         },
         {
           "name": "Kaka\"",
-          "team": "Egypt",
+          "team": "Tunisia + Algeria",
           "goals": 0,
           "assists": 0,
           "kicks": 8,
@@ -717,7 +717,7 @@
         },
         {
           "name": "SUCA",
-          "team": "Egypt",
+          "team": "Tunisia + Algeria",
           "goals": 0,
           "assists": 0,
           "kicks": 8,
@@ -726,7 +726,7 @@
         },
         {
           "name": "Zalofa",
-          "team": "Egypt",
+          "team": "Tunisia + Algeria",
           "goals": 0,
           "assists": 0,
           "kicks": 12,
@@ -735,7 +735,7 @@
         },
         {
           "name": "SAFFF",
-          "team": "Egypt",
+          "team": "Tunisia + Algeria",
           "goals": 0,
           "assists": 0,
           "kicks": 0,
@@ -744,7 +744,7 @@
         },
         {
           "name": "Himothy",
-          "team": "Egypt",
+          "team": "Tunisia + Algeria",
           "goals": 0,
           "assists": 0,
           "kicks": 3,
@@ -753,7 +753,7 @@
         },
         {
           "name": "𝕐𝔼𝔼𝕋 💚",
-          "team": "Egypt",
+          "team": "Tunisia + Algeria",
           "goals": 0,
           "assists": 0,
           "kicks": 4,
@@ -762,7 +762,7 @@
         },
         {
           "name": "chiggas",
-          "team": "Egypt",
+          "team": "Tunisia + Algeria",
           "goals": 0,
           "assists": 0,
           "kicks": 3,
@@ -6041,6 +6041,331 @@
           "assists": 0,
           "kicks": 4,
           "passes": 1,
+          "shots": 0
+        }
+      ]
+    },
+    {
+      "matchNumber": 20,
+      "halfNumber": 1,
+      "teamA": "Spain",
+      "teamB": "Egypt",
+      "scoreA": 1,
+      "scoreB": 1,
+      "gameTime": "8:48",
+      "goals": [
+        {
+          "score": "1:0",
+          "scorer": "Johnny Sins on Android",
+          "assist": ".oskar",
+          "ownGoal": false
+        },
+        {
+          "score": "1:1",
+          "scorer": "ToughBaby",
+          "assist": "Kong",
+          "ownGoal": false
+        }
+      ],
+      "stats": {
+        "possessionA": 52.2,
+        "possessionB": 47.8,
+        "kicksA": 138,
+        "kicksB": 114,
+        "passesA": 67,
+        "passesB": 44,
+        "shotsA": 6,
+        "shotsB": 3
+      },
+      "players": [
+        {
+          "name": "Pedri",
+          "team": "Spain",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 19,
+          "passes": 10,
+          "shots": 1
+        },
+        {
+          "name": "$limani",
+          "team": "Spain",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 30,
+          "passes": 14,
+          "shots": 1
+        },
+        {
+          "name": "Johnny Sins on Android",
+          "team": "Spain",
+          "goals": 1,
+          "assists": 0,
+          "kicks": 24,
+          "passes": 10,
+          "shots": 1
+        },
+        {
+          "name": "m1dnam",
+          "team": "Spain",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 22,
+          "passes": 10,
+          "shots": 2
+        },
+        {
+          "name": ".oskar",
+          "team": "Spain",
+          "goals": 0,
+          "assists": 1,
+          "kicks": 28,
+          "passes": 14,
+          "shots": 1
+        },
+        {
+          "name": "II Mbappe II",
+          "team": "Spain",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 15,
+          "passes": 9,
+          "shots": 0
+        },
+        {
+          "name": "A7mdBibo",
+          "team": "Egypt",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 20,
+          "passes": 8,
+          "shots": 0
+        },
+        {
+          "name": "Ryzen",
+          "team": "Egypt",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 7,
+          "passes": 0,
+          "shots": 0
+        },
+        {
+          "name": "ToughBaby",
+          "team": "Egypt",
+          "goals": 1,
+          "assists": 0,
+          "kicks": 29,
+          "passes": 10,
+          "shots": 3
+        },
+        {
+          "name": "ShadiOzz",
+          "team": "Egypt",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 18,
+          "passes": 9,
+          "shots": 0
+        },
+        {
+          "name": "R.Gullit",
+          "team": "Egypt",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 24,
+          "passes": 6,
+          "shots": 0
+        },
+        {
+          "name": "Kong",
+          "team": "Egypt",
+          "goals": 0,
+          "assists": 1,
+          "kicks": 16,
+          "passes": 11,
+          "shots": 0
+        }
+      ]
+    },
+    {
+      "matchNumber": 20,
+      "halfNumber": 2,
+      "teamA": "Egypt",
+      "teamB": "Spain",
+      "scoreA": 1,
+      "scoreB": 1,
+      "mvp": "ToughBaby",
+      "gameTime": "8:29",
+      "goals": [
+        {
+          "score": "1:0",
+          "scorer": "Szcesny",
+          "assist": "A7mdBibo",
+          "ownGoal": true
+        },
+        {
+          "score": "1:1",
+          "scorer": "ToughBaby",
+          "assist": "m1dnam",
+          "ownGoal": true
+        }
+      ],
+      "stats": {
+        "possessionA": 56.3,
+        "possessionB": 43.7,
+        "kicksA": 153,
+        "kicksB": 115,
+        "passesA": 65,
+        "passesB": 33,
+        "shotsA": 4,
+        "shotsB": 3
+      },
+      "players": [
+        {
+          "name": "Ryzen",
+          "team": "Egypt",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 6,
+          "passes": 1,
+          "shots": 0
+        },
+        {
+          "name": "Kong",
+          "team": "Egypt",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 24,
+          "passes": 11,
+          "shots": 1
+        },
+        {
+          "name": "ToughBaby",
+          "team": "Egypt",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 42,
+          "passes": 17,
+          "shots": 0,
+          "ownGoals": 1
+        },
+        {
+          "name": "R.Gullit",
+          "team": "Egypt",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 14,
+          "passes": 5,
+          "shots": 0
+        },
+        {
+          "name": "ShadiOzz",
+          "team": "Egypt",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 26,
+          "passes": 13,
+          "shots": 1
+        },
+        {
+          "name": "A7mdBibo",
+          "team": "Egypt",
+          "goals": 0,
+          "assists": 1,
+          "kicks": 29,
+          "passes": 12,
+          "shots": 2
+        },
+        {
+          "name": "Virgil Van Dijk",
+          "team": "Egypt",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 12,
+          "passes": 6,
+          "shots": 0
+        },
+        {
+          "name": "II Mbappe II",
+          "team": "Spain",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 19,
+          "passes": 3,
+          "shots": 0
+        },
+        {
+          "name": "Pedri",
+          "team": "Spain",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 17,
+          "passes": 7,
+          "shots": 0
+        },
+        {
+          "name": "m1dnam",
+          "team": "Spain",
+          "goals": 0,
+          "assists": 1,
+          "kicks": 20,
+          "passes": 5,
+          "shots": 2
+        },
+        {
+          "name": "Szcesny",
+          "team": "Spain",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 9,
+          "passes": 5,
+          "shots": 0,
+          "ownGoals": 1
+        },
+        {
+          "name": "Pitarch",
+          "team": "Spain",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 6,
+          "passes": 3,
+          "shots": 0
+        },
+        {
+          "name": "Chie",
+          "team": "Spain",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 9,
+          "passes": 2,
+          "shots": 0
+        },
+        {
+          "name": "Johnny Sins on Android",
+          "team": "Spain",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 10,
+          "passes": 1,
+          "shots": 1
+        },
+        {
+          "name": "$limani",
+          "team": "Spain",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 13,
+          "passes": 3,
+          "shots": 0
+        },
+        {
+          "name": ".oskar",
+          "team": "Spain",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 12,
+          "passes": 4,
           "shots": 0
         }
       ]
