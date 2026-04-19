@@ -1585,7 +1585,7 @@
             ],
             overall: [
                 { team: "Spain", halves: 9, passes: 395, possession: 440.8, shots: 27 },
-                { team: "Germany", halves: 7, passes: 356, possession: 350.6, shots: 31 },
+                { team: "Germany", halves: 9, passes: 481, possession: 452.2, shots: 37 },
                 { team: "Egypt", halves: 10, passes: 441, possession: 518.5, shots: 21 },
                 { team: "Tunisia and Algeria", halves: 6, passes: 212, possession: 279.6, shots: 17 },
                 { team: "Netherlands", halves: 8, passes: 528, possession: 423.5, shots: 56 },
@@ -1593,7 +1593,7 @@
                 { team: "World XI", halves: 8, passes: 280, possession: 371.4, shots: 15 },
                 { team: "France", halves: 8, passes: 320, possession: 378.0, shots: 20 },
                 { team: "England / UK", halves: 10, passes: 650, possession: 502.9, shots: 55 },
-                { team: "Poland + Balkans", halves: 6, passes: 343, possession: 320.0, shots: 34 }
+                { team: "Poland + Balkans", halves: 8, passes: 451, possession: 418.4, shots: 46 }
             ]
         };
 
@@ -1604,9 +1604,9 @@
                 { player: "ShIeLd", value: 5 },
                 { player: "Nympex", value: 5 },
                 { player: "atrocity exhibition", value: 4 },
-                { player: "luur", value: 4 },
+                { player: "luur", value: 6 },
                 { player: "Zenon", value: 4 },
-                { player: "Naeh", value: 4 },
+                { player: "Naeh", value: 6 },
                 { player: "ShadiOzz", value: 3 },
                 { player: "Timber", value: 3 },
                 { player: "Praetor", value: 2 },
@@ -1634,7 +1634,8 @@
                 { player: "Johnny Sins", value: 1 },
                 { player: "Refix", value: 1 },
                 { player: "Isagi Yoichi", value: 1 },
-                { player: "Triple G", value: 1 }
+                { player: "Triple G", value: 1 },
+                { player: "drkuu", value: 1 }
             ],
             goals: [
                 { player: "zenix", value: 6 },
@@ -2573,6 +2574,10 @@
                     home: { label: 'England / UK 4', status: 'winner' },
                     away: { label: 'Italy 0', status: 'lost' }
                 },
+                polandGermanyQuarterFinal: {
+                    home: { label: 'Poland + Balkans 0 (2)', status: 'lost' },
+                    away: { label: 'Germany 0 (4)', status: 'winner' }
+                },
                 topSemiFinalSlot: { label: 'Egypt', status: 'winner' }
             };
 
@@ -2628,8 +2633,8 @@
                                         </div>
 
                                         <div class="match">
-                                            ${bracketTeamMarkup('Poland + Balkans')}
-                                            ${bracketTeamMarkup('Germany')}
+                                            ${bracketTeamMarkup(knockoutBracket.polandGermanyQuarterFinal.home)}
+                                            ${bracketTeamMarkup(knockoutBracket.polandGermanyQuarterFinal.away)}
                                         </div>
                                     </div>
 
