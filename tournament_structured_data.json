@@ -2062,7 +2062,7 @@
       "goals": [
         {
           "score": "1:0",
-          "scorer": "Zénon",
+          "scorer": "Vonmacron🇫🇷",
           "assist": null,
           "ownGoal": true
         }
@@ -7028,6 +7028,297 @@
           "kicks": 39,
           "passes": 20,
           "shots": 1
+        }
+      ]
+    },
+    {
+      "matchNumber": 23,
+      "halfNumber": 1,
+      "teamA": "Netherlands",
+      "teamB": "France",
+      "scoreA": 1,
+      "scoreB": 0,
+      "gameTime": "8:09",
+      "goals": [
+        {
+          "score": "1:0",
+          "scorer": "Zénon",
+          "assist": null,
+          "ownGoal": true
+        }
+      ],
+      "stats": {
+        "possessionA": 47.9,
+        "possessionB": 52.1,
+        "kicksA": 129,
+        "kicksB": 99,
+        "passesA": 56,
+        "passesB": 29,
+        "shotsA": 8,
+        "shotsB": 0
+      },
+      "players": [
+        {
+          "name": "poppa",
+          "team": "Netherlands",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 15,
+          "passes": 6,
+          "shots": 1
+        },
+        {
+          "name": "N7MP3X",
+          "team": "Netherlands",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 9,
+          "passes": 7,
+          "shots": 0
+        },
+        {
+          "name": "yonko",
+          "team": "Netherlands",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 30,
+          "passes": 14,
+          "shots": 3
+        },
+        {
+          "name": "erdi",
+          "team": "Netherlands",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 24,
+          "passes": 11,
+          "shots": 0
+        },
+        {
+          "name": "Shinsuke Nakamura",
+          "team": "Netherlands",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 24,
+          "passes": 7,
+          "shots": 1
+        },
+        {
+          "name": "tsukuyomi.",
+          "team": "Netherlands",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 27,
+          "passes": 11,
+          "shots": 3
+        },
+        {
+          "name": "Zénon",
+          "team": "France",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 24,
+          "passes": 9,
+          "shots": 0
+        },
+        {
+          "name": "Toshiba",
+          "team": "France",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 25,
+          "passes": 9,
+          "shots": 0
+        },
+        {
+          "name": "Vonmacron🇫🇷",
+          "team": "France",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 13,
+          "passes": 5,
+          "shots": 0,
+          "ownGoals": 1
+        },
+        {
+          "name": "SanDiego",
+          "team": "France",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 9,
+          "passes": 1,
+          "shots": 0
+        },
+        {
+          "name": "galaz",
+          "team": "France",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 10,
+          "passes": 0,
+          "shots": 0
+        },
+        {
+          "name": "aaron",
+          "team": "France",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 18,
+          "passes": 5,
+          "shots": 0
+        }
+      ]
+    },
+    {
+      "matchNumber": 23,
+      "halfNumber": 2,
+      "teamA": "France",
+      "teamB": "Netherlands",
+      "scoreA": 0,
+      "scoreB": 2,
+      "mvp": "Shinsuke Nakamura",
+      "gameTime": "8:10",
+      "goals": [
+        {
+          "score": "0:1",
+          "scorer": "Shinsuke Nakamura",
+          "assist": "poppa",
+          "ownGoal": false
+        },
+        {
+          "score": "0:2",
+          "scorer": "tsukuyomi.",
+          "assist": "Shinsuke Nakamura",
+          "ownGoal": false
+        }
+      ],
+      "stats": {
+        "possessionA": 45.7,
+        "possessionB": 54.3,
+        "kicksA": 109,
+        "kicksB": 113,
+        "passesA": 43,
+        "passesB": 51,
+        "shotsA": 0,
+        "shotsB": 9
+      },
+      "players": [
+        {
+          "name": "aaron",
+          "team": "France",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 13,
+          "passes": 3,
+          "shots": 0
+        },
+        {
+          "name": "galaz",
+          "team": "France",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 2,
+          "passes": 2,
+          "shots": 0
+        },
+        {
+          "name": "SanDiego",
+          "team": "France",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 14,
+          "passes": 4,
+          "shots": 0
+        },
+        {
+          "name": "Vonmacron🇫🇷",
+          "team": "France",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 15,
+          "passes": 5,
+          "shots": 0
+        },
+        {
+          "name": "Toshiba",
+          "team": "France",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 23,
+          "passes": 10,
+          "shots": 0
+        },
+        {
+          "name": "Zénon",
+          "team": "France",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 37,
+          "passes": 17,
+          "shots": 0
+        },
+        {
+          "name": "AVT_43(elpedri)",
+          "team": "France",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 5,
+          "passes": 2,
+          "shots": 0
+        },
+        {
+          "name": "tsukuyomi.",
+          "team": "Netherlands",
+          "goals": 1,
+          "assists": 0,
+          "kicks": 24,
+          "passes": 11,
+          "shots": 2
+        },
+        {
+          "name": "Shinsuke Nakamura",
+          "team": "Netherlands",
+          "goals": 1,
+          "assists": 1,
+          "kicks": 20,
+          "passes": 11,
+          "shots": 3
+        },
+        {
+          "name": "yonko",
+          "team": "Netherlands",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 20,
+          "passes": 6,
+          "shots": 4
+        },
+        {
+          "name": "poppa",
+          "team": "Netherlands",
+          "goals": 0,
+          "assists": 1,
+          "kicks": 15,
+          "passes": 7,
+          "shots": 0
+        },
+        {
+          "name": "erdi",
+          "team": "Netherlands",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 19,
+          "passes": 6,
+          "shots": 0
+        },
+        {
+          "name": "N7MP3X",
+          "team": "Netherlands",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 15,
+          "passes": 10,
+          "shots": 0
         }
       ]
     }
