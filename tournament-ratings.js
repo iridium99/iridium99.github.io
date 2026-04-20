@@ -85,7 +85,7 @@
       cleanSheets: [
         { player: 'Mbappe', value: 5 },
         { player: 'ShIeLd', value: 5 },
-        { player: 'Nympex', value: 5 },
+        { player: 'Nympex', value: 7 },
         { player: 'atrocity exhibition', value: 4 },
         { player: 'luur', value: 6 },
         { player: 'Zenon', value: 4 },
@@ -112,7 +112,7 @@
         { player: 'Wakanda', value: 1 },
         { player: 'Perkz', value: 1 },
         { player: 'Razor', value: 1 },
-        { player: 'Shinsuke Nakamura', value: 1 },
+        { player: 'Shinsuke Nakamura', value: 2 },
         { player: 'cytro', value: 1 },
         { player: 'Johnny Sins', value: 1 },
         { player: 'Refix', value: 1 },
@@ -129,8 +129,8 @@
         { player: 'A7mdBibo', value: 3 },
         { player: 'Kong', value: 2 },
         { player: 'Gnagna', value: 2 },
-        { player: 'Shinsuke Nakamura', value: 2 },
-        { player: 'tsukuyomi', value: 2 },
+        { player: 'Shinsuke Nakamura', value: 3 },
+        { player: 'tsukuyomi', value: 3 },
         { player: 'Isagi Yoichi', value: 2 },
         { player: 'SUCA', value: 1 },
         { player: 'Tiki', value: 1 },
@@ -155,12 +155,12 @@
       ],
       assists: [
         { player: 'Wakanda', value: 4 },
-        { player: 'poppa', value: 3 },
+        { player: 'poppa', value: 4 },
         { player: 'MRN', value: 2 },
         { player: 'tsukuyomi', value: 2 },
         { player: 'Kong', value: 2 },
         { player: 'cytro', value: 2 },
-        { player: 'Shinsuke Nakamura', value: 2 },
+        { player: 'Shinsuke Nakamura', value: 3 },
         { player: 'A7mdBibo', value: 1 },
         { player: 'aaron', value: 1 },
         { player: 'Lookman', value: 1 },
@@ -191,7 +191,8 @@
       ownGoals: [
         { player: 'Saygex', value: 1 },
         { player: 'SergioRamoss', value: 1 },
-        { player: 'ToughBaby', value: 1 }
+        { player: 'ToughBaby', value: 1 },
+        { player: 'Vonmacron', value: 1 }
       ]
     }
   };
@@ -1305,5 +1306,4 @@
     console.error('World Cup top 10 injection failed', error);
   });
 })();
-
 
