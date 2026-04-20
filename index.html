@@ -1588,10 +1588,10 @@
                 { team: "Germany", halves: 9, passes: 481, possession: 452.2, shots: 37 },
                 { team: "Egypt", halves: 10, passes: 441, possession: 518.5, shots: 21 },
                 { team: "Tunisia and Algeria", halves: 6, passes: 212, possession: 279.6, shots: 17 },
-                { team: "Netherlands", halves: 8, passes: 528, possession: 423.5, shots: 56 },
+                { team: "Netherlands", halves: 10, passes: 635, possession: 525.7, shots: 73 },
                 { team: "Italy", halves: 10, passes: 494, possession: 514.6, shots: 30 },
                 { team: "World XI", halves: 8, passes: 280, possession: 371.4, shots: 15 },
-                { team: "France", halves: 8, passes: 320, possession: 378.0, shots: 20 },
+                { team: "France", halves: 10, passes: 392, possession: 475.8, shots: 20 },
                 { team: "England / UK", halves: 10, passes: 650, possession: 502.9, shots: 55 },
                 { team: "Poland + Balkans", halves: 8, passes: 451, possession: 418.4, shots: 46 }
             ]
@@ -1602,7 +1602,7 @@
             cleanSheets: [
                 { player: "Mbappe", value: 5 },
                 { player: "ShIeLd", value: 5 },
-                { player: "Nympex", value: 5 },
+                { player: "Nympex", value: 7 },
                 { player: "atrocity exhibition", value: 4 },
                 { player: "luur", value: 4 },
                 { player: "Zenon", value: 4 },
@@ -1629,7 +1629,7 @@
                 { player: "Wakanda", value: 1 },
                 { player: "Perkz", value: 1 },
                 { player: "Razor", value: 1 },
-                { player: "Shinsuke Nakamura", value: 1 },
+                { player: "Shinsuke Nakamura", value: 2 },
                 { player: "cytro", value: 1 },
                 { player: "Johnny Sins", value: 1 },
                 { player: "Refix", value: 1 },
@@ -1646,8 +1646,8 @@
                 { player: "A7mdBibo", value: 3 },
                 { player: "Kong", value: 2 },
                 { player: "Gnagna", value: 2 },
-                { player: "Shinsuke Nakamura", value: 2 },
-                { player: "tsukuyomi", value: 2 },
+                { player: "Shinsuke Nakamura", value: 3 },
+                { player: "tsukuyomi", value: 3 },
                 { player: "Isagi Yoichi", value: 2 },
                 { player: "SUCA", value: 1 },
                 { player: "Tiki", value: 1 },
@@ -1672,12 +1672,12 @@
             ],
             assists: [
                 { player: "Wakanda", value: 4 },
-                { player: "poppa", value: 3 },
+                { player: "poppa", value: 4 },
                 { player: "MRN", value: 2 },
                 { player: "tsukuyomi", value: 2 },
                 { player: "Kong", value: 2 },
                 { player: "cytro", value: 2 },
-                { player: "Shinsuke Nakamura", value: 2 },
+                { player: "Shinsuke Nakamura", value: 3 },
                 { player: "A7mdBibo", value: 1 },
                 { player: "aaron", value: 1 },
                 { player: "Lookman", value: 1 },
@@ -1708,7 +1708,8 @@
             ownGoals: [
                 { player: "Saygex", value: 1 },
                 { player: "SergioRamoss", value: 1 },
-                { player: "ToughBaby", value: 1 }
+                { player: "ToughBaby", value: 1 },
+                { player: "Vonmacron", value: 1 }
             ]
         };
 
@@ -1720,7 +1721,9 @@
                     { player: 'ToughBaby', value: 1 },
                     { player: 'cytro', value: 1 },
                     { player: 'Berbatov', value: 1 },
-                    { player: 'Wakanda', value: 1 }
+                    { player: 'Wakanda', value: 1 },
+                    { player: 'Shinsuke Nakamura', value: 1 },
+                    { player: 'tsukuyomi', value: 1 }
                 ],
                 assists: [
                     { player: '.oskar', value: 1 },
@@ -1729,23 +1732,28 @@
                     { player: 'm1dnam', value: 1 },
                     { player: 'Berbatov', value: 1 },
                     { player: 'cYn', value: 1 },
-                    { player: 'cytro', value: 2 }
+                    { player: 'cytro', value: 2 },
+                    { player: 'poppa', value: 1 },
+                    { player: 'Shinsuke Nakamura', value: 1 }
                 ],
                 mvps: [
                     { player: 'ToughBaby', value: 1 },
                     { player: 'cytro', value: 1 },
-                    { player: 'drkuu', value: 1 }
+                    { player: 'drkuu', value: 1 },
+                    { player: 'Shinsuke Nakamura', value: 1 }
                 ],
                 cleanSheets: [
                     { player: 'luur', value: 2 },
                     { player: 'Naeh', value: 2 },
                     { player: 'atrocity exhibition', value: 1 },
-                    { player: 'evilpedri', value: 1 }
+                    { player: 'evilpedri', value: 1 },
+                    { player: 'Nympex', value: 2 }
                 ],
                 ownGoals: [
                     { player: 'Szcesny', value: 1 },
                     { player: 'ToughBaby', value: 1 },
-                    { player: 'Fad', value: 1 }
+                    { player: 'Fad', value: 1 },
+                    { player: 'Vonmacron', value: 1 }
                 ]
             }
         };
@@ -2189,11 +2197,21 @@
                 const isEgyptSpain =
                     (teamA === 'Egypt' && teamB === 'Spain') ||
                     (teamA === 'Spain' && teamB === 'Egypt');
+                const isNetherlandsFrance =
+                    (teamA === 'Netherlands' && teamB === 'France') ||
+                    (teamA === 'France' && teamB === 'Netherlands');
 
                 if (isEgyptSpain) {
                     return `
                         <div class="world-cup-result-line">Egypt 2 (5)</div>
                         <div class="world-cup-result-line world-cup-result-eliminated">Spain 2 (3)</div>
+                    `;
+                }
+
+                if (isNetherlandsFrance) {
+                    return `
+                        <div class="world-cup-result-line">Netherlands 3</div>
+                        <div class="world-cup-result-line world-cup-result-eliminated">France 0</div>
                     `;
                 }
 
@@ -2569,6 +2587,10 @@
             }
 
             const knockoutBracket = {
+                netherlandsFranceQuarterFinal: {
+                    home: { label: 'Netherlands 3', status: 'winner' },
+                    away: { label: 'France 0', status: 'lost' }
+                },
                 spainEgyptQuarterFinal: {
                     home: { label: 'Spain 2 (3)', status: 'lost' },
                     away: { label: 'Egypt 2 (5)', status: 'winner' }
@@ -2581,7 +2603,8 @@
                     home: { label: 'Poland 0 (2)', status: 'lost' },
                     away: { label: 'Germany 0 (4)', status: 'winner' }
                 },
-                topSemiFinalSlot: { label: 'Egypt', status: 'winner' }
+                topSemiFinalSlot: { label: 'Netherlands', status: '' },
+                topSemiFinalOpponent: { label: 'Egypt', status: '' }
             };
 
             const tbdTeamMarkup = '<div class="team world-cup-bracket-tbd">TBD</div>';
@@ -2621,8 +2644,8 @@
                                 <div class="bracket">
                                     <div class="round">
                                         <div class="match">
-                                            ${bracketTeamMarkup('Netherlands')}
-                                            ${bracketTeamMarkup('France')}
+                                            ${bracketTeamMarkup(knockoutBracket.netherlandsFranceQuarterFinal.home)}
+                                            ${bracketTeamMarkup(knockoutBracket.netherlandsFranceQuarterFinal.away)}
                                         </div>
 
                                         <div class="match">
@@ -2644,7 +2667,7 @@
                                     <div class="round">
                                         <div class="match">
                                             ${bracketTeamMarkup(knockoutBracket.topSemiFinalSlot)}
-                                            ${tbdTeamMarkup}
+                                            ${bracketTeamMarkup(knockoutBracket.topSemiFinalOpponent)}
                                         </div>
 
                                         <div class="match">
