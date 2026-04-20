@@ -85,7 +85,7 @@
       cleanSheets: [
         { player: 'Mbappe', value: 5 },
         { player: 'ShIeLd', value: 5 },
-        { player: 'Nympex', value: 7 },
+        { player: 'Nympex', value: 5 },
         { player: 'atrocity exhibition', value: 4 },
         { player: 'luur', value: 6 },
         { player: 'Zenon', value: 4 },
@@ -1306,4 +1306,5 @@
     console.error('World Cup top 10 injection failed', error);
   });
 })();
+
 
