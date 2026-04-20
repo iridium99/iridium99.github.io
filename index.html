@@ -1602,7 +1602,7 @@
             cleanSheets: [
                 { player: "Mbappe", value: 5 },
                 { player: "ShIeLd", value: 5 },
-                { player: "Nympex", value: 7 },
+                { player: "Nympex", value: 5 },
                 { player: "atrocity exhibition", value: 4 },
                 { player: "luur", value: 4 },
                 { player: "Zenon", value: 4 },
@@ -2604,7 +2604,9 @@
                     away: { label: 'Germany 0 (4)', status: 'winner' }
                 },
                 topSemiFinalSlot: { label: 'Netherlands', status: '' },
-                topSemiFinalOpponent: { label: 'Egypt', status: '' }
+                topSemiFinalOpponent: { label: 'England / UK', status: '' },
+                bottomSemiFinalSlot: { label: 'Germany', status: '' },
+                bottomSemiFinalOpponent: { label: 'Egypt', status: '' }
             };
 
             const tbdTeamMarkup = '<div class="team world-cup-bracket-tbd">TBD</div>';
@@ -2671,8 +2673,8 @@
                                         </div>
 
                                         <div class="match">
-                                            ${tbdTeamMarkup}
-                                            ${tbdTeamMarkup}
+                                            ${bracketTeamMarkup(knockoutBracket.bottomSemiFinalSlot)}
+                                            ${bracketTeamMarkup(knockoutBracket.bottomSemiFinalOpponent)}
                                         </div>
                                     </div>
 
