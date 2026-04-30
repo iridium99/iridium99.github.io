@@ -1298,8 +1298,8 @@
 
     <div class="tabs">
         <div class="tab" data-tab="whats-new">What's New</div>
-        <div class="tab" data-tab="players">Players</div>
-        <div class="tab active" data-tab="archive">Archive</div>
+        <div class="tab active" data-tab="players">Players</div>
+        <div class="tab" data-tab="archive">Archive</div>
         <div class="tab" data-tab="compare">Upgrade Lab & Player Comparison</div>
         <div class="tab" data-tab="help">Help & Commands</div>
     </div>
@@ -1317,7 +1317,7 @@
         </div>
     </div>
 
-    <div class="tab-content" id="players-tab">
+    <div class="tab-content active" id="players-tab">
         <div class="filters">
             <select id="sort-select">
                 <option value="recently-added">Recently Added</option>
@@ -1420,7 +1420,7 @@
         </div>
     </div>
 
-    <div class="tab-content active" id="archive-tab">
+    <div class="tab-content" id="archive-tab">
         <div class="archive-subtabs">
             <button type="button" class="archive-subtab active" data-archive-view="world-cup">World Cup</button>
         </div>
@@ -1975,6 +1975,8 @@
             if (!player.img) {
                 const specialNames = {
                     "W-pi": "w-pi",
+                    "W-pi_tott": "w-pi_tott",
+                    "W-Pi TOTT": "w-pi_tott",
                     "evil.pro": "evil.pro",
                     "Cubarsí": "cubarsi",
                     "zen!x": "zenix",
