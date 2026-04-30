@@ -132,6 +132,37 @@
         .tab-content.active {
             display: block;
         }
+
+        .archive-subtabs {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .archive-subtab {
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--primary);
+            background: transparent;
+            color: var(--text);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .archive-subtab.active {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .archive-subtab-content {
+            display: none;
+        }
+
+        .archive-subtab-content.active {
+            display: block;
+        }
         
         .filters {
             display: flex;
@@ -1268,7 +1299,7 @@
     <div class="tabs">
         <div class="tab" data-tab="whats-new">What's New</div>
         <div class="tab" data-tab="players">Players</div>
-        <div class="tab active" data-tab="world-cup">World Cup</div>
+        <div class="tab active" data-tab="archive">Archive</div>
         <div class="tab" data-tab="compare">Upgrade Lab & Player Comparison</div>
         <div class="tab" data-tab="help">Help & Commands</div>
     </div>
@@ -1389,8 +1420,13 @@
         </div>
     </div>
 
-    <div class="tab-content active" id="world-cup-tab">
-        <div id="world-cup-container"></div>
+    <div class="tab-content active" id="archive-tab">
+        <div class="archive-subtabs">
+            <button type="button" class="archive-subtab active" data-archive-view="world-cup">World Cup</button>
+        </div>
+        <div class="archive-subtab-content active" id="archive-world-cup-view">
+            <div id="world-cup-container"></div>
+        </div>
     </div>
 
     <div class="tab-content" id="compare-tab">
@@ -3225,6 +3261,19 @@
                 tab.classList.add('active');
                 const tabName = tab.getAttribute('data-tab');
                 document.getElementById(`${tabName}-tab`).classList.add('active');
+            });
+        });
+
+        document.querySelectorAll('.archive-subtab').forEach(button => {
+            button.addEventListener('click', () => {
+                document.querySelectorAll('.archive-subtab').forEach(tab => tab.classList.remove('active'));
+                document.querySelectorAll('.archive-subtab-content').forEach(view => view.classList.remove('active'));
+                button.classList.add('active');
+                const viewName = button.getAttribute('data-archive-view');
+                const view = document.getElementById(`archive-${viewName}-view`);
+                if (view) {
+                    view.classList.add('active');
+                }
             });
         });
     </script>
