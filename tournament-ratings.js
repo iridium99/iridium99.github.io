@@ -13,6 +13,7 @@
   const TEAM_CONFIDENCE_SPAN = 0.4;
   const PLAYER_RELIABILITY_GAMES = 2.5;
   const TOP10_PLAYER_MIN_MATCHES = 3;
+  const PLAYER_KNOCKOUT_MULTIPLIER = 1.35;
   const DEBUG_COUNTRY_TRACE = true;
 
   const IMPACT_WEIGHTS = {
@@ -904,12 +905,15 @@
         impact[`assists_${stageSuffix}`] += assists;
         impact[`cs_${stageSuffix}`] += cleanSheet;
 
+        const stageMultiplier = stage === 'ko' ? PLAYER_KNOCKOUT_MULTIPLIER : 1;
         const rating = 72
-          + (goals * 6)
-          + (assists * 4)
-          + (shots * 0.6)
-          + (cleanSheet * 2.5)
-          - (ownGoals * 7);
+          + stageMultiplier * (
+            (goals * 6)
+            + (assists * 4)
+            + (shots * 0.6)
+            + (cleanSheet * 2.5)
+            - (ownGoals * 7)
+          );
 
         player.matchesPlayed += 1;
         player.matchRatings.push(clamp(rating, 0, MAX_DISPLAY_RATING));
@@ -1109,7 +1113,7 @@
         <button class="world-cup-info-btn" type="button" data-info-target="players-rating-info" aria-expanded="false" aria-label="How player rating is calculated">i</button>
       </div>
       <p id="players-rating-info" class="world-cup-info-text" hidden>
-        Ratings are based on match impact: results, goal difference, goals/assists/clean sheets, and team stats like possession, passes, and shots. More matches = more reliable rating.
+        Ratings are based on match impact: results, goal difference, goals/assists/clean sheets, and team stats like possession, passes, and shots. Knockout performances are weighted more heavily, and more matches = a more reliable rating.
       </p>
       <div class="world-cup-table-wrap">
         <table class="world-cup-stat-table">
