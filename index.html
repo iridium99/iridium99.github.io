@@ -2054,11 +2054,11 @@
                 
                 card.innerHTML = `
                     <div class="card-image-container">
-                        <img src="${player.img}" alt="${player.name}" class="player-image-base">
+                        <img src="${player.img}" alt="${player.display_name || player.name}" class="player-image-base">
                         ${overlayHTML}
                     </div>
                     <div class="player-header">
-                        <h3 class="player-name">${player.name}</h3>
+                        <h3 class="player-name">${player.display_name || player.name}</h3>
                     </div>
                     <div class="player-details">
                         <div class="player-detail">
@@ -2079,7 +2079,7 @@
                         </div>
                     </div>
                     <p style="margin-top:15px;text-align:center;font-size:12px;color:#a0a0a0;">
-                        Use <code>/buyplayer ${player.name}</code> in Discord
+                        Use <code>/buyplayer ${player.display_name || player.name}</code> in Discord
                     </p>
                 `;
                 container.appendChild(card);
@@ -2110,6 +2110,7 @@
 
                 const matchesSearch = searchTerm === '' ||
                     player.name.toLowerCase().includes(searchTerm) ||
+                    (player.display_name || '').toLowerCase().includes(searchTerm) ||
                     player.nation.toLowerCase().includes(searchTerm);
 
                 let matchesRating = true;
@@ -2924,7 +2925,7 @@
                 
                 card.innerHTML = `
                     <div class="card-image-container">
-                        <img src="${player.img}" alt="${player.name}" class="player-image-base">
+                        <img src="${player.img}" alt="${player.display_name || player.name}" class="player-image-base">
                         ${overlayHTML}
                     </div>
                     <div style="text-align:center;margin-top:8px;">
@@ -2974,7 +2975,7 @@
                 <div class="selected-player-display" onclick="openPlayerModal(${slotIndex})">
                     <button class="change-player-btn">Change</button>
                     <div class="card-image-container">
-                        <img src="${player.img}" alt="${player.name}" class="player-image-base">
+                        <img src="${player.img}" alt="${player.display_name || player.name}" class="player-image-base">
                         ${overlayHTML}
                     </div>
                     <div style="text-align:center;margin-top:8px;">
