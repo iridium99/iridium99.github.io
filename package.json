@@ -1,0 +1,27 @@
+{
+  "name": "iridium99-github-io",
+  "version": "1.0.0",
+  "description": "LDC RS Legends - Official Website",
+  "main": "tournament-ratings.js",
+  "scripts": {
+    "test": "echo \"No tests specified\" && exit 0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iridium99/iridium99.github.io.git"
+  },
+  "keywords": [
+    "rocket-league",
+    "tournament",
+    "leaderboard"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/iridium99/iridium99.github.io/issues"
+  },
+  "homepage": "https://github.com/iridium99/iridium99.github.io#readme",
+  "dependencies": {
+    "@vercel/speed-insights": "^2.0.0"
+  }
+}
