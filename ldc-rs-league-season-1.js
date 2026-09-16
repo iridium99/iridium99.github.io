@@ -13,6 +13,7 @@ const ldcRsLeagueSeason1 = {
             name: 'Baguette Z Apex',
             shortName: 'BZA',
             image: null,
+            kit: { primary: '#4a90d9', secondary: '#f8fafc', source: 'configurable-fallback' },
             owner: 'Spero',
             captain: 'Spero',
             coCaptain: 'evilpedri',
@@ -23,6 +24,7 @@ const ldcRsLeagueSeason1 = {
             name: 'HAX UNITED',
             shortName: 'HAX',
             image: null,
+            kit: { primary: '#4a90d9', secondary: '#f8fafc', source: 'configurable-fallback' },
             owner: 'GK',
             captain: 'GK',
             coCaptain: 'Misimaro',
@@ -33,6 +35,7 @@ const ldcRsLeagueSeason1 = {
             name: 'OG FC',
             shortName: 'OG',
             image: null,
+            kit: { primary: '#4a90d9', secondary: '#f8fafc', source: 'configurable-fallback' },
             owner: '𝐌𝐨𝐬𝐭𝐚𝐟𝐚 𝐙𝐢𝐤𝐨',
             captain: 'Mbappe',
             coCaptain: '𝐌𝐨𝐬𝐭𝐚𝐟𝐚 𝐙𝐢𝐤𝐨',
@@ -43,6 +46,7 @@ const ldcRsLeagueSeason1 = {
             name: 'X TO WIN 2',
             shortName: 'XTW',
             image: null,
+            kit: { primary: '#4a90d9', secondary: '#f8fafc', source: 'configurable-fallback' },
             owner: 'Cytro',
             captain: 'Cytro',
             coCaptain: 'SVimes',
@@ -53,6 +57,7 @@ const ldcRsLeagueSeason1 = {
             name: 'HUQQA',
             shortName: 'HUQ',
             image: null,
+            kit: { primary: '#4a90d9', secondary: '#f8fafc', source: 'configurable-fallback' },
             owner: 'Ollhurse',
             captain: 'Lena',
             coCaptain: 'Ollhurse',
@@ -63,6 +68,7 @@ const ldcRsLeagueSeason1 = {
             name: 'ROONEY TUNES',
             shortName: 'RT',
             image: 'league-assets/rooney-tunes.webp',
+            kit: { primary: '#e53923', secondary: '#ffe94a', source: 'team-image' },
             owner: 'Vonmacron',
             captain: 'Vonmacron',
             coCaptain: 'MRN',
@@ -77,6 +83,13 @@ const ldcRsLeagueSeason1 = {
             awayTeamId: 'rooney-tunes',
             homeGoals: 5,
             awayGoals: 0,
+            duration: {
+                totalSeconds: 585,
+                halves: [
+                    { half: 1, seconds: 471, display: '7:51' },
+                    { half: 2, seconds: 114, display: '1:54' }
+                ]
+            },
             mvp: 'Drkuu',
             cleanSheetHalves: [
                 { player: 'atrocity exhibition', value: 1 },
@@ -150,11 +163,96 @@ const ldcRsLeagueSeason1 = {
                     }
                 }
             ],
-            // Awaiting authoritative data; do not derive these from half participation.
-            startingLineups: null,
-            substitutes: null,
-            substitutions: null,
-            minutesPlayed: null
+            lineups: {
+                firstHalf: {
+                    'x-to-win-2': ['Naeh', 'atrocity exhibition', 'elex', 'Drkuu', 'maccy', 'Berbatov'],
+                    'rooney-tunes': ['KK', 'Vonmacron', 'MRN', '1m bad', 'fkfk', 'ilaola']
+                },
+                secondHalf: {
+                    'x-to-win-2': ['atrocity exhibition', 'elex', 'maccy', 'Drkuu', 'Wakanda', 'Berbatov'],
+                    'rooney-tunes': ['KK', 'Vonmacron', 'click', 'ilaola', 'MRN', '1m bad']
+                }
+            },
+            substitutions: [
+                {
+                    teamId: 'x-to-win-2', half: 1, playerIn: 'Wakanda', playerOut: 'Drkuu',
+                    timing: { type: 'observed-interval', fromSeconds: 344, toSeconds: 416, display: '05:44–06:56 (1H)', approximateDisplay: '~06:20' }
+                },
+                {
+                    teamId: 'rooney-tunes', half: 1, playerIn: 'click', playerOut: 'ilaola',
+                    timing: { type: 'observed-interval', fromSeconds: 225, toSeconds: 281, display: '03:45–04:41 (1H)', approximateDisplay: '~04:13' }
+                },
+                {
+                    teamId: 'x-to-win-2', half: 'halftime', playerIn: 'Drkuu', playerOut: 'Naeh',
+                    timing: { type: 'halftime', display: 'Halftime' }
+                },
+                {
+                    teamId: 'rooney-tunes', half: 'halftime', playerIn: 'ilaola', playerOut: 'fkfk',
+                    timing: { type: 'halftime', display: 'Halftime' }
+                },
+                {
+                    teamId: 'x-to-win-2', half: 2, playerIn: 'Naeh', playerOut: 'maccy',
+                    timing: { type: 'observed-interval', fromSeconds: 65, toSeconds: 96, display: '01:05–01:36 (2H)', approximateDisplay: '~01:21' }
+                }
+            ],
+            goalkeepers: {
+                firstHalf: { 'x-to-win-2': 'Naeh', 'rooney-tunes': 'KK' },
+                secondHalf: { 'x-to-win-2': 'atrocity exhibition', 'rooney-tunes': 'KK' }
+            },
+            pitch: {
+                orientation: 'x=0 is own goal; x=100 is the attacking goal; y=0 is the left touchline from that team\'s attacking perspective.',
+                // Future adjudicated screenshot samples can be stored as:
+                // { half, observedAtSeconds, teamId, positions: [{ player, x, y, role, confidence }] }
+                observations: [],
+                views: {
+                    starting: {
+                        label: 'Starting shape',
+                        note: 'First-half starting six with broad, estimated roles and positions.',
+                        teams: {
+                            'x-to-win-2': [
+                                { player: 'Naeh', role: 'goalkeeper', x: 9, y: 50, confidence: 'estimated' },
+                                { player: 'atrocity exhibition', role: 'deeper left-sided utility', x: 31, y: 25, confidence: 'estimated' },
+                                { player: 'Drkuu', role: 'central box-to-box midfield', x: 49, y: 43, confidence: 'estimated' },
+                                { player: 'maccy', role: 'central midfield', x: 53, y: 68, confidence: 'estimated' },
+                                { player: 'elex', role: 'advanced attacking midfield', x: 70, y: 25, confidence: 'estimated' },
+                                { player: 'Berbatov', role: 'central forward', x: 84, y: 52, confidence: 'estimated' }
+                            ],
+                            'rooney-tunes': [
+                                { player: 'KK', role: 'goalkeeper', x: 9, y: 50, confidence: 'estimated' },
+                                { player: 'MRN', role: 'deeper defensive midfield', x: 32, y: 28, confidence: 'estimated' },
+                                { player: '1m bad', role: 'deeper defensive role', x: 31, y: 72, confidence: 'estimated' },
+                                { player: 'Vonmacron', role: 'central midfield link', x: 51, y: 52, confidence: 'estimated' },
+                                { player: 'fkfk', role: 'midfield', x: 58, y: 31, confidence: 'estimated' },
+                                { player: 'ilaola', role: 'central advanced outfield', x: 74, y: 59, confidence: 'estimated' }
+                            ]
+                        }
+                    },
+                    observed: {
+                        label: 'Average / observed positions',
+                        note: 'Broad locations reconstructed from interval screenshots; not tracking-derived averages.',
+                        teams: {
+                            'x-to-win-2': [
+                                { player: 'Naeh', role: 'goalkeeper / advanced outfield', x: 24, y: 51, confidence: 'estimated' },
+                                { player: 'atrocity exhibition', role: 'deeper utility / goalkeeper', x: 20, y: 28, confidence: 'estimated' },
+                                { player: 'Drkuu', role: 'central box-to-box midfield', x: 53, y: 45, confidence: 'estimated' },
+                                { player: 'maccy', role: 'central midfield', x: 53, y: 70, confidence: 'estimated' },
+                                { player: 'Wakanda', role: 'central deeper midfield', x: 42, y: 59, confidence: 'estimated' },
+                                { player: 'elex', role: 'advanced / wide attacking', x: 72, y: 25, confidence: 'estimated' },
+                                { player: 'Berbatov', role: 'central forward', x: 85, y: 52, confidence: 'estimated' }
+                            ],
+                            'rooney-tunes': [
+                                { player: 'KK', role: 'goalkeeper', x: 9, y: 50, confidence: 'estimated' },
+                                { player: 'MRN', role: 'deeper defensive midfield', x: 31, y: 27, confidence: 'estimated' },
+                                { player: '1m bad', role: 'deeper defensive role', x: 30, y: 73, confidence: 'estimated' },
+                                { player: 'click', role: 'deeper midfield', x: 44, y: 75, confidence: 'estimated' },
+                                { player: 'Vonmacron', role: 'central midfield link', x: 51, y: 50, confidence: 'estimated' },
+                                { player: 'fkfk', role: 'midfield', x: 58, y: 31, confidence: 'estimated' },
+                                { player: 'ilaola', role: 'central advanced outfield', x: 73, y: 58, confidence: 'estimated' }
+                            ]
+                        }
+                    }
+                }
+            }
         }
     ]
 };
@@ -221,6 +319,62 @@ function getLeaguePlayerTeams(season) {
     return playerTeams;
 }
 
+function deriveLeagueMatchParticipation(match) {
+    const participation = new Map();
+    const active = new Map();
+    const firstHalfSeconds = match.duration.halves[0].seconds;
+    const totalSeconds = match.duration.totalSeconds;
+    const ensure = (player) => {
+        if (!participation.has(player)) {
+            participation.set(player, { player, appearances: 1, seconds: 0, estimated: false });
+        }
+        return participation.get(player);
+    };
+    const enter = (player, second) => {
+        ensure(player);
+        active.set(player, second);
+    };
+    const leave = (player, second, estimated) => {
+        const startedAt = active.get(player);
+        if (startedAt === undefined) return;
+        const row = ensure(player);
+        row.seconds += second - startedAt;
+        row.estimated = row.estimated || estimated;
+        active.delete(player);
+    };
+
+    Object.values(match.lineups.firstHalf).flat().forEach((player) => enter(player, 0));
+
+    match.substitutions
+        .filter((substitution) => substitution.half === 1)
+        .sort((a, b) => a.timing.fromSeconds - b.timing.fromSeconds)
+        .forEach((substitution) => {
+            const estimatedSecond = (substitution.timing.fromSeconds + substitution.timing.toSeconds) / 2;
+            leave(substitution.playerOut, estimatedSecond, true);
+            enter(substitution.playerIn, estimatedSecond);
+            ensure(substitution.playerIn).estimated = true;
+        });
+
+    const secondHalfPlayers = new Set(Object.values(match.lineups.secondHalf).flat());
+    [...active.keys()].filter((player) => !secondHalfPlayers.has(player)).forEach((player) => leave(player, firstHalfSeconds, false));
+    secondHalfPlayers.forEach((player) => {
+        if (!active.has(player)) enter(player, firstHalfSeconds);
+    });
+
+    match.substitutions
+        .filter((substitution) => substitution.half === 2)
+        .sort((a, b) => a.timing.fromSeconds - b.timing.fromSeconds)
+        .forEach((substitution) => {
+            const estimatedSecond = firstHalfSeconds + (substitution.timing.fromSeconds + substitution.timing.toSeconds) / 2;
+            leave(substitution.playerOut, estimatedSecond, true);
+            enter(substitution.playerIn, estimatedSecond);
+            ensure(substitution.playerIn).estimated = true;
+        });
+
+    [...active.keys()].forEach((player) => leave(player, totalSeconds, false));
+    return [...participation.values()];
+}
+
 function calculateLeagueMatchPlayerTotals(season, match) {
     const totals = new Map();
     const playerTeams = getLeaguePlayerTeams(season);
@@ -237,8 +391,9 @@ function calculateLeagueMatchPlayerTotals(season, match) {
                 ownGoals: 0,
                 mvps: 0,
                 cleanSheetHalves: 0,
-                appearances: null,
-                minutes: null
+                appearances: 0,
+                minutes: 0,
+                minutesEstimated: false
             });
         }
         return totals.get(player);
@@ -269,6 +424,13 @@ function calculateLeagueMatchPlayerTotals(season, match) {
         ensurePlayer(credit.player).cleanSheetHalves += credit.value;
     });
 
+    deriveLeagueMatchParticipation(match).forEach((participation) => {
+        const total = ensurePlayer(participation.player);
+        total.appearances = participation.appearances;
+        total.minutes = participation.seconds;
+        total.minutesEstimated = participation.estimated;
+    });
+
     return [...totals.values()];
 }
 
@@ -282,8 +444,9 @@ function calculateLeagueSeasonPlayerTotals(season) {
                 return;
             }
             const seasonRow = totals.get(matchRow.player);
-            ['kicks', 'passes', 'shotsOnGoal', 'goals', 'assists', 'ownGoals', 'mvps', 'cleanSheetHalves']
+            ['kicks', 'passes', 'shotsOnGoal', 'goals', 'assists', 'ownGoals', 'mvps', 'cleanSheetHalves', 'appearances', 'minutes']
                 .forEach((key) => { seasonRow[key] += matchRow[key]; });
+            seasonRow.minutesEstimated = seasonRow.minutesEstimated || matchRow.minutesEstimated;
         });
     });
 
@@ -396,11 +559,12 @@ function renderLeagueMatchPlayerTable(season, match, teamId, playerTotals) {
             <div class="world-cup-header"><h3 class="world-cup-title">${escapeLeagueText(team.name)}</h3></div>
             <div class="world-cup-table-wrap">
                 <table class="world-cup-table league-player-stats-table">
-                    <thead><tr><th>Player</th><th>K</th><th>Pass</th><th>SoG</th><th>G</th><th>A</th><th>OG</th><th>MVP</th><th>CSH</th></tr></thead>
+                    <thead><tr><th>Player</th><th>Time</th><th>K</th><th>Pass</th><th>SoG</th><th>G</th><th>A</th><th>OG</th><th>MVP</th><th>CSH</th></tr></thead>
                     <tbody>
                         ${rows.map((row) => `
                             <tr>
                                 <td>${escapeLeagueText(row.player)}</td>
+                                <td>${formatLeagueClock(row.minutes, row.minutesEstimated)}</td>
                                 <td>${row.kicks}</td><td>${row.passes}</td><td>${row.shotsOnGoal}</td>
                                 <td>${row.goals}</td><td>${row.assists}</td><td>${row.ownGoals}</td>
                                 <td>${row.mvps ? '✓' : '–'}</td><td>${row.cleanSheetHalves}</td>
@@ -409,6 +573,114 @@ function renderLeagueMatchPlayerTable(season, match, teamId, playerTotals) {
                     </tbody>
                 </table>
             </div>
+        </div>
+    `;
+}
+
+let leaguePitchMode = 'starting';
+
+function renderLeagueTeamPitch(season, match, teamId) {
+    const team = getLeagueTeamsById(season).get(teamId);
+    const view = match.pitch.views[leaguePitchMode];
+    const positions = view.teams[teamId];
+    return `
+        <div class="world-cup-card league-pitch-team-card">
+            <div class="world-cup-header">
+                <h3 class="world-cup-title">${escapeLeagueText(team.name)}</h3>
+                <span class="league-kit-source">Kit: ${team.kit.source === 'team-image' ? 'team-image colours' : 'configurable fallback'}</span>
+            </div>
+            <div class="league-pitch" aria-label="${escapeLeagueText(team.name)} ${escapeLeagueText(view.label)}">
+                <span class="league-pitch-halfway" aria-hidden="true"></span>
+                <span class="league-pitch-circle" aria-hidden="true"></span>
+                <span class="league-pitch-box league-pitch-box-own" aria-hidden="true"></span>
+                <span class="league-pitch-box league-pitch-box-away" aria-hidden="true"></span>
+                ${positions.map((position) => `
+                    <div class="league-pitch-player" style="--pitch-x:${position.x}%;--pitch-y:${position.y}%;--kit-primary:${team.kit.primary};--kit-secondary:${team.kit.secondary};" aria-label="${escapeLeagueText(position.player)}, ${escapeLeagueText(position.role)}, ${escapeLeagueText(position.confidence)} position">
+                        <span class="league-shirt-icon" aria-hidden="true"></span>
+                        <strong>${escapeLeagueText(position.player)}</strong>
+                    </div>
+                `).join('')}
+            </div>
+            <ul class="league-role-list">
+                ${positions.map((position) => `<li><strong>${escapeLeagueText(position.player)}</strong><span>${escapeLeagueText(position.role)}</span></li>`).join('')}
+            </ul>
+        </div>
+    `;
+}
+
+function renderLeaguePitchSection(season, match) {
+    const view = match.pitch.views[leaguePitchMode];
+    return `
+        <div class="world-cup-card league-pitch-section">
+            <div class="world-cup-header">
+                <div>
+                    <h2 class="world-cup-title">Lineups &amp; positional view</h2>
+                    <p class="league-pitch-note">${escapeLeagueText(view.note)}</p>
+                </div>
+                <div class="world-cup-toggle">
+                    <button type="button" data-league-pitch="starting" class="${leaguePitchMode === 'starting' ? 'active' : ''}">Starting</button>
+                    <button type="button" data-league-pitch="observed" class="${leaguePitchMode === 'observed' ? 'active' : ''}">Average positions</button>
+                </div>
+            </div>
+            <p class="league-orientation-note">Orientation: each team attacks from left (own goal) to right (opposition goal). All coordinates are normalized 0–100 and remain in that orientation regardless of in-game side swaps.</p>
+            <div class="league-pitches-grid">
+                ${renderLeagueTeamPitch(season, match, match.homeTeamId)}
+                ${renderLeagueTeamPitch(season, match, match.awayTeamId)}
+            </div>
+        </div>
+    `;
+}
+
+function renderLeagueLineups(season, match) {
+    const teamsById = getLeagueTeamsById(season);
+    return `
+        <div class="league-lineups-grid">
+            ${[match.homeTeamId, match.awayTeamId].map((teamId) => `
+                <div class="world-cup-card league-lineup-card">
+                    <h3 class="world-cup-title">${escapeLeagueText(teamsById.get(teamId).name)} starting sixes</h3>
+                    <div class="league-lineup-halves">
+                        <div><strong>First half</strong><span>${match.lineups.firstHalf[teamId].map(escapeLeagueText).join(' · ')}</span></div>
+                        <div><strong>Second half</strong><span>${match.lineups.secondHalf[teamId].map(escapeLeagueText).join(' · ')}</span></div>
+                    </div>
+                </div>
+            `).join('')}
+        </div>
+    `;
+}
+
+function renderLeagueSubstitutions(season, match) {
+    const teamsById = getLeagueTeamsById(season);
+    return `
+        <div class="world-cup-card league-substitutions-card">
+            <div class="world-cup-header"><h2 class="world-cup-title">Substitutions</h2><span class="league-update-note">Intervals are observations, not exact event times</span></div>
+            <div class="league-substitution-list">
+                ${match.substitutions.map((substitution) => `
+                    <div class="league-substitution">
+                        <span class="league-sub-time">${escapeLeagueText(substitution.timing.display)}</span>
+                        <span><strong>${escapeLeagueText(substitution.playerIn)} ↑</strong> for ${escapeLeagueText(substitution.playerOut)} ↓</span>
+                        <small>${escapeLeagueText(teamsById.get(substitution.teamId).name)}${substitution.timing.type === 'observed-interval' ? ` · midpoint ${escapeLeagueText(substitution.timing.approximateDisplay)} used only for estimated playing time` : ' · halftime change'}</small>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+    `;
+}
+
+function renderLeagueGoalkeeperContext(season, match) {
+    const teamsById = getLeagueTeamsById(season);
+    return `
+        <div class="world-cup-card league-goalkeeper-card">
+            <div class="world-cup-header"><h2 class="world-cup-title">Goalkeepers &amp; clean-sheet halves</h2></div>
+            <div class="league-goalkeeper-grid">
+                ${[match.homeTeamId, match.awayTeamId].map((teamId) => `
+                    <div>
+                        <strong>${escapeLeagueText(teamsById.get(teamId).name)}</strong>
+                        <span>1H: ${escapeLeagueText(match.goalkeepers.firstHalf[teamId])}</span>
+                        <span>2H: ${escapeLeagueText(match.goalkeepers.secondHalf[teamId])}</span>
+                    </div>
+                `).join('')}
+            </div>
+            <p class="league-clean-sheet-credit">Credited clean-sheet halves: ${match.cleanSheetHalves.map((credit) => `${escapeLeagueText(credit.player)} (${credit.value})`).join(' · ')}. No additional credit inferred.</p>
         </div>
     `;
 }
@@ -461,6 +733,15 @@ function renderLeagueMatchView(season, match) {
                 </div>
             </div>
 
+            ${renderLeagueLineups(season, match)}
+
+            ${renderLeaguePitchSection(season, match)}
+
+            <div class="league-match-summary-grid">
+                ${renderLeagueSubstitutions(season, match)}
+                ${renderLeagueGoalkeeperContext(season, match)}
+            </div>
+
             <div class="league-halves-grid">
                 ${match.halves.map((half) => renderLeagueHalfTeamStats(season, match, half)).join('')}
             </div>
@@ -475,16 +756,16 @@ function renderLeagueMatchView(season, match) {
             </div>
 
             <div class="world-cup-card league-pending-data">
-                <strong>Lineups, substitutions, appearances and minutes</strong>
-                <span>Awaiting authoritative match data; no values have been inferred from half-stat participation.</span>
+                <strong>Playing-time method</strong>
+                <span>Match-clock time is derived from the supplied starting sixes, halftime changes and observed substitution intervals. A ~ marker identifies interval-based estimates; no conventional 90-minute conversion is used.</span>
             </div>
         </section>
     `;
 }
 
 const leagueSeasonMetricDefinitions = {
-    appearances: { label: 'Appearances', empty: true },
-    minutes: { label: 'Minutes', empty: true },
+    appearances: { label: 'Appearances' },
+    minutes: { label: 'Playing time' },
     goals: { label: 'Goals' },
     assists: { label: 'Assists' },
     goalContributions: { label: 'Goals + Assists' },
@@ -498,12 +779,22 @@ const leagueSeasonMetricDefinitions = {
 
 let leagueSeasonStatMode = 'goalContributions';
 
+function formatLeagueClock(totalSeconds, estimated = false) {
+    const roundedSeconds = Math.round(totalSeconds);
+    const minutes = Math.floor(roundedSeconds / 60);
+    const seconds = String(roundedSeconds % 60).padStart(2, '0');
+    return `${estimated ? '~' : ''}${minutes}:${seconds}`;
+}
+
 function renderLeagueSeasonLeaderboard(season) {
     const definition = leagueSeasonMetricDefinitions[leagueSeasonStatMode];
     const teamsById = getLeagueTeamsById(season);
     const rows = calculateLeagueSeasonPlayerTotals(season)
-        .filter((row) => !definition.empty && row[leagueSeasonStatMode] > 0)
+        .filter((row) => row[leagueSeasonStatMode] > 0)
         .sort((a, b) => b[leagueSeasonStatMode] - a[leagueSeasonStatMode] || a.player.localeCompare(b.player));
+    const displayMetric = (row) => leagueSeasonStatMode === 'minutes'
+        ? formatLeagueClock(row.minutes, row.minutesEstimated)
+        : row[leagueSeasonStatMode];
 
     return `
         <section class="world-cup-card league-season-stats" aria-labelledby="league-season-stats-heading">
@@ -516,18 +807,15 @@ function renderLeagueSeasonLeaderboard(season) {
                     <button type="button" data-league-stat="${key}" class="${key === leagueSeasonStatMode ? 'active' : ''}">${metric.label}</button>
                 `).join('')}
             </div>
-            ${definition.empty ? `
-                <p class="league-empty-state league-stat-empty">${definition.label} will be shown once authoritative lineup/minutes data is supplied.</p>
-            ` : `
-                <div class="world-cup-table-wrap">
-                    <table class="world-cup-table league-leaderboard-table">
-                        <thead><tr><th>Player</th><th>Team</th><th>${definition.label}</th></tr></thead>
-                        <tbody>
-                            ${rows.map((row) => `<tr><td>${escapeLeagueText(row.player)}</td><td>${escapeLeagueText(teamsById.get(row.teamId).name)}</td><td>${row[leagueSeasonStatMode]}</td></tr>`).join('')}
-                        </tbody>
-                    </table>
-                </div>
-            `}
+            <div class="world-cup-table-wrap">
+                <table class="world-cup-table league-leaderboard-table">
+                    <thead><tr><th>Player</th><th>Team</th><th>${definition.label}</th></tr></thead>
+                    <tbody>
+                        ${rows.map((row) => `<tr><td>${escapeLeagueText(row.player)}</td><td>${escapeLeagueText(teamsById.get(row.teamId).name)}</td><td>${displayMetric(row)}</td></tr>`).join('')}
+                    </tbody>
+                </table>
+            </div>
+            ${leagueSeasonStatMode === 'minutes' ? '<p class="league-update-note league-minutes-note">~ indicates estimated playing time derived from an observed substitution interval. Times use the 9:45 match clock.</p>' : ''}
         </section>
     `;
 }
@@ -608,6 +896,13 @@ function renderLdcRsLeagueSeason() {
     container.querySelectorAll('[data-league-stat]').forEach((button) => {
         button.addEventListener('click', () => {
             leagueSeasonStatMode = button.getAttribute('data-league-stat');
+            renderLdcRsLeagueSeason();
+        });
+    });
+
+    container.querySelectorAll('[data-league-pitch]').forEach((button) => {
+        button.addEventListener('click', () => {
+            leaguePitchMode = button.getAttribute('data-league-pitch');
             renderLdcRsLeagueSeason();
         });
     });

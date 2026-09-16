@@ -13,7 +13,7 @@ const context = {
     document: { getElementById: () => null }
 };
 vm.createContext(context);
-vm.runInContext(`${leagueScript}\nthis.season = ldcRsLeagueSeason1; this.calculate = calculateLdcRsLeagueStandings; this.matchPlayerTotals = calculateLeagueMatchPlayerTotals; this.seasonPlayerTotals = calculateLeagueSeasonPlayerTotals; this.matchTeamTotals = calculateLeagueMatchTeamTotals;`, context);
+vm.runInContext(`${leagueScript}\nthis.season = ldcRsLeagueSeason1; this.calculate = calculateLdcRsLeagueStandings; this.matchPlayerTotals = calculateLeagueMatchPlayerTotals; this.seasonPlayerTotals = calculateLeagueSeasonPlayerTotals; this.matchTeamTotals = calculateLeagueMatchTeamTotals; this.participation = deriveLeagueMatchParticipation; this.formatClock = formatLeagueClock;`, context);
 
 const season = context.season;
 assert.equal(season.title, 'LDC RS League Season 1');
@@ -40,6 +40,8 @@ season.teams.forEach((team) => {
     [team.owner, team.captain, team.coCaptain, ...team.roster].forEach((name) => {
         assert.equal(name.includes('@'), false, `${team.name} contains a raw Discord mention`);
     });
+    assert.match(team.kit.primary, /^#[0-9a-f]{6}$/i);
+    assert.match(team.kit.secondary, /^#[0-9a-f]{6}$/i);
 });
 
 const match = season.matches[0];
@@ -60,10 +62,34 @@ assert.deepEqual(JSON.parse(JSON.stringify(match.scoringEvents)), [
     { score: '4–0', type: 'goal', player: 'Drkuu', assist: 'Berbatov' },
     { score: '5–0', type: 'goal', player: 'Naeh', assist: 'Drkuu' }
 ]);
-assert.equal(match.startingLineups, null);
-assert.equal(match.substitutes, null);
-assert.equal(match.substitutions, null);
-assert.equal(match.minutesPlayed, null);
+assert.deepEqual(JSON.parse(JSON.stringify(match.duration)), {
+    totalSeconds: 585,
+    halves: [{ half: 1, seconds: 471, display: '7:51' }, { half: 2, seconds: 114, display: '1:54' }]
+});
+assert.deepEqual(JSON.parse(JSON.stringify(match.lineups.firstHalf)), {
+    'x-to-win-2': ['Naeh', 'atrocity exhibition', 'elex', 'Drkuu', 'maccy', 'Berbatov'],
+    'rooney-tunes': ['KK', 'Vonmacron', 'MRN', '1m bad', 'fkfk', 'ilaola']
+});
+assert.deepEqual(JSON.parse(JSON.stringify(match.lineups.secondHalf)), {
+    'x-to-win-2': ['atrocity exhibition', 'elex', 'maccy', 'Drkuu', 'Wakanda', 'Berbatov'],
+    'rooney-tunes': ['KK', 'Vonmacron', 'click', 'ilaola', 'MRN', '1m bad']
+});
+assert.equal(match.substitutions.length, 5);
+assert.equal(match.substitutions.filter((substitution) => substitution.timing.type === 'observed-interval').length, 3);
+assert.equal(match.substitutions.filter((substitution) => substitution.timing.type === 'halftime').length, 2);
+assert.deepEqual(JSON.parse(JSON.stringify(match.goalkeepers)), {
+    firstHalf: { 'x-to-win-2': 'Naeh', 'rooney-tunes': 'KK' },
+    secondHalf: { 'x-to-win-2': 'atrocity exhibition', 'rooney-tunes': 'KK' }
+});
+assert.match(match.pitch.orientation, /x=0 is own goal/);
+assert.deepEqual(JSON.parse(JSON.stringify(match.pitch.observations)), []);
+Object.values(match.pitch.views).forEach((view) => {
+    Object.values(view.teams).flat().forEach((position) => {
+        assert.equal(position.confidence, 'estimated');
+        assert.equal(position.x >= 0 && position.x <= 100, true);
+        assert.equal(position.y >= 0 && position.y <= 100, true);
+    });
+});
 
 const standings = context.calculate(season);
 assert.equal(standings.length, 6);
@@ -110,8 +136,30 @@ Object.entries(expectedPlayerTotals).forEach(([player, values]) => {
 });
 assert.equal(context.seasonPlayerTotals(season).find((row) => row.player === 'Berbatov').goalContributions, 3);
 
+const participation = context.participation(match);
+const time = (player) => participation.find((row) => row.player === player);
+['atrocity exhibition', 'Berbatov', 'elex', 'KK', 'Vonmacron', 'MRN', '1m bad'].forEach((player) => {
+    assert.deepEqual(JSON.parse(JSON.stringify(time(player))), { player, appearances: 1, seconds: 585, estimated: false });
+});
+assert.deepEqual(JSON.parse(JSON.stringify(time('Drkuu'))), { player: 'Drkuu', appearances: 1, seconds: 494, estimated: true });
+assert.deepEqual(JSON.parse(JSON.stringify(time('Wakanda'))), { player: 'Wakanda', appearances: 1, seconds: 205, estimated: true });
+assert.deepEqual(JSON.parse(JSON.stringify(time('Naeh'))), { player: 'Naeh', appearances: 1, seconds: 504.5, estimated: true });
+assert.deepEqual(JSON.parse(JSON.stringify(time('maccy'))), { player: 'maccy', appearances: 1, seconds: 551.5, estimated: true });
+assert.deepEqual(JSON.parse(JSON.stringify(time('click'))), { player: 'click', appearances: 1, seconds: 332, estimated: true });
+assert.deepEqual(JSON.parse(JSON.stringify(time('ilaola'))), { player: 'ilaola', appearances: 1, seconds: 367, estimated: true });
+assert.deepEqual(JSON.parse(JSON.stringify(time('fkfk'))), { player: 'fkfk', appearances: 1, seconds: 471, estimated: false });
+assert.equal(context.formatClock(504.5, true), '~8:25');
+assert.equal(playerTotals.every((row) => row.appearances === 1), true);
+
 const canonicalPlayers = new Set(season.teams.flatMap((team) => team.roster));
 match.halves.flatMap((half) => Object.values(half.playerStats).flat()).forEach((row) => assert.equal(canonicalPlayers.has(row.player), true, `Unknown player ${row.player}`));
+Object.values(match.lineups).flatMap((half) => Object.values(half).flat()).forEach((player) => assert.equal(canonicalPlayers.has(player), true, `Unknown lineup player ${player}`));
+match.substitutions.forEach((substitution) => {
+    assert.equal(canonicalPlayers.has(substitution.playerIn), true, `Unknown substitute ${substitution.playerIn}`);
+    assert.equal(canonicalPlayers.has(substitution.playerOut), true, `Unknown substituted player ${substitution.playerOut}`);
+});
+Object.values(match.goalkeepers).flatMap((half) => Object.values(half)).forEach((player) => assert.equal(canonicalPlayers.has(player), true, `Unknown goalkeeper ${player}`));
+Object.values(match.pitch.views).flatMap((view) => Object.values(view.teams).flat()).forEach((position) => assert.equal(canonicalPlayers.has(position.player), true, `Unknown positioned player ${position.player}`));
 match.scoringEvents.forEach((event) => {
     assert.equal(canonicalPlayers.has(event.player), true, `Unknown scoring player ${event.player}`);
     if (event.assist) assert.equal(canonicalPlayers.has(event.assist), true, `Unknown assisting player ${event.assist}`);
@@ -124,6 +172,8 @@ assert.match(html, /\.league-competition-grid/);
 assert.match(html, /\.league-teams-grid/);
 assert.match(html, /\.league-match-section/);
 assert.match(html, /\.league-season-stats/);
+assert.match(html, /\.league-pitch/);
+assert.match(html, /\.league-shirt-icon/);
 assert.equal(fs.existsSync(path.join(root, 'league-assets', 'rooney-tunes.webp')), true);
 
 console.log('LDC RS League Season 1 validation passed.');
