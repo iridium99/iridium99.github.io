@@ -13,7 +13,7 @@ const context = {
     document: { getElementById: () => null }
 };
 vm.createContext(context);
-vm.runInContext(`${leagueScript}\nthis.season = ldcRsLeagueSeason1; this.calculate = calculateLdcRsLeagueStandings; this.teamPower = calculateLeagueTeamPowerRatings; this.playerPower = calculateLeaguePlayerPowerRankings; this.matchPlayerTotals = calculateLeagueMatchPlayerTotals; this.seasonPlayerTotals = calculateLeagueSeasonPlayerTotals; this.matchTeamTotals = calculateLeagueMatchTeamTotals; this.participation = deriveLeagueMatchParticipation; this.formatClock = formatLeagueClock; this.renderResults = renderLdcRsLeagueResults; this.renderLeaderboard = renderLeagueSeasonLeaderboard;`, context);
+vm.runInContext(`${leagueScript}\nthis.season = ldcRsLeagueSeason1; this.calculate = calculateLdcRsLeagueStandings; this.teamPower = calculateLeagueTeamPowerRatings; this.playerPower = calculateLeaguePlayerPowerRankings; this.matchPlayerTotals = calculateLeagueMatchPlayerTotals; this.seasonPlayerTotals = calculateLeagueSeasonPlayerTotals; this.matchTeamTotals = calculateLeagueMatchTeamTotals; this.participation = deriveLeagueMatchParticipation; this.matchEvents = deriveLeagueMatchEvents; this.statisticsRows = getLeagueStatisticsRows; this.formatClock = formatLeagueClock; this.renderResults = renderLdcRsLeagueResults; this.renderLeaderboard = renderLeagueSeasonLeaderboard; this.expandedMatches = leagueExpandedMatches; this.matchModes = leagueMatchDetailModes; this.statisticsPeriods = leagueStatisticsPeriods; this.setPitchMode = (mode) => { leaguePitchMode = mode; };`, context);
 
 const season = context.season;
 assert.equal(season.title, 'LDC RS League Season 1');
@@ -47,6 +47,9 @@ season.teams.forEach((team) => {
 });
 assert.equal(season.teams.find((team) => team.name === 'X TO WIN 2').roster.length, 14);
 assert.equal(leagueScript.includes("'Boat'"), false);
+assert.deepEqual(JSON.parse(JSON.stringify(season.teams.find((team) => team.id === 'x-to-win-2').kit)), {
+    primary: '#d4af37', secondary: '#080808', pattern: 'stripes', source: 'configured-team-kit'
+});
 assert.deepEqual(JSON.parse(JSON.stringify(season.powerRatingConfig)), {
     team: { baseline: 1500, kFactor: 32, marginStep: 0.2, marginCap: 4 },
     player: { goal: 5, assist: 3, mvp: 4, cleanSheetHalf: 1.5, ownGoal: -2, shotOnGoal: 0.25, pass: 0.02, kick: 0.005, teamWinAppearance: 1 }
@@ -89,6 +92,21 @@ assert.deepEqual(JSON.parse(JSON.stringify(match.goalkeepers)), {
     firstHalf: { 'x-to-win-2': 'Naeh', 'rooney-tunes': 'KK' },
     secondHalf: { 'x-to-win-2': 'atrocity exhibition', 'rooney-tunes': 'KK' }
 });
+
+const events = context.matchEvents(match);
+assert.equal(events.length, match.scoringEvents.length + match.substitutions.length);
+assert.equal(events.every((event, index) => index === 0 || events[index - 1].sortValue >= event.sortValue), true);
+assert.equal(events.filter((event) => ['goal', 'own-goal'].includes(event.eventType)).length, 5);
+assert.equal(events.filter((event) => ['substitution', 'halftime-substitution'].includes(event.eventType)).length, 5);
+assert.equal(events.find((event) => event.eventType === 'own-goal').player, 'ilaola');
+assert.match(events.find((event) => event.eventType === 'substitution' && event.playerIn === 'Naeh').displayTime, /^~01:21 2H$/);
+assert.match(events.find((event) => event.eventType === 'substitution' && event.playerIn === 'Naeh').detailTime, /^Observed 01:05–01:36 2H$/);
+const halftimeIndexes = events.map((event, index) => event.eventType === 'halftime-substitution' ? index : -1).filter((index) => index >= 0);
+const lastSecondHalfIndex = Math.max(...events.map((event, index) => event.half === 2 ? index : -1));
+const firstFirstHalfIndex = events.findIndex((event) => event.half === 1);
+assert.equal(halftimeIndexes.every((index) => index > lastSecondHalfIndex && index < firstFirstHalfIndex), true);
+assert.equal(events.findIndex((event) => event.playerIn === 'Wakanda') < events.findIndex((event) => event.eventType === 'own-goal'), true);
+assert.equal(events.findIndex((event) => event.eventType === 'goal' && event.player === 'Naeh') < events.findIndex((event) => event.playerIn === 'Naeh'), true);
 assert.match(match.pitch.orientation, /x=0 is own goal/);
 assert.deepEqual(JSON.parse(JSON.stringify(match.pitch.observations)), []);
 Object.values(match.pitch.views).forEach((view) => {
@@ -209,11 +227,48 @@ assert.doesNotMatch(leagueScript, /Six teams play a double round robin/);
 assert.doesNotMatch(leagueScript, /league-format-facts/);
 
 const resultsMarkup = context.renderResults(season);
-assert.match(resultsMarkup, /<details class="league-match-disclosure">/);
-assert.doesNotMatch(resultsMarkup, /<details class="league-match-disclosure" open/);
-assert.match(resultsMarkup, /View match details/);
-assert.match(resultsMarkup, /MVP Drkuu/);
+assert.match(resultsMarkup, /<details class="league-match-disclosure" data-match-id=/);
+assert.doesNotMatch(resultsMarkup, /data-match-id="match-1-x-to-win-2-v-rooney-tunes" open/);
+assert.match(resultsMarkup, /View full details/);
+assert.match(resultsMarkup, /MVP: Drkuu/);
+assert.match(resultsMarkup, /data-league-match-tab="statistics"/);
+assert.match(resultsMarkup, /data-league-match-tab="events"/);
+assert.match(resultsMarkup, /data-league-match-tab="players"/);
+assert.match(resultsMarkup, /data-league-period="total"/);
+assert.match(resultsMarkup, /data-league-period="first"/);
+assert.match(resultsMarkup, /data-league-period="second"/);
+assert.doesNotMatch(resultsMarkup, /Possession<\/span>/);
+
+const totalStats = context.statisticsRows(season, match, 'total');
+assert.deepEqual(JSON.parse(JSON.stringify(totalStats.rows.map((row) => row.label))), ['Kicks', 'Passes', 'Shots on Goal']);
+const firstHalfStats = context.statisticsRows(season, match, 'first');
+assert.deepEqual(JSON.parse(JSON.stringify(firstHalfStats.rows.map((row) => row.label))), ['Possession', 'Kicks', 'Passes', 'Shots on Goal']);
+assert.equal(firstHalfStats.rows[0].homeDisplay, '58.9%');
+assert.equal(firstHalfStats.rows[0].awayDisplay, '41.1%');
+
+context.expandedMatches.add(match.id);
+context.matchModes.set(match.id, 'events');
+let expandedMarkup = context.renderResults(season);
+assert.match(expandedMarkup, /data-match-id="match-1-x-to-win-2-v-rooney-tunes" open/);
+assert.match(expandedMarkup, /Match timeline/);
+assert.match(expandedMarkup, /Naeh ↑/);
+assert.match(expandedMarkup, /ilaola own goal/);
+context.matchModes.set(match.id, 'players');
+context.setPitchMode('observed');
+expandedMarkup = context.renderResults(season);
+assert.match(expandedMarkup, /data-match-id="match-1-x-to-win-2-v-rooney-tunes" open/);
+assert.match(expandedMarkup, /Average \/ observed positions/);
+assert.match(expandedMarkup, /Player match statistics/);
+assert.match(expandedMarkup, /league-shirt-pattern-stripes/);
+assert.match(expandedMarkup, /<td>39<\/td><td>22<\/td><td>1<\/td>/);
+assert.doesNotMatch(expandedMarkup, /<td class="league-positive">39<\/td>/);
 const leaderboardMarkup = context.renderLeaderboard(season);
 assert.match(leaderboardMarkup, /<th>Goals<\/th><th>Assists<\/th><th>G\+A<\/th>/);
+assert.match(leaderboardMarkup, /league-positive/);
+assert.match(leaderboardMarkup, /league-assist/);
+assert.match(html, /\.league-intrinsic-table/);
+assert.match(html, /width: max-content/);
+assert.match(html, /\.league-table-leader/);
+assert.match(html, /\.league-event-own-goal/);
 
 console.log('LDC RS League Season 1 validation passed.');

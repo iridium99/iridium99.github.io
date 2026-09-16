@@ -65,7 +65,7 @@ const ldcRsLeagueSeason1 = {
             name: 'X TO WIN 2',
             shortName: 'XTW',
             image: 'league-assets/x-to-win-2.webp',
-            kit: { primary: '#4a90d9', secondary: '#f8fafc', source: 'configurable-fallback' },
+            kit: { primary: '#d4af37', secondary: '#080808', pattern: 'stripes', source: 'configured-team-kit' },
             owner: 'Cytro',
             captain: 'Cytro',
             coCaptain: 'SVimes',
@@ -114,6 +114,10 @@ const ldcRsLeagueSeason1 = {
                 { player: 'atrocity exhibition', value: 1 },
                 { player: 'Naeh', value: 1 }
             ],
+            timelineOrdering: {
+                firstHalfGoals: 'before-observed-changes',
+                secondHalfGoals: 'after-observed-changes'
+            },
             scoringEvents: [
                 { score: '1–0', type: 'own-goal', player: 'ilaola', assist: null },
                 { score: '2–0', type: 'goal', player: 'Berbatov', assist: 'atrocity exhibition' },
@@ -547,6 +551,93 @@ function calculateLeagueMatchTeamTotals(match, teamId) {
     }, { kicks: 0, passes: 0, shotsOnGoal: 0 });
 }
 
+function deriveLeagueMatchEvents(match) {
+    const firstHalfGoalCount = match.halves[0].homeGoals + match.halves[0].awayGoals;
+    const firstHalfSeconds = match.duration.halves[0].seconds;
+    const totalSeconds = match.duration.totalSeconds;
+    const goalHalfSequence = { 1: 0, 2: 0 };
+    const goalEvents = match.scoringEvents.map((event, index) => {
+        const half = index < firstHalfGoalCount ? 1 : 2;
+        goalHalfSequence[half] += 1;
+        // Goal clocks were not supplied. Sequence-only values preserve adjudicated
+        // scoring order and configured event grouping without presenting invented times.
+        const goalOrdering = half === 1 ? match.timelineOrdering?.firstHalfGoals : match.timelineOrdering?.secondHalfGoals;
+        const sequenceSortValue = goalOrdering === 'after-observed-changes'
+            ? (half === 1 ? firstHalfSeconds : totalSeconds) - 1 + goalHalfSequence[half] / 1000
+            : (half === 1 ? 0 : firstHalfSeconds) + goalHalfSequence[half] / 1000;
+        return {
+            ...event,
+            half,
+            eventType: event.type === 'own-goal' ? 'own-goal' : 'goal',
+            displayTime: `${half}H · time not recorded`,
+            sortValue: sequenceSortValue,
+            sortBasis: 'recorded-scoring-sequence',
+            sourceOrder: index
+        };
+    });
+    const substitutionEvents = match.substitutions.map((substitution, index) => {
+        if (substitution.timing.type === 'halftime') {
+            return {
+                ...substitution,
+                eventType: 'halftime-substitution',
+                displayTime: 'HT',
+                detailTime: 'Halftime change',
+                sortValue: firstHalfSeconds,
+                sortBasis: 'halftime',
+                sourceOrder: index
+            };
+        }
+        const midpoint = (substitution.timing.fromSeconds + substitution.timing.toSeconds) / 2;
+        const halfOffset = substitution.half === 2 ? firstHalfSeconds : 0;
+        const halfLabel = `${substitution.half}H`;
+        return {
+            ...substitution,
+            eventType: 'substitution',
+            displayTime: `${substitution.timing.approximateDisplay} ${halfLabel}`,
+            detailTime: `Observed ${substitution.timing.display.replace(/ \((1H|2H)\)$/, ' $1')}`,
+            sortValue: halfOffset + midpoint,
+            sortBasis: 'observed-range-midpoint',
+            sourceOrder: index
+        };
+    });
+
+    return [...goalEvents, ...substitutionEvents]
+        .sort((a, b) => b.sortValue - a.sortValue || a.sourceOrder - b.sourceOrder || a.eventType.localeCompare(b.eventType));
+}
+
+function getLeagueStatisticsRows(season, match, period) {
+    const teamsById = getLeagueTeamsById(season);
+    const homeTeam = teamsById.get(match.homeTeamId);
+    const awayTeam = teamsById.get(match.awayTeamId);
+    const metric = (label, home, away, format = (value) => String(value)) => ({ label, home, away, homeDisplay: format(home), awayDisplay: format(away) });
+    let rows;
+    let periodLabel;
+
+    if (period === 'first' || period === 'second') {
+        const half = match.halves[period === 'first' ? 0 : 1];
+        const home = half.teamStats[match.homeTeamId];
+        const away = half.teamStats[match.awayTeamId];
+        periodLabel = half.label;
+        rows = [
+            metric('Possession', home.possession, away.possession, (value) => `${value.toFixed(1)}%`),
+            metric('Kicks', home.kicks, away.kicks),
+            metric('Passes', home.passes, away.passes),
+            metric('Shots on Goal', home.shotsOnGoal, away.shotsOnGoal)
+        ];
+    } else {
+        const home = calculateLeagueMatchTeamTotals(match, match.homeTeamId);
+        const away = calculateLeagueMatchTeamTotals(match, match.awayTeamId);
+        periodLabel = 'Full match';
+        rows = [
+            metric('Kicks', home.kicks, away.kicks),
+            metric('Passes', home.passes, away.passes),
+            metric('Shots on Goal', home.shotsOnGoal, away.shotsOnGoal)
+        ];
+    }
+
+    return { homeTeam, awayTeam, periodLabel, rows };
+}
+
 function escapeLeagueText(value) {
     return String(value)
         .replace(/&/g, '&amp;')
@@ -570,11 +661,11 @@ function renderLdcRsLeagueStandings(season) {
                 <table class="world-cup-table league-standings-table">
                     <thead><tr>${headers.map((header) => `<th>${header}</th>`).join('')}</tr></thead>
                     <tbody>
-                        ${standings.map((row) => `
-                            <tr>
-                                <td>${escapeLeagueText(row.team)}</td>
-                                <td>${row.P}</td><td>${row.W}</td><td>${row.D}</td><td>${row.L}</td>
-                                <td>${row.GF}</td><td>${row.GA}</td><td>${row.GD}</td><td>${row.Pts}</td>
+                        ${standings.map((row, index) => `
+                            <tr class="${index === 0 ? 'league-table-leader' : ''}">
+                                <td><span class="league-rank">${index + 1}</span>${escapeLeagueText(row.team)}</td>
+                                <td>${row.P}</td><td class="${row.W ? 'league-positive' : ''}">${row.W}</td><td>${row.D}</td><td class="${row.L ? 'league-negative' : ''}">${row.L}</td>
+                                <td>${row.GF}</td><td>${row.GA}</td><td class="${row.GD > 0 ? 'league-positive' : row.GD < 0 ? 'league-negative' : 'league-neutral'}">${row.GD}</td><td class="league-points">${row.Pts}</td>
                             </tr>
                         `).join('')}
                     </tbody>
@@ -622,7 +713,7 @@ function renderLeaguePlayerPowerRankings(season) {
                 <table class="world-cup-table league-compact-table league-player-power-table">
                     <thead><tr><th>#</th><th>Player</th><th>Team</th><th>Score</th><th>G</th><th>A</th><th>MVP</th></tr></thead>
                     <tbody>${rows.map((row, index) => `
-                        <tr><td>${index + 1}</td><td>${escapeLeagueText(row.player)}</td><td>${escapeLeagueText(teamsById.get(row.teamId).shortName)}</td><td>${row.score.toFixed(2)}</td><td>${row.goals}</td><td>${row.assists}</td><td>${row.mvps}</td></tr>
+                        <tr><td>${index + 1}</td><td>${escapeLeagueText(row.player)}</td><td>${escapeLeagueText(teamsById.get(row.teamId).shortName)}</td><td>${row.score.toFixed(2)}</td><td class="${row.goals ? 'league-positive' : ''}">${row.goals}</td><td class="${row.assists ? 'league-assist' : ''}">${row.assists}</td><td class="${row.mvps ? 'league-mvp' : ''}">${row.mvps}</td></tr>
                     `).join('')}</tbody>
                 </table>
             </div>
@@ -652,11 +743,11 @@ function renderLdcRsLeagueResults(season) {
                     }, new Map());
                     const scorers = [...scorerCounts].map(([player, goals]) => `${player}${goals > 1 ? ` ×${goals}` : ''}`).join(', ');
                     return `
-                        <details class="league-match-disclosure">
+                        <details class="league-match-disclosure" data-match-id="${match.id}" ${leagueExpandedMatches.has(match.id) ? 'open' : ''}>
                             <summary>
                                 <span class="league-result-score"><span>${escapeLeagueText(teamsById.get(match.homeTeamId).name)}</span><strong>${match.homeGoals} – ${match.awayGoals}</strong><span>${escapeLeagueText(teamsById.get(match.awayTeamId).name)}</span></span>
-                                <span class="league-result-meta">MVP ${escapeLeagueText(match.mvp)} · Scorers ${escapeLeagueText(scorers)}</span>
-                                <span class="league-result-action">View match details</span>
+                                <span class="league-result-meta">MVP: ${escapeLeagueText(match.mvp)} · Scorers ${escapeLeagueText(scorers)}</span>
+                                <span class="league-result-action"><span class="league-action-open">View full details</span><span class="league-action-close">Close details</span></span>
                             </summary>
                             <div class="league-match-details">${renderLeagueMatchView(season, match)}</div>
                         </details>
@@ -697,8 +788,8 @@ function renderLeagueMatchPlayerTable(season, match, teamId, playerTotals) {
     return `
         <div class="world-cup-card league-player-stats-card">
             <div class="world-cup-header"><h3 class="world-cup-title">${escapeLeagueText(team.name)}</h3></div>
-            <div class="world-cup-table-wrap">
-                <table class="world-cup-table league-player-stats-table">
+            <div class="world-cup-table-wrap league-match-table-wrap">
+                <table class="world-cup-table league-player-stats-table league-intrinsic-table">
                     <thead><tr><th>Player</th><th>Time</th><th>K</th><th>Pass</th><th>SoG</th><th>G</th><th>A</th><th>OG</th><th>MVP</th><th>CSH</th></tr></thead>
                     <tbody>
                         ${rows.map((row) => `
@@ -706,8 +797,8 @@ function renderLeagueMatchPlayerTable(season, match, teamId, playerTotals) {
                                 <td>${escapeLeagueText(row.player)}</td>
                                 <td>${formatLeagueClock(row.minutes, row.minutesEstimated)}</td>
                                 <td>${row.kicks}</td><td>${row.passes}</td><td>${row.shotsOnGoal}</td>
-                                <td>${row.goals}</td><td>${row.assists}</td><td>${row.ownGoals}</td>
-                                <td>${row.mvps ? '✓' : '–'}</td><td>${row.cleanSheetHalves}</td>
+                                <td class="${row.goals ? 'league-positive' : ''}">${row.goals}</td><td class="${row.assists ? 'league-assist' : ''}">${row.assists}</td><td class="${row.ownGoals ? 'league-negative' : ''}">${row.ownGoals}</td>
+                                <td class="${row.mvps ? 'league-mvp' : ''}">${row.mvps ? '✓' : '–'}</td><td class="${row.cleanSheetHalves ? 'league-positive' : ''}">${row.cleanSheetHalves}</td>
                             </tr>
                         `).join('')}
                     </tbody>
@@ -718,6 +809,9 @@ function renderLeagueMatchPlayerTable(season, match, teamId, playerTotals) {
 }
 
 let leaguePitchMode = 'starting';
+const leagueExpandedMatches = new Set();
+const leagueMatchDetailModes = new Map();
+const leagueStatisticsPeriods = new Map();
 
 function renderLeagueTeamPitch(season, match, teamId) {
     const team = getLeagueTeamsById(season).get(teamId);
@@ -727,7 +821,7 @@ function renderLeagueTeamPitch(season, match, teamId) {
         <div class="world-cup-card league-pitch-team-card">
             <div class="world-cup-header">
                 <h3 class="world-cup-title">${escapeLeagueText(team.name)}</h3>
-                <span class="league-kit-source">Kit: ${team.kit.source === 'team-image' ? 'team-image colours' : 'configurable fallback'}</span>
+                <span class="league-kit-source">Kit: ${team.kit.pattern === 'stripes' ? 'configured black / gold stripes' : team.kit.source === 'team-image' ? 'team-image colours' : 'configurable fallback'}</span>
             </div>
             <div class="league-pitch" aria-label="${escapeLeagueText(team.name)} ${escapeLeagueText(view.label)}">
                 <span class="league-pitch-halfway" aria-hidden="true"></span>
@@ -736,7 +830,7 @@ function renderLeagueTeamPitch(season, match, teamId) {
                 <span class="league-pitch-box league-pitch-box-away" aria-hidden="true"></span>
                 ${positions.map((position) => `
                     <div class="league-pitch-player" style="--pitch-x:${position.x}%;--pitch-y:${position.y}%;--kit-primary:${team.kit.primary};--kit-secondary:${team.kit.secondary};" aria-label="${escapeLeagueText(position.player)}, ${escapeLeagueText(position.role)}, ${escapeLeagueText(position.confidence)} position">
-                        <span class="league-shirt-icon" aria-hidden="true"></span>
+                        <span class="league-shirt-icon ${team.kit.pattern === 'stripes' ? 'league-shirt-pattern-stripes' : ''}" aria-hidden="true"></span>
                         <strong>${escapeLeagueText(position.player)}</strong>
                     </div>
                 `).join('')}
@@ -825,80 +919,105 @@ function renderLeagueGoalkeeperContext(season, match) {
     `;
 }
 
-function renderLeagueMatchView(season, match) {
-    const teamsById = getLeagueTeamsById(season);
-    const homeTeam = teamsById.get(match.homeTeamId);
-    const awayTeam = teamsById.get(match.awayTeamId);
-    const playerTotals = calculateLeagueMatchPlayerTotals(season, match);
-    const homeTotals = calculateLeagueMatchTeamTotals(match, match.homeTeamId);
-    const awayTotals = calculateLeagueMatchTeamTotals(match, match.awayTeamId);
-
+function renderLeagueStatisticsComparison(season, match) {
+    const period = leagueStatisticsPeriods.get(match.id) || 'total';
+    const { homeTeam, awayTeam, periodLabel, rows } = getLeagueStatisticsRows(season, match, period);
     return `
-        <section class="league-match-section" aria-labelledby="league-match-1-heading">
-            <div class="world-cup-card league-match-hero">
-                <p class="league-season-kicker">Official league match · Match 1</p>
-                <div class="league-scoreline" id="league-match-1-heading">
-                    <span>${escapeLeagueText(homeTeam.name)}</span>
-                    <strong>${match.homeGoals}<i>–</i>${match.awayGoals}</strong>
-                    <span>${escapeLeagueText(awayTeam.name)}</span>
-                </div>
-                <p class="league-match-mvp"><span>MVP</span> ${escapeLeagueText(match.mvp)}</p>
+        <div class="league-statistics-panel">
+            <div class="world-cup-toggle league-period-toggle" role="group" aria-label="Statistics period">
+                ${[['total', 'Full Match'], ['first', '1st Half'], ['second', '2nd Half']].map(([key, label]) => `<button type="button" data-league-period="${key}" data-match-id="${match.id}" class="${period === key ? 'active' : ''}">${label}</button>`).join('')}
             </div>
-
-            <div class="league-match-summary-grid">
-                <div class="world-cup-card">
-                    <div class="world-cup-header"><h2 class="world-cup-title">Scoring events</h2></div>
-                    <ol class="league-scoring-events">
-                        ${match.scoringEvents.map((event) => `
-                            <li>
-                                <strong>${escapeLeagueText(event.score)}</strong>
-                                <span>${escapeLeagueText(event.player)}${event.type === 'own-goal' ? ' <em>(own goal)</em>' : ''}</span>
-                                <small>${event.assist ? `Assist: ${escapeLeagueText(event.assist)}` : 'No assist'}</small>
-                            </li>
-                        `).join('')}
-                    </ol>
+            <div class="world-cup-card league-comparison-card" style="--home-accent:${homeTeam.kit.primary};--away-accent:${awayTeam.kit.primary};">
+                <div class="league-comparison-heading"><strong>${escapeLeagueText(homeTeam.shortName)}</strong><span>${escapeLeagueText(periodLabel)}</span><strong>${escapeLeagueText(awayTeam.shortName)}</strong></div>
+                <div class="league-comparison-list">
+                    ${rows.map((row) => {
+                        const total = row.home + row.away;
+                        const homeWidth = total ? row.home / total * 100 : 0;
+                        const awayWidth = total ? row.away / total * 100 : 0;
+                        return `<div class="league-comparison-row">
+                            <div class="league-comparison-values"><strong>${row.homeDisplay}</strong><span>${escapeLeagueText(row.label)}</span><strong>${row.awayDisplay}</strong></div>
+                            <div class="league-comparison-bars" aria-hidden="true"><span><i style="width:${homeWidth}%"></i></span><span><i style="width:${awayWidth}%"></i></span></div>
+                        </div>`;
+                    }).join('')}
                 </div>
-                <div class="world-cup-card">
-                    <div class="world-cup-header"><h2 class="world-cup-title">Full-match team totals</h2></div>
-                    <div class="world-cup-table-wrap">
-                        <table class="world-cup-table league-full-team-table">
-                            <thead><tr><th>Team</th><th>Kicks</th><th>Passes</th><th>SoG</th><th>Goals</th></tr></thead>
-                            <tbody>
-                                <tr><td>${escapeLeagueText(homeTeam.name)}</td><td>${homeTotals.kicks}</td><td>${homeTotals.passes}</td><td>${homeTotals.shotsOnGoal}</td><td>${match.homeGoals}</td></tr>
-                                <tr><td>${escapeLeagueText(awayTeam.name)}</td><td>${awayTotals.kicks}</td><td>${awayTotals.passes}</td><td>${awayTotals.shotsOnGoal}</td><td>${match.awayGoals}</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <p class="league-update-note league-possession-note">Possession is shown per half below; percentages are not added together.</p>
-                </div>
+                ${period === 'total' ? '<p class="league-update-note league-possession-note">Possession is recorded per half and is therefore not summed for the full-match view.</p>' : ''}
             </div>
+            ${renderLeagueGoalkeeperContext(season, match)}
+        </div>
+    `;
+}
 
-            ${renderLeagueLineups(season, match)}
+function renderLeagueEventTimeline(season, match) {
+    const teamsById = getLeagueTeamsById(season);
+    const events = deriveLeagueMatchEvents(match);
+    return `
+        <div class="world-cup-card league-events-card">
+            <div class="world-cup-header"><h2 class="world-cup-title">Match timeline</h2><span class="league-update-note">Latest event first · goal clocks were not recorded</span></div>
+            <ol class="league-event-timeline">
+                ${events.map((event) => {
+                    if (event.eventType === 'goal' || event.eventType === 'own-goal') {
+                        return `<li class="league-event league-event-${event.eventType}">
+                            <span class="league-event-time">${escapeLeagueText(event.displayTime)}</span>
+                            <span class="league-event-icon" aria-hidden="true">${event.eventType === 'own-goal' ? 'OG' : '●'}</span>
+                            <span class="league-event-copy"><strong>${escapeLeagueText(event.player)}${event.eventType === 'own-goal' ? ' own goal' : ' goal'}</strong><small>${event.assist ? `Assisted by <span class="league-assist">${escapeLeagueText(event.assist)}</span>` : 'No assist'} · ${escapeLeagueText(event.score)}</small></span>
+                        </li>`;
+                    }
+                    return `<li class="league-event league-event-substitution ${event.eventType === 'halftime-substitution' ? 'league-event-halftime' : ''}">
+                        <span class="league-event-time">${escapeLeagueText(event.displayTime)}</span>
+                        <span class="league-event-icon" aria-hidden="true">↕</span>
+                        <span class="league-event-copy"><strong><span class="league-player-in">${escapeLeagueText(event.playerIn)} ↑</span> <span class="league-player-out">${escapeLeagueText(event.playerOut)} ↓</span></strong><small>${escapeLeagueText(teamsById.get(event.teamId).name)} · ${escapeLeagueText(event.detailTime)}</small></span>
+                    </li>`;
+                }).join('')}
+            </ol>
+        </div>
+    `;
+}
 
+function renderLeaguePlayersPanel(season, match) {
+    const playerTotals = calculateLeagueMatchPlayerTotals(season, match);
+    return `
+        <div class="league-players-panel">
             ${renderLeaguePitchSection(season, match)}
-
-            <div class="league-match-summary-grid">
-                ${renderLeagueSubstitutions(season, match)}
-                ${renderLeagueGoalkeeperContext(season, match)}
-            </div>
-
-            <div class="league-halves-grid">
-                ${match.halves.map((half) => renderLeagueHalfTeamStats(season, match, half)).join('')}
-            </div>
-
             <div class="world-cup-header league-section-header">
-                <h2 class="world-cup-title">Player match stats</h2>
-                <span class="league-update-note">CSH = clean-sheet halves</span>
+                <h2 class="world-cup-title">Player match statistics</h2>
+                <span class="league-update-note">K = kicks · SoG = shots on goal · CSH = clean-sheet halves</span>
             </div>
             <div class="league-match-player-grid">
                 ${renderLeagueMatchPlayerTable(season, match, match.homeTeamId, playerTotals)}
                 ${renderLeagueMatchPlayerTable(season, match, match.awayTeamId, playerTotals)}
             </div>
-
             <div class="world-cup-card league-pending-data">
                 <strong>Playing-time method</strong>
                 <span>Match-clock time is derived from the supplied starting sixes, halftime changes and observed substitution intervals. A ~ marker identifies interval-based estimates; no conventional 90-minute conversion is used.</span>
             </div>
+        </div>
+    `;
+}
+
+function renderLeagueMatchView(season, match) {
+    const teamsById = getLeagueTeamsById(season);
+    const homeTeam = teamsById.get(match.homeTeamId);
+    const awayTeam = teamsById.get(match.awayTeamId);
+    const activeTab = leagueMatchDetailModes.get(match.id) || 'statistics';
+    const panel = activeTab === 'events'
+        ? renderLeagueEventTimeline(season, match)
+        : activeTab === 'players'
+            ? renderLeaguePlayersPanel(season, match)
+            : renderLeagueStatisticsComparison(season, match);
+
+    return `
+        <section class="league-match-section" aria-labelledby="${match.id}-heading">
+            <div class="league-match-hero">
+                <p class="league-season-kicker">Official league match · Match 1</p>
+                <div class="league-scoreline" id="${match.id}-heading">
+                    <span>${escapeLeagueText(homeTeam.name)}</span><strong>${match.homeGoals}<i>–</i>${match.awayGoals}</strong><span>${escapeLeagueText(awayTeam.name)}</span>
+                </div>
+                <p class="league-match-mvp"><span>MVP</span> ${escapeLeagueText(match.mvp)}</p>
+            </div>
+            <div class="league-match-tabs" role="tablist" aria-label="Match details">
+                ${[['statistics', 'Statistics'], ['events', 'Events'], ['players', 'Players']].map(([key, label]) => `<button type="button" role="tab" aria-selected="${activeTab === key}" aria-controls="${match.id}-${key}-panel" data-league-match-tab="${key}" data-match-id="${match.id}" class="${activeTab === key ? 'active' : ''}">${label}</button>`).join('')}
+            </div>
+            <div id="${match.id}-${activeTab}-panel" class="league-match-tab-panel" role="tabpanel">${panel}</div>
         </section>
     `;
 }
@@ -954,7 +1073,7 @@ function renderLeagueSeasonLeaderboard(season) {
                 <table class="world-cup-table league-compact-table league-leaderboard-table">
                     <thead><tr><th>Player</th><th>Team</th>${leagueSeasonStatMode === 'goalContributions' ? '<th>Goals</th><th>Assists</th><th>G+A</th>' : `<th>${definition.label}</th>`}</tr></thead>
                     <tbody>
-                        ${rows.map((row) => `<tr><td>${escapeLeagueText(row.player)}</td><td>${escapeLeagueText(teamsById.get(row.teamId).shortName)}</td>${leagueSeasonStatMode === 'goalContributions' ? `<td>${row.goals}</td><td>${row.assists}</td><td>${row.goalContributions}</td>` : `<td>${displayMetric(row)}</td>`}</tr>`).join('')}
+                        ${rows.map((row) => `<tr><td>${escapeLeagueText(row.player)}</td><td>${escapeLeagueText(teamsById.get(row.teamId).shortName)}</td>${leagueSeasonStatMode === 'goalContributions' ? `<td class="${row.goals ? 'league-positive' : ''}">${row.goals}</td><td class="${row.assists ? 'league-assist' : ''}">${row.assists}</td><td class="league-mvp">${row.goalContributions}</td>` : `<td>${displayMetric(row)}</td>`}</tr>`).join('')}
                     </tbody>
                 </table>
             </div>
@@ -995,7 +1114,7 @@ function renderLdcRsLeagueTeam(team) {
     `;
 }
 
-function renderLdcRsLeagueSeason() {
+function renderLdcRsLeagueSeason(focusSelector = null) {
     const container = document.getElementById('ldc-rs-league-season-1-container');
     if (!container) {
         return;
@@ -1034,16 +1153,50 @@ function renderLdcRsLeagueSeason() {
     container.querySelectorAll('[data-league-stat]').forEach((button) => {
         button.addEventListener('click', () => {
             leagueSeasonStatMode = button.getAttribute('data-league-stat');
-            renderLdcRsLeagueSeason();
+            renderLdcRsLeagueSeason(`[data-league-stat="${leagueSeasonStatMode}"]`);
+        });
+    });
+
+    container.querySelectorAll('.league-match-disclosure').forEach((details) => {
+        details.addEventListener('toggle', () => {
+            const matchId = details.getAttribute('data-match-id');
+            if (details.open) leagueExpandedMatches.add(matchId);
+            else leagueExpandedMatches.delete(matchId);
+        });
+    });
+
+    container.querySelectorAll('[data-league-match-tab]').forEach((button) => {
+        button.addEventListener('click', () => {
+            const matchId = button.getAttribute('data-match-id');
+            const tab = button.getAttribute('data-league-match-tab');
+            leagueExpandedMatches.add(matchId);
+            leagueMatchDetailModes.set(matchId, tab);
+            renderLdcRsLeagueSeason(`[data-match-id="${matchId}"][data-league-match-tab="${tab}"]`);
+        });
+    });
+
+    container.querySelectorAll('[data-league-period]').forEach((button) => {
+        button.addEventListener('click', () => {
+            const matchId = button.getAttribute('data-match-id');
+            const period = button.getAttribute('data-league-period');
+            leagueExpandedMatches.add(matchId);
+            leagueStatisticsPeriods.set(matchId, period);
+            renderLdcRsLeagueSeason(`[data-match-id="${matchId}"][data-league-period="${period}"]`);
         });
     });
 
     container.querySelectorAll('[data-league-pitch]').forEach((button) => {
         button.addEventListener('click', () => {
+            const matchId = button.closest('.league-match-disclosure')?.getAttribute('data-match-id');
             leaguePitchMode = button.getAttribute('data-league-pitch');
-            renderLdcRsLeagueSeason();
+            if (matchId) leagueExpandedMatches.add(matchId);
+            renderLdcRsLeagueSeason(`[data-league-pitch="${leaguePitchMode}"]`);
         });
     });
+
+    if (focusSelector) {
+        container.querySelector(focusSelector)?.focus({ preventScroll: true });
+    }
 }
 
 renderLdcRsLeagueSeason();
