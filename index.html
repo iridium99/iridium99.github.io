@@ -865,6 +865,252 @@
             display: none;
         }
 
+        .league-match-disclosure > summary:focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: -2px;
+        }
+
+        .league-match-latest > summary {
+            grid-template-columns: minmax(0, 1fr) auto;
+            padding: 14px;
+            background: linear-gradient(135deg, rgba(74, 144, 217, 0.08), rgba(255, 255, 255, 0.015));
+        }
+
+        .league-latest-scoreline,
+        .league-latest-summary,
+        .league-latest-lineup-preview,
+        .league-latest-stats,
+        .league-latest-events {
+            grid-column: 1 / -1;
+        }
+
+        .league-latest-scoreline {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+            gap: 12px;
+            align-items: center;
+        }
+
+        .league-latest-team {
+            display: flex;
+            gap: 9px;
+            align-items: center;
+            min-width: 0;
+        }
+
+        .league-latest-team:last-child {
+            justify-content: flex-end;
+            text-align: right;
+        }
+
+        .league-latest-team img {
+            width: 34px;
+            height: 34px;
+            flex: 0 0 34px;
+            border-radius: 8px;
+            background: #fff;
+            object-fit: cover;
+        }
+
+        .league-latest-team strong {
+            overflow: hidden;
+            color: var(--text);
+            text-overflow: ellipsis;
+        }
+
+        .league-latest-score {
+            padding: 7px 11px;
+            border-radius: 8px;
+            background: var(--primary);
+            color: #fff;
+            font-size: 18px;
+            white-space: nowrap;
+        }
+
+        .league-latest-summary {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(120px, auto);
+            gap: 10px;
+        }
+
+        .league-latest-summary > span,
+        .league-latest-stats > span {
+            display: grid;
+            gap: 3px;
+        }
+
+        .league-latest-summary small,
+        .league-latest-stats small,
+        .league-latest-events > small {
+            color: #7f8b99;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .league-latest-summary strong {
+            color: #d8e0ea;
+            font-size: 12px;
+        }
+
+        .league-latest-lineup-preview {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .league-mini-pitch-team {
+            display: grid;
+            gap: 5px;
+            min-width: 0;
+        }
+
+        .league-mini-pitch-title {
+            color: #aeb9c7;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .league-mini-pitch {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 7;
+            overflow: hidden;
+            border: 1px solid rgba(232, 255, 239, 0.78);
+            border-radius: 8px;
+            background:
+                repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.035) 0 12.5%, transparent 12.5% 25%),
+                linear-gradient(135deg, #1d7149, #15583b);
+        }
+
+        .league-mini-pitch::before,
+        .league-mini-pitch::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 3.5%;
+            height: 28%;
+            border: 1px solid rgba(232, 255, 239, 0.78);
+            transform: translateY(-50%);
+        }
+
+        .league-mini-pitch::before {
+            left: -1px;
+            border-left: 0;
+        }
+
+        .league-mini-pitch::after {
+            right: -1px;
+            border-right: 0;
+        }
+
+        .league-mini-pitch-halfway {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            border-left: 1px solid rgba(232, 255, 239, 0.78);
+        }
+
+        .league-mini-pitch-circle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 16%;
+            aspect-ratio: 1;
+            border: 1px solid rgba(232, 255, 239, 0.78);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .league-mini-pitch-direction,
+        .league-pitch-direction {
+            position: absolute;
+            z-index: 2;
+            top: 5px;
+            left: 7px;
+            padding: 2px 4px;
+            border-radius: 3px;
+            background: rgba(4, 22, 14, 0.58);
+            color: rgba(232, 255, 239, 0.8);
+            font-size: 7px;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            line-height: 1;
+            pointer-events: none;
+        }
+
+        .league-mini-pitch-player {
+            position: absolute;
+            z-index: 1;
+            top: var(--pitch-y);
+            left: var(--pitch-x);
+            display: grid;
+            justify-items: center;
+            gap: 1px;
+            width: 64px;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .league-mini-pitch-player .league-shirt-icon {
+            width: 20px;
+            height: 17px;
+        }
+
+        .league-mini-pitch-player strong {
+            max-width: 64px;
+            padding: 1px 3px;
+            border-radius: 3px;
+            background: rgba(4, 22, 14, 0.78);
+            color: #fff;
+            font-size: 8px;
+            font-weight: 700;
+            line-height: 1.1;
+            overflow-wrap: anywhere;
+        }
+
+        .league-latest-stats {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 8px;
+        }
+
+        .league-latest-stats > span {
+            padding: 8px 10px;
+            border: 1px solid rgba(148, 163, 184, 0.16);
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.12);
+        }
+
+        .league-latest-stats strong {
+            color: #fff;
+            font-size: 13px;
+        }
+
+        .league-latest-events {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            color: #aeb9c7;
+            font-size: 11px;
+        }
+
+        .league-latest-events span + span::before {
+            content: '·';
+            margin-right: 10px;
+            color: #586575;
+        }
+
+        .league-match-latest .league-result-action {
+            grid-column: 1 / -1;
+            justify-self: end;
+            font-size: 13px;
+        }
+
         .league-result-score {
             display: grid;
             grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
@@ -935,7 +1181,92 @@
         }
 
         .league-player-power-table {
-            min-width: 590px;
+            min-width: 690px;
+        }
+
+        .league-predictions {
+            min-width: 0;
+        }
+
+        .league-predictions-strip {
+            display: grid;
+            grid-auto-columns: minmax(270px, 320px);
+            grid-auto-flow: column;
+            gap: 10px;
+            overflow-x: auto;
+            padding: 1px 1px 8px;
+            scroll-snap-type: x proximity;
+        }
+
+        .league-prediction-card {
+            display: grid;
+            gap: 7px;
+            padding: 10px;
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.025);
+            scroll-snap-align: start;
+        }
+
+        .league-prediction-line {
+            display: grid;
+            grid-template-columns: 25px minmax(0, 1fr) auto;
+            gap: 7px;
+            align-items: center;
+            min-height: 25px;
+            color: #cbd5e1;
+            font-size: 12px;
+        }
+
+        .league-prediction-line img {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            background: #fff;
+            object-fit: cover;
+        }
+
+        .league-prediction-line strong {
+            color: #d8e0ea;
+        }
+
+        .league-prediction-draw {
+            grid-template-columns: 25px minmax(0, 1fr) auto;
+        }
+
+        .league-prediction-draw::before {
+            content: '—';
+            color: #7b8796;
+            text-align: center;
+        }
+
+        .league-probability-highest {
+            color: #fff;
+            font-weight: 700;
+        }
+
+        .league-probability-highest strong {
+            color: #7cb8ff;
+        }
+
+        .league-prediction-bar {
+            display: flex;
+            height: 5px;
+            overflow: hidden;
+            border-radius: 999px;
+            background: rgba(148, 163, 184, 0.12);
+        }
+
+        .league-prediction-bar i {
+            display: block;
+            background: var(--segment);
+            opacity: 0.8;
+        }
+
+        .league-prediction-card small {
+            color: #7f8b99;
+            font-size: 10px;
+            text-align: right;
         }
 
         .league-player-power-table th:first-child,
@@ -1304,95 +1635,155 @@
         }
 
         .league-events-card {
-            width: min(100%, 820px);
+            width: min(100%, 960px);
             margin: 0 auto;
+        }
+
+        .league-event-team-headings,
+        .league-event-row {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 108px minmax(0, 1fr);
+            gap: 12px;
+        }
+
+        .league-event-team-headings {
+            align-items: center;
+            padding: 0 10px 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            color: #96a3b4;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+        }
+
+        .league-event-team-headings span:first-child {
+            color: var(--home-accent);
+            text-align: right;
+        }
+
+        .league-event-team-headings span:last-child {
+            color: var(--away-accent);
+        }
+
+        .league-event-team-headings small {
+            color: #7f8b99;
+            font-size: inherit;
+            text-align: center;
         }
 
         .league-event-timeline {
             display: grid;
-            gap: 7px;
-            margin: 0;
-            padding: 0;
-            list-style: none;
+            gap: 10px;
+            padding-top: 12px;
         }
 
-        .league-event {
-            display: grid;
-            grid-template-columns: 135px 28px minmax(0, 1fr);
-            gap: 10px;
+        .league-event-row {
             align-items: center;
-            padding: 9px 10px;
-            border-left: 3px solid #5f7896;
+        }
+
+        .league-event-side {
+            display: grid;
+            gap: 7px;
+            min-height: 36px;
+        }
+
+        .league-event-side:empty::before {
+            content: '';
+            display: block;
+            height: 1px;
+        }
+
+        .league-event-side-home {
+            text-align: right;
+        }
+
+        .league-event-time {
+            display: grid;
+            min-height: 42px;
+            place-items: center;
+            padding: 6px;
+            border: 1px solid rgba(148, 163, 184, 0.26);
+            border-radius: 8px;
+            background: rgba(74, 144, 217, 0.08);
+            color: #d8e0ea;
+            font-size: 11px;
+            font-weight: 800;
+            line-height: 1.2;
+            text-align: center;
+        }
+
+        .league-event-time small {
+            display: block;
+            margin-top: 3px;
+            color: #8995a5;
+            font-size: 8px;
+            font-weight: 650;
+            letter-spacing: 0;
+            line-height: 1.15;
+            text-transform: none;
+        }
+
+        .league-timeline-event {
+            display: grid;
+            gap: 3px;
+            padding: 8px 10px;
+            border: 1px solid rgba(148, 163, 184, 0.18);
             border-radius: 8px;
             background: rgba(255, 255, 255, 0.035);
         }
 
-        .league-event-goal {
-            border-left-color: #69d391;
+        .league-event-side-home .league-timeline-event {
+            border-right: 3px solid var(--home-accent);
         }
 
-        .league-event-own-goal {
-            border-left-color: #ff6868;
+        .league-event-side-away .league-timeline-event {
+            border-left: 3px solid var(--away-accent);
         }
 
-        .league-event-substitution {
-            border-left-color: #4a90d9;
+        .league-timeline-event-goal {
+            box-shadow: inset 0 0 18px rgba(105, 211, 145, 0.04);
         }
 
-        .league-event-halftime {
-            border-left-color: #96a3b4;
+        .league-timeline-event-own-goal {
+            box-shadow: inset 0 0 18px rgba(255, 104, 104, 0.06);
         }
 
-        .league-event-time {
+        .league-timeline-event-own-goal strong {
+            color: #ff9b9b;
+        }
+
+        .league-timeline-event-meta {
+            display: flex;
+            gap: 6px;
+            align-items: center;
             color: #96a3b4;
-            font-size: 11px;
-            font-weight: 700;
-        }
-
-        .league-event-icon {
-            display: grid;
-            width: 26px;
-            height: 26px;
-            place-items: center;
-            border-radius: 50%;
-            background: rgba(74, 144, 217, 0.15);
-            color: #7cb8ff;
-            font-size: 10px;
+            font-size: 9px;
             font-weight: 800;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
         }
 
-        .league-event-goal .league-event-icon {
-            background: rgba(105, 211, 145, 0.14);
-            color: #69d391;
+        .league-event-side-home .league-timeline-event-meta {
+            justify-content: flex-end;
         }
 
-        .league-event-own-goal .league-event-icon {
-            background: rgba(255, 104, 104, 0.14);
-            color: #ff8585;
+        .league-timeline-team {
+            color: #d8e0ea;
         }
 
-        .league-event-copy {
-            display: grid;
-            gap: 3px;
-        }
-
-        .league-event-copy strong {
+        .league-timeline-event strong {
             color: #e7edf5;
             font-size: 13px;
         }
 
-        .league-event-copy small {
+        .league-timeline-event-goal strong {
+            color: #8be2ad;
+        }
+
+        .league-timeline-event small {
             color: #96a3b4;
             line-height: 1.35;
-        }
-
-        .league-player-in {
-            color: #69d391;
-        }
-
-        .league-player-out {
-            margin-left: 8px;
-            color: #ff8585;
         }
 
         .league-match-hero {
@@ -1674,6 +2065,13 @@
             border-left: 1px solid rgba(232, 255, 239, 0.82);
         }
 
+        .league-pitch-direction {
+            top: 9px;
+            left: 10px;
+            padding: 3px 5px;
+            font-size: 9px;
+        }
+
         .league-pitch-circle {
             position: absolute;
             z-index: 1;
@@ -1728,8 +2126,8 @@
             filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.48));
         }
 
-        .league-shirt-icon.league-shirt-pattern-stripes {
-            background: repeating-linear-gradient(90deg, var(--kit-secondary) 0 5px, var(--kit-primary) 5px 10px);
+        .league-shirt-icon.league-shirt-pattern-pinstripes {
+            background: repeating-linear-gradient(90deg, var(--kit-primary) 0 10px, var(--kit-secondary) 10px 12px);
             outline: 1px solid rgba(212, 175, 55, 0.72);
             outline-offset: -1px;
         }
@@ -1843,6 +2241,13 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         }
 
+        .league-rate-toggle button:disabled {
+            border-color: rgba(148, 163, 184, 0.2);
+            color: #66717e;
+            cursor: not-allowed;
+            opacity: 0.55;
+        }
+
         .league-stat-empty {
             min-height: 80px;
         }
@@ -1861,6 +2266,21 @@
         .league-leaderboard-table th:nth-child(2),
         .league-leaderboard-table td:nth-child(2) {
             width: 72px;
+        }
+
+        .league-leaderboard-table tr.league-medal-gold {
+            background: linear-gradient(90deg, rgba(242, 201, 76, 0.16), rgba(242, 201, 76, 0.025));
+            box-shadow: inset 3px 0 #f2c94c;
+        }
+
+        .league-leaderboard-table tr.league-medal-silver {
+            background: linear-gradient(90deg, rgba(192, 199, 207, 0.13), rgba(192, 199, 207, 0.02));
+            box-shadow: inset 3px 0 #c0c7cf;
+        }
+
+        .league-leaderboard-table tr.league-medal-bronze {
+            background: linear-gradient(90deg, rgba(196, 128, 73, 0.14), rgba(196, 128, 73, 0.02));
+            box-shadow: inset 3px 0 #c48049;
         }
 
         @media (max-width: 900px) {
@@ -1922,6 +2342,68 @@
                 gap: 8px;
             }
 
+            .league-latest-scoreline {
+                gap: 8px;
+            }
+
+            .league-latest-team {
+                display: grid;
+                justify-items: center;
+                text-align: center;
+            }
+
+            .league-latest-team:last-child {
+                justify-content: stretch;
+                text-align: center;
+            }
+
+            .league-latest-team img {
+                width: 30px;
+                height: 30px;
+            }
+
+            .league-latest-team strong {
+                font-size: 11px;
+            }
+
+            .league-latest-summary {
+                grid-template-columns: 1fr;
+            }
+
+            .league-latest-lineup-preview {
+                grid-template-columns: 1fr;
+            }
+
+            .league-mini-pitch {
+                aspect-ratio: 16 / 6;
+            }
+
+            .league-mini-pitch-player {
+                width: 56px;
+            }
+
+            .league-mini-pitch-player strong {
+                max-width: 56px;
+                font-size: 7px;
+            }
+
+            .league-latest-stats {
+                gap: 5px;
+            }
+
+            .league-latest-stats > span {
+                padding: 7px 6px;
+            }
+
+            .league-latest-events {
+                display: grid;
+                gap: 4px;
+            }
+
+            .league-latest-events span + span::before {
+                content: none;
+            }
+
             .league-match-details {
                 padding: 8px;
             }
@@ -1937,27 +2419,38 @@
                 gap: 7px;
             }
 
-            .league-event {
-                grid-template-columns: 82px 24px minmax(0, 1fr);
+            .league-event-team-headings {
+                display: none;
+            }
+
+            .league-event-row {
+                grid-template-columns: 1fr;
                 gap: 6px;
-                padding: 8px 7px;
             }
 
             .league-event-time {
+                order: -1;
+                min-height: 0;
+                justify-self: center;
+                padding: 4px 8px;
                 font-size: 10px;
             }
 
-            .league-event-copy strong {
-                font-size: 12px;
+            .league-event-side:empty {
+                display: none;
             }
 
-            .league-player-in,
-            .league-player-out {
-                display: inline-block;
+            .league-event-side-home {
+                text-align: left;
             }
 
-            .league-player-out {
-                margin-left: 4px;
+            .league-event-side-home .league-timeline-event {
+                border-right: 1px solid rgba(148, 163, 184, 0.18);
+                border-left: 3px solid var(--home-accent);
+            }
+
+            .league-event-side-home .league-timeline-event-meta {
+                justify-content: flex-start;
             }
 
             .league-result-meta {
@@ -2820,54 +3313,59 @@
             <div class="help-section">
                 <h3>Website Features</h3>
                 <ul class="feature-list">
-                    <li><strong>Player Catalog:</strong> Browse all available players with detailed information including ratings, positions, and prices.</li>
-                    <li><strong>Advanced Filtering:</strong> Filter players by position, rating range, and price range to find exactly what you're looking for.</li>
-                    <li><strong>Search Functionality:</strong> Search for players by name.</li>
-                    <li><strong>Sorting Options:</strong> Sort players by rating, name, or price in ascending or descending order.</li>
-                    <li><strong>Responsive Design:</strong> The website works well on both desktop and mobile devices.</li>
+                    <li><strong>Player & Card Catalogue:</strong> Browse cards with ratings, positions, traits, and values.</li>
+                    <li><strong>Search, Filters & Sorting:</strong> Find and order cards by name, position, Overall, traits, and value.</li>
+                    <li><strong>LDC Player Rankings:</strong> Explore Overall, position, and attribute rankings with player profiles.</li>
+                    <li><strong>Ranking History:</strong> See historical ranking information, Highest Recorded, and Movers.</li>
+                    <li><strong>Compare & Honours:</strong> Compare players and view public career honours.</li>
+                    <li><strong>Recognised Prime:</strong> Player profiles show public recognised Prime-period information where available.</li>
                 </ul>
             </div>
             
             <div class="help-section">
                 <h3>Discord Commands</h3>
+                <h4>Players & Collection</h4>
                 <ul class="command-list">
-                    <li><span class="command-name">/addplayer [name] [position]</span> - Add a player to your team</li>
-                    <li><span class="command-name">/balance</span> - Check your current coin balance</li>
-                    <li><span class="command-name">/buyplayer [name]</span> - Purchase a player from the market</li>
-                    <li><span class="command-name">/changeteamname [name]</span> - Change your team's name</li>
                     <li><span class="command-name">/claim</span> - Claim a free player</li>
-                    <li><span class="command-name">/collection</span> - View all of the players in your collection</li>
-                    <li><span class="command-name">/daily</span> - Claim your daily rewards</li>
-                    <li><span class="command-name">/duplicates</span> - View the duplicate cards in your collection</li>
-                    <li><span class="command-name">/export</span> - Export user data <span class="badge-admin">Admin Only</span></li>
-                    <li><span class="command-name">/form rating</span> - View detailed form analysis, Elo rating, and last 10 match performance <span class="badge-plus">Plus Only</span></li>
-                    <li><span class="command-name">/friendly [user]</span> - Play against another user in a friendly match</li>
-                    <li><span class="command-name">/generate_all_cards</span> - Generate all card images <span class="badge-admin">Admin Only</span></li>
-                    <li><span class="command-name">/get_plus</span> - Purchase a Plus membership</li>
-                    <li><span class="command-name">/givecoins [user] [amount]</span> - Give coins to a user <span class="badge-admin">Admin Only</span></li>
-                    <li><span class="command-name">/leaderboards</span> - View leaderboards, stats, and rankings on iridium99.github.io/leagues/</li>
-                    <li><span class="command-name">/league create</span> - Create a new league <span class="badge-admin">Admin Only</span></li>
-                    <li><span class="command-name">/league create_test</span> - Create a test league <span class="badge-admin">Admin Only</span></li>
-                    <li><span class="command-name">/market</span> - View the transfer market on iridium99.github.io</li>
-                    <li><span class="command-name">/myteam</span> - View your current team lineup</li>
-                    <li><span class="command-name">/myupgrades</span> - View your active upgrades</li>
-                    <li><span class="command-name">/packs [type]</span> - Open different types of packs</li>
-                    <li><span class="command-name">/ping</span> - Check the bot's response time</li>
-                    <li><span class="command-name">/player stats [name]</span> - View detailed stats for a player</li>
-                    <li><span class="command-name">/playerinfo [name]</span> - Get information about a specific player</li>
-                    <li><span class="command-name">/preview_card [name]</span> - Preview a card design</li>
-                    <li><span class="command-name">/quickselldupes</span> - Sell all of your duplicate cards</li>
-                    <li><span class="command-name">/removeplayer [position]</span> - Remove a player from your team</li>
-                    <li><span class="command-name">/resetteam</span> - Reset your team to default lineup</li>
-                    <li><span class="command-name">/sellplayer [name]</span> - Sell a player from your collection</li>
-                    <li><span class="command-name">/setlineup [formation]</span> - Change your team formation</li>
-                    <li><span class="command-name">/setpieces</span> - Configure set piece takers</li>
-                    <li><span class="command-name">/sim [user]</span> - Run advanced match simulation with team comparison, win probability, expected goals, and tactical analysis <span class="badge-plus">Plus Only</span></li>
-                    <li><span class="command-name">/team analysis</span> - View tactical analysis with formation, line-by-line ratings (GK/DEF/MID/ATT), recent form (last 10 games), and upgrade recommendations <span class="badge-plus">Plus Only</span></li>
-                    <li><span class="command-name">/upgrade [name]</span> - Upgrade a player card</li>
-                    <li><span class="command-name">/vip add [user]</span> - Add VIP status to a user <span class="badge-admin">Admin Only</span></li>
-                    <li><span class="command-name">/vip remove [user]</span> - Remove VIP status from a user <span class="badge-admin">Admin Only</span></li>
-                    <li><span class="command-name">/vip color [color1] [color2]</span> - Set your VIP username gradient <span class="badge-plus">Plus Only</span></li>
+                    <li><span class="command-name">/daily</span> - Claim daily coins</li>
+                    <li><span class="command-name">/packs [pack_type]</span> - View or open available packs</li>
+                    <li><span class="command-name">/collection</span> - View your owned cards</li>
+                    <li><span class="command-name">/market</span> - Browse market-eligible cards</li>
+                    <li><span class="command-name">/buyplayer [player_name]</span> / <span class="command-name">/sellplayer [player_name]</span> - Buy or sell a card</li>
+                    <li><span class="command-name">/upgrade [player_name]</span> - Upgrade an owned card</li>
+                    <li><span class="command-name">/player info [player_name]</span> / <span class="command-name">/player stats [player_name]</span> - View a card or player statistics</li>
+                </ul>
+                <h4>Team</h4>
+                <ul class="command-list">
+                    <li><span class="command-name">/team view</span> - View your team and formation</li>
+                    <li><span class="command-name">/team add [player_name] [position]</span> / <span class="command-name">/team remove [player_name]</span> - Manage your lineup</li>
+                    <li><span class="command-name">/team formation [formation]</span> - Set your team formation</li>
+                    <li><span class="command-name">/team setpieces</span> - Assign penalty and free-kick takers</li>
+                    <li><span class="command-name">/team name [name]</span> / <span class="command-name">/team reset</span> - Rename or clear your lineup</li>
+                    <li><span class="command-name">/team form</span> / <span class="command-name">/team analysis</span> - Review recent form and team performance</li>
+                </ul>
+                <h4>Matches & Ranked</h4>
+                <ul class="command-list">
+                    <li><span class="command-name">/friendly [opponent]</span> - Play a friendly match</li>
+                    <li><span class="command-name">/matchup [opponent]</span> - Estimate a matchup before playing</li>
+                    <li><span class="command-name">/ranked opponents</span> - Find eligible ranked opponents</li>
+                    <li><span class="command-name">/ranked challenge [opponent]</span> / <span class="command-name">/ranked cancel</span> - Manage a ranked challenge</li>
+                </ul>
+                <h4>Rankings / Leaderboards</h4>
+                <ul class="command-list">
+                    <li><span class="command-name">/rankings</span> - View the active season's ranked ladder</li>
+                    <li><span class="command-name">/leaderboards</span> - Open the website's leaderboards and rankings</li>
+                </ul>
+                <h4>VIP</h4>
+                <ul class="command-list">
+                    <li><span class="command-name">/vip info</span> - Learn about verified Haxball VIP recognition</li>
+                    <li><span class="command-name">/vip color [color1] [color2]</span> - Set a VIP leaderboard-name gradient</li>
+                </ul>
+                <h4>Other / Help</h4>
+                <ul class="command-list">
+                    <li><span class="command-name">/balance</span> - Check your coin balance and player values</li>
+                    <li><span class="command-name">/ping</span> - Check bot latency</li>
+                    <li><span class="command-name">/help</span> - Show the bot's core command guide</li>
                 </ul>
             </div>
             
