@@ -13,7 +13,7 @@ const context = {
     document: { getElementById: () => null }
 };
 vm.createContext(context);
-vm.runInContext(`${leagueScript}\nthis.season = ldcRsLeagueSeason1; this.calculate = calculateLdcRsLeagueStandings; this.matchPlayerTotals = calculateLeagueMatchPlayerTotals; this.seasonPlayerTotals = calculateLeagueSeasonPlayerTotals; this.matchTeamTotals = calculateLeagueMatchTeamTotals; this.participation = deriveLeagueMatchParticipation; this.formatClock = formatLeagueClock;`, context);
+vm.runInContext(`${leagueScript}\nthis.season = ldcRsLeagueSeason1; this.calculate = calculateLdcRsLeagueStandings; this.teamPower = calculateLeagueTeamPowerRatings; this.playerPower = calculateLeaguePlayerPowerRankings; this.matchPlayerTotals = calculateLeagueMatchPlayerTotals; this.seasonPlayerTotals = calculateLeagueSeasonPlayerTotals; this.matchTeamTotals = calculateLeagueMatchTeamTotals; this.participation = deriveLeagueMatchParticipation; this.formatClock = formatLeagueClock; this.renderResults = renderLdcRsLeagueResults; this.renderLeaderboard = renderLeagueSeasonLeaderboard;`, context);
 
 const season = context.season;
 assert.equal(season.title, 'LDC RS League Season 1');
@@ -30,7 +30,7 @@ const expectedRosters = {
     'Baguette Z Apex': ['Spero', 'V4KS', 'luur', 'zenix', 'oskar', 'Nympex', 'amaanofc', 'evilpedri', 'x', 'myrulez', 'Faya', 'Shield', 'Kaka'],
     'HAX UNITED': ['GK', 'Braga.', 'Misimaro', 'Pedri.', 'GGG', 'A7mdBibo', 'Arshavin', 'Blimpus', 'dierfetje', 'bananajoe', 'ShadiOzz', 'Szcesny'],
     'OG FC': ['𝐌𝐨𝐬𝐭𝐚𝐟𝐚 𝐙𝐢𝐤𝐨', 'Mbappe', 'Nistel', 'Nijad', 'MeeRo', 'Dynaxz', 'Lookman', 'Brutus', 'MaksLuburic', 'Olise', 'saygex', 'Wizop', 'ToughBaby'],
-    'X TO WIN 2': ['Drkuu', 'Ibrahim', 'SamueleRicci', 'Berbatov', 'Naeh', 'SVimes', 'maccy', 'atrocity exhibition', 'elex', 'mitrita KING', 'Wakanda', 'tsukuyomi.', 'wee', 'Johnny Sins', 'Boat'],
+    'X TO WIN 2': ['Drkuu', 'Ibrahim', 'SamueleRicci', 'Berbatov', 'Naeh', 'SVimes', 'maccy', 'atrocity exhibition', 'elex', 'mitrita KING', 'Wakanda', 'tsukuyomi.', 'wee', 'Johnny Sins'],
     HUQQA: ['Menéur', 'Lena', 'Ollhurse', 'Perkz', 'Mattéo Guendouzi', 'unknown-user', 'barn', 'Razor', 'Grmii', 'Himothy', 'Kimmich', 'whân'],
     'ROONEY TUNES': ['KK', 'MRN', 'click', 'Vonmacron', 'Antax', 'sergicanos', 'Minicostaud', 'Kahn', 'Swajin', 'ilaola', 'fkfk', '1m bad']
 };
@@ -42,6 +42,14 @@ season.teams.forEach((team) => {
     });
     assert.match(team.kit.primary, /^#[0-9a-f]{6}$/i);
     assert.match(team.kit.secondary, /^#[0-9a-f]{6}$/i);
+    assert.match(team.image, /^league-assets\/[a-z0-9-]+\.webp$/);
+    assert.equal(fs.existsSync(path.join(root, team.image)), true, `${team.name} local image exists`);
+});
+assert.equal(season.teams.find((team) => team.name === 'X TO WIN 2').roster.length, 14);
+assert.equal(leagueScript.includes("'Boat'"), false);
+assert.deepEqual(JSON.parse(JSON.stringify(season.powerRatingConfig)), {
+    team: { baseline: 1500, kFactor: 32, marginStep: 0.2, marginCap: 4 },
+    player: { goal: 5, assist: 3, mvp: 4, cleanSheetHalf: 1.5, ownGoal: -2, shotOnGoal: 0.25, pass: 0.02, kick: 0.005, teamWinAppearance: 1 }
 });
 
 const match = season.matches[0];
@@ -134,7 +142,26 @@ Object.entries(expectedPlayerTotals).forEach(([player, values]) => {
     const actual = Object.fromEntries(playerKeys.map((key) => [key, stat(player)[key]]));
     assert.deepEqual(JSON.parse(JSON.stringify(actual)), expected, `${player} totals`);
 });
+
+const teamPower = context.teamPower(season);
+assert.deepEqual(JSON.parse(JSON.stringify(teamPower.map((row) => row.team))), ['X TO WIN 2', 'Baguette Z Apex', 'HAX UNITED', 'OG FC', 'HUQQA', 'ROONEY TUNES']);
+assert.equal(Math.abs(teamPower[0].rating - 1528.8) < 1e-9, true);
+assert.equal(Math.abs(teamPower[0].movement - 28.8) < 1e-9, true);
+assert.equal(teamPower[0].played, 1);
+assert.equal(Math.abs(teamPower.at(-1).rating - 1471.2) < 1e-9, true);
+teamPower.slice(1, -1).forEach((row) => {
+    assert.equal(row.rating, 1500);
+    assert.equal(row.movement, 0);
+    assert.equal(row.played, 0);
+});
 assert.equal(context.seasonPlayerTotals(season).find((row) => row.player === 'Berbatov').goalContributions, 3);
+
+const playerPower = context.playerPower(season);
+assert.equal(playerPower.length, 14);
+assert.deepEqual(JSON.parse(JSON.stringify(playerPower.slice(0, 5).map((row) => row.player))), ['Berbatov', 'Drkuu', 'Naeh', 'atrocity exhibition', 'elex']);
+assert.equal(playerPower[0].score, 15.01);
+assert.equal(playerPower[0].teamWinAppearances, 1);
+assert.equal(Math.abs(playerPower.find((row) => row.player === 'ilaola').score - -1.87) < 1e-9, true);
 
 const participation = context.participation(match);
 const time = (player) => participation.find((row) => row.player === player);
@@ -166,14 +193,27 @@ match.scoringEvents.forEach((event) => {
 });
 
 assert.match(html, /data-tab="ldc-rs-league-season-1">LDC RS League Season 1</);
-assert.match(html, /id="ldc-rs-league-season-1-tab"/);
+assert.match(html, /class="tab active" data-tab="ldc-rs-league-season-1"/);
+assert.match(html, /class="tab-content active" id="ldc-rs-league-season-1-tab"/);
+assert.doesNotMatch(html, /class="tab-content active" id="players-tab"/);
 assert.match(html, /src="ldc-rs-league-season-1\.js"/);
-assert.match(html, /\.league-competition-grid/);
+assert.match(html, /\.league-power-grid/);
 assert.match(html, /\.league-teams-grid/);
 assert.match(html, /\.league-match-section/);
 assert.match(html, /\.league-season-stats/);
 assert.match(html, /\.league-pitch/);
 assert.match(html, /\.league-shirt-icon/);
-assert.equal(fs.existsSync(path.join(root, 'league-assets', 'rooney-tunes.webp')), true);
+assert.match(html, /\.league-match-disclosure/);
+assert.match(html, /\.league-standings-table th:not\(:first-child\)/);
+assert.doesNotMatch(leagueScript, /Six teams play a double round robin/);
+assert.doesNotMatch(leagueScript, /league-format-facts/);
+
+const resultsMarkup = context.renderResults(season);
+assert.match(resultsMarkup, /<details class="league-match-disclosure">/);
+assert.doesNotMatch(resultsMarkup, /<details class="league-match-disclosure" open/);
+assert.match(resultsMarkup, /View match details/);
+assert.match(resultsMarkup, /MVP Drkuu/);
+const leaderboardMarkup = context.renderLeaderboard(season);
+assert.match(leaderboardMarkup, /<th>Goals<\/th><th>Assists<\/th><th>G\+A<\/th>/);
 
 console.log('LDC RS League Season 1 validation passed.');

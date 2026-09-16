@@ -7,12 +7,31 @@ const ldcRsLeagueSeason1 = {
         matchesPerTeam: 10,
         totalMatches: 30
     },
+    powerRatingConfig: {
+        team: {
+            baseline: 1500,
+            kFactor: 32,
+            marginStep: 0.20,
+            marginCap: 4
+        },
+        player: {
+            goal: 5,
+            assist: 3,
+            mvp: 4,
+            cleanSheetHalf: 1.5,
+            ownGoal: -2,
+            shotOnGoal: 0.25,
+            pass: 0.02,
+            kick: 0.005,
+            teamWinAppearance: 1
+        }
+    },
     teams: [
         {
             id: 'baguette-z-apex',
             name: 'Baguette Z Apex',
             shortName: 'BZA',
-            image: null,
+            image: 'league-assets/baguette-z-apex.webp',
             kit: { primary: '#4a90d9', secondary: '#f8fafc', source: 'configurable-fallback' },
             owner: 'Spero',
             captain: 'Spero',
@@ -23,7 +42,7 @@ const ldcRsLeagueSeason1 = {
             id: 'hax-united',
             name: 'HAX UNITED',
             shortName: 'HAX',
-            image: null,
+            image: 'league-assets/hax-united.webp',
             kit: { primary: '#4a90d9', secondary: '#f8fafc', source: 'configurable-fallback' },
             owner: 'GK',
             captain: 'GK',
@@ -34,7 +53,7 @@ const ldcRsLeagueSeason1 = {
             id: 'og-fc',
             name: 'OG FC',
             shortName: 'OG',
-            image: null,
+            image: 'league-assets/og-fc.webp',
             kit: { primary: '#4a90d9', secondary: '#f8fafc', source: 'configurable-fallback' },
             owner: '𝐌𝐨𝐬𝐭𝐚𝐟𝐚 𝐙𝐢𝐤𝐨',
             captain: 'Mbappe',
@@ -45,18 +64,18 @@ const ldcRsLeagueSeason1 = {
             id: 'x-to-win-2',
             name: 'X TO WIN 2',
             shortName: 'XTW',
-            image: null,
+            image: 'league-assets/x-to-win-2.webp',
             kit: { primary: '#4a90d9', secondary: '#f8fafc', source: 'configurable-fallback' },
             owner: 'Cytro',
             captain: 'Cytro',
             coCaptain: 'SVimes',
-            roster: ['Drkuu', 'Ibrahim', 'SamueleRicci', 'Berbatov', 'Naeh', 'SVimes', 'maccy', 'atrocity exhibition', 'elex', 'mitrita KING', 'Wakanda', 'tsukuyomi.', 'wee', 'Johnny Sins', 'Boat']
+            roster: ['Drkuu', 'Ibrahim', 'SamueleRicci', 'Berbatov', 'Naeh', 'SVimes', 'maccy', 'atrocity exhibition', 'elex', 'mitrita KING', 'Wakanda', 'tsukuyomi.', 'wee', 'Johnny Sins']
         },
         {
             id: 'huqqa',
             name: 'HUQQA',
             shortName: 'HUQ',
-            image: null,
+            image: 'league-assets/huqqa.webp',
             kit: { primary: '#4a90d9', secondary: '#f8fafc', source: 'configurable-fallback' },
             owner: 'Ollhurse',
             captain: 'Lena',
@@ -307,6 +326,36 @@ function calculateLdcRsLeagueStandings(season) {
         .sort((a, b) => b.Pts - a.Pts || b.GD - a.GD || b.GF - a.GF || a.order - b.order);
 }
 
+function calculateLeagueTeamPowerRatings(season) {
+    const config = season.powerRatingConfig.team;
+    const ratings = new Map(season.teams.map((team) => [team.id, config.baseline]));
+    const played = new Map(season.teams.map((team) => [team.id, 0]));
+
+    season.matches.forEach((match) => {
+        const homeRating = ratings.get(match.homeTeamId);
+        const awayRating = ratings.get(match.awayTeamId);
+        const expectedHome = 1 / (1 + (10 ** ((awayRating - homeRating) / 400)));
+        const homeResult = match.homeGoals === match.awayGoals ? 0.5 : match.homeGoals > match.awayGoals ? 1 : 0;
+        const goalDifference = Math.abs(match.homeGoals - match.awayGoals);
+        const marginMultiplier = 1 + config.marginStep * Math.min(Math.max(goalDifference - 1, 0), config.marginCap);
+        const change = config.kFactor * marginMultiplier * (homeResult - expectedHome);
+
+        ratings.set(match.homeTeamId, homeRating + change);
+        ratings.set(match.awayTeamId, awayRating - change);
+        played.set(match.homeTeamId, played.get(match.homeTeamId) + 1);
+        played.set(match.awayTeamId, played.get(match.awayTeamId) + 1);
+    });
+
+    return season.teams.map((team, order) => ({
+        teamId: team.id,
+        team: team.name,
+        rating: ratings.get(team.id),
+        movement: ratings.get(team.id) - config.baseline,
+        played: played.get(team.id),
+        order
+    })).sort((a, b) => b.rating - a.rating || a.order - b.order);
+}
+
 function getLeagueTeamsById(season) {
     return new Map(season.teams.map((team) => [team.id, team]));
 }
@@ -453,6 +502,41 @@ function calculateLeagueSeasonPlayerTotals(season) {
     return [...totals.values()].map((row) => ({ ...row, goalContributions: row.goals + row.assists }));
 }
 
+function calculateLeaguePlayerPowerRankings(season) {
+    const weights = season.powerRatingConfig.player;
+    const winAppearances = new Map();
+    const playerTeams = getLeaguePlayerTeams(season);
+
+    season.matches.forEach((match) => {
+        if (match.homeGoals === match.awayGoals) return;
+        const winningTeamId = match.homeGoals > match.awayGoals ? match.homeTeamId : match.awayTeamId;
+        deriveLeagueMatchParticipation(match).forEach(({ player }) => {
+            if (playerTeams.get(player) === winningTeamId) {
+                winAppearances.set(player, (winAppearances.get(player) || 0) + 1);
+            }
+        });
+    });
+
+    return calculateLeagueSeasonPlayerTotals(season).map((row) => {
+        const teamWinAppearances = winAppearances.get(row.player) || 0;
+        const score = row.goals * weights.goal
+            + row.assists * weights.assist
+            + row.mvps * weights.mvp
+            + row.cleanSheetHalves * weights.cleanSheetHalf
+            + row.ownGoals * weights.ownGoal
+            + row.shotsOnGoal * weights.shotOnGoal
+            + row.passes * weights.pass
+            + row.kicks * weights.kick
+            + teamWinAppearances * weights.teamWinAppearance;
+        return { ...row, teamWinAppearances, score };
+    }).sort((a, b) => b.score - a.score
+        || b.goalContributions - a.goalContributions
+        || b.mvps - a.mvps
+        || b.goals - a.goals
+        || b.assists - a.assists
+        || a.player.localeCompare(b.player));
+}
+
 function calculateLeagueMatchTeamTotals(match, teamId) {
     return match.halves.reduce((totals, half) => {
         const halfStats = half.teamStats[teamId];
@@ -500,11 +584,57 @@ function renderLdcRsLeagueStandings(season) {
     `;
 }
 
+function formatLeagueRatingMovement(value) {
+    if (Math.abs(value) < 0.05) return '—';
+    return `${value > 0 ? '+' : '−'}${Math.abs(value).toFixed(1)}`;
+}
+
+function renderLeagueTeamPowerRatings(season) {
+    const rows = calculateLeagueTeamPowerRatings(season);
+    return `
+        <section class="world-cup-card league-power-card" aria-labelledby="league-team-power-heading">
+            <div class="world-cup-header">
+                <h2 class="world-cup-title" id="league-team-power-heading">Team Power Ratings</h2>
+                <span class="league-update-note">Elo · ${season.powerRatingConfig.team.baseline} baseline</span>
+            </div>
+            <div class="world-cup-table-wrap league-compact-table-wrap">
+                <table class="world-cup-table league-compact-table league-team-power-table">
+                    <thead><tr><th>Team</th><th>Rating</th><th>Movement</th><th>P</th></tr></thead>
+                    <tbody>${rows.map((row) => `
+                        <tr><td>${escapeLeagueText(row.team)}</td><td>${Math.round(row.rating)}</td><td class="${row.movement > 0 ? 'positive' : row.movement < 0 ? 'negative' : ''}">${formatLeagueRatingMovement(row.movement)}</td><td>${row.played}</td></tr>
+                    `).join('')}</tbody>
+                </table>
+            </div>
+        </section>
+    `;
+}
+
+function renderLeaguePlayerPowerRankings(season) {
+    const rows = calculateLeaguePlayerPowerRankings(season).slice(0, 10);
+    const teamsById = getLeagueTeamsById(season);
+    return `
+        <section class="world-cup-card league-power-card" aria-labelledby="league-player-power-heading">
+            <div class="world-cup-header">
+                <h2 class="world-cup-title" id="league-player-power-heading">Top 10 Players</h2>
+                <span class="league-update-note">Provisional · cumulative match score</span>
+            </div>
+            <div class="world-cup-table-wrap league-compact-table-wrap">
+                <table class="world-cup-table league-compact-table league-player-power-table">
+                    <thead><tr><th>#</th><th>Player</th><th>Team</th><th>Score</th><th>G</th><th>A</th><th>MVP</th></tr></thead>
+                    <tbody>${rows.map((row, index) => `
+                        <tr><td>${index + 1}</td><td>${escapeLeagueText(row.player)}</td><td>${escapeLeagueText(teamsById.get(row.teamId).shortName)}</td><td>${row.score.toFixed(2)}</td><td>${row.goals}</td><td>${row.assists}</td><td>${row.mvps}</td></tr>
+                    `).join('')}</tbody>
+                </table>
+            </div>
+        </section>
+    `;
+}
+
 function renderLdcRsLeagueResults(season) {
     if (season.matches.length === 0) {
         return `
             <div class="world-cup-card league-results-card">
-                <div class="world-cup-header"><h2 class="world-cup-title">Results</h2></div>
+                <div class="world-cup-header"><h2 class="world-cup-title">Recent matches</h2></div>
                 <p class="league-empty-state">No results have been recorded yet.</p>
             </div>
         `;
@@ -512,18 +642,28 @@ function renderLdcRsLeagueResults(season) {
 
     const teamsById = new Map(season.teams.map((team) => [team.id, team]));
     return `
-        <div class="world-cup-card league-results-card">
-            <div class="world-cup-header"><h2 class="world-cup-title">Results</h2></div>
+        <section class="world-cup-card league-results-card" aria-labelledby="league-results-heading">
+            <div class="world-cup-header"><h2 class="world-cup-title" id="league-results-heading">Recent matches</h2><span class="league-update-note">Select a result for the full record</span></div>
             <div class="league-results-list">
-                ${season.matches.map((match) => `
-                    <div class="world-cup-match league-result">
-                        <span>${escapeLeagueText(teamsById.get(match.homeTeamId).name)}</span>
-                        <strong>${match.homeGoals} – ${match.awayGoals}</strong>
-                        <span>${escapeLeagueText(teamsById.get(match.awayTeamId).name)}</span>
-                    </div>
-                `).join('')}
+                ${season.matches.map((match) => {
+                    const scorerCounts = match.scoringEvents.filter((event) => event.type === 'goal').reduce((counts, event) => {
+                        counts.set(event.player, (counts.get(event.player) || 0) + 1);
+                        return counts;
+                    }, new Map());
+                    const scorers = [...scorerCounts].map(([player, goals]) => `${player}${goals > 1 ? ` ×${goals}` : ''}`).join(', ');
+                    return `
+                        <details class="league-match-disclosure">
+                            <summary>
+                                <span class="league-result-score"><span>${escapeLeagueText(teamsById.get(match.homeTeamId).name)}</span><strong>${match.homeGoals} – ${match.awayGoals}</strong><span>${escapeLeagueText(teamsById.get(match.awayTeamId).name)}</span></span>
+                                <span class="league-result-meta">MVP ${escapeLeagueText(match.mvp)} · Scorers ${escapeLeagueText(scorers)}</span>
+                                <span class="league-result-action">View match details</span>
+                            </summary>
+                            <div class="league-match-details">${renderLeagueMatchView(season, match)}</div>
+                        </details>
+                    `;
+                }).join('')}
             </div>
-        </div>
+        </section>
     `;
 }
 
@@ -791,7 +931,10 @@ function renderLeagueSeasonLeaderboard(season) {
     const teamsById = getLeagueTeamsById(season);
     const rows = calculateLeagueSeasonPlayerTotals(season)
         .filter((row) => row[leagueSeasonStatMode] > 0)
-        .sort((a, b) => b[leagueSeasonStatMode] - a[leagueSeasonStatMode] || a.player.localeCompare(b.player));
+        .sort((a, b) => b[leagueSeasonStatMode] - a[leagueSeasonStatMode]
+            || (leagueSeasonStatMode === 'goalContributions' ? b.goals - a.goals || b.assists - a.assists : 0)
+            || b.goalContributions - a.goalContributions
+            || a.player.localeCompare(b.player));
     const displayMetric = (row) => leagueSeasonStatMode === 'minutes'
         ? formatLeagueClock(row.minutes, row.minutesEstimated)
         : row[leagueSeasonStatMode];
@@ -807,11 +950,11 @@ function renderLeagueSeasonLeaderboard(season) {
                     <button type="button" data-league-stat="${key}" class="${key === leagueSeasonStatMode ? 'active' : ''}">${metric.label}</button>
                 `).join('')}
             </div>
-            <div class="world-cup-table-wrap">
-                <table class="world-cup-table league-leaderboard-table">
-                    <thead><tr><th>Player</th><th>Team</th><th>${definition.label}</th></tr></thead>
+            <div class="world-cup-table-wrap league-compact-table-wrap">
+                <table class="world-cup-table league-compact-table league-leaderboard-table">
+                    <thead><tr><th>Player</th><th>Team</th>${leagueSeasonStatMode === 'goalContributions' ? '<th>Goals</th><th>Assists</th><th>G+A</th>' : `<th>${definition.label}</th>`}</tr></thead>
                     <tbody>
-                        ${rows.map((row) => `<tr><td>${escapeLeagueText(row.player)}</td><td>${escapeLeagueText(teamsById.get(row.teamId).name)}</td><td>${displayMetric(row)}</td></tr>`).join('')}
+                        ${rows.map((row) => `<tr><td>${escapeLeagueText(row.player)}</td><td>${escapeLeagueText(teamsById.get(row.teamId).shortName)}</td>${leagueSeasonStatMode === 'goalContributions' ? `<td>${row.goals}</td><td>${row.assists}</td><td>${row.goalContributions}</td>` : `<td>${displayMetric(row)}</td>`}</tr>`).join('')}
                     </tbody>
                 </table>
             </div>
@@ -861,23 +1004,18 @@ function renderLdcRsLeagueSeason() {
     const season = ldcRsLeagueSeason1;
     container.innerHTML = `
         <div class="world-cup-layout league-season-layout">
-            <div class="world-cup-card league-season-hero">
-                <p class="league-season-kicker">League archive</p>
+            <header class="league-season-hero">
                 <h1>${escapeLeagueText(season.title)}</h1>
-                <p>Six teams play a double round robin: every team faces every other team twice.</p>
-                <div class="league-format-facts" aria-label="Competition format">
-                    <span><strong>${season.format.teamCount}</strong> teams</span>
-                    <span><strong>${season.format.matchesPerTeam}</strong> matches per team</span>
-                    <span><strong>${season.format.totalMatches}</strong> matches total</span>
-                </div>
+            </header>
+
+            ${renderLdcRsLeagueStandings(season)}
+
+            <div class="league-power-grid">
+                ${renderLeagueTeamPowerRatings(season)}
+                ${renderLeaguePlayerPowerRankings(season)}
             </div>
 
-            <div class="league-competition-grid">
-                ${renderLdcRsLeagueStandings(season)}
-                ${renderLdcRsLeagueResults(season)}
-            </div>
-
-            ${renderLeagueMatchView(season, season.matches[0])}
+            ${renderLdcRsLeagueResults(season)}
 
             ${renderLeagueSeasonLeaderboard(season)}
 

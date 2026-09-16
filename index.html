@@ -710,14 +710,20 @@
         /* LDC RS League Season 1: extends the archived World Cup visual language. */
         .league-season-layout {
             gap: 16px;
+            min-width: 0;
+            max-width: 100%;
+        }
+
+        #ldc-rs-league-season-1-container,
+        .league-season-layout > * {
+            box-sizing: border-box;
+            min-width: 0;
+            max-width: 100%;
         }
 
         .league-season-hero {
-            text-align: center;
-            padding: 24px;
-            background:
-                radial-gradient(circle at top, rgba(74, 144, 217, 0.2), transparent 58%),
-                var(--card-bg);
+            padding: 6px 2px 2px;
+            text-align: left;
         }
 
         .league-season-kicker {
@@ -762,7 +768,8 @@
             color: #fff;
         }
 
-        .league-competition-grid {
+        .league-competition-grid,
+        .league-power-grid {
             display: grid;
             grid-template-columns: minmax(0, 2fr) minmax(260px, 1fr);
             gap: 12px;
@@ -774,13 +781,31 @@
             min-width: 0;
         }
 
-        .league-standings-table {
-            min-width: 620px;
+        .league-standings-card {
+            width: min(100%, 820px);
+        }
+
+        .league-compact-table-wrap {
+            width: 100%;
+        }
+
+        .league-standings-table,
+        .league-compact-table {
+            width: 100%;
+            table-layout: auto;
         }
 
         .league-standings-table th:first-child,
         .league-standings-table td:first-child {
-            width: 30%;
+            width: 48%;
+            min-width: 165px;
+        }
+
+        .league-standings-table th:not(:first-child),
+        .league-standings-table td:not(:first-child) {
+            width: 42px;
+            padding-inline: 7px;
+            text-align: center;
         }
 
         .league-update-note {
@@ -802,6 +827,115 @@
         .league-results-list {
             display: grid;
             gap: 8px;
+        }
+
+        .league-match-disclosure {
+            overflow: hidden;
+            border: 1px solid rgba(148, 163, 184, 0.22);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.025);
+        }
+
+        .league-match-disclosure[open] {
+            border-color: rgba(74, 144, 217, 0.48);
+        }
+
+        .league-match-disclosure > summary {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(180px, auto) auto;
+            gap: 14px;
+            align-items: center;
+            padding: 12px 14px;
+            cursor: pointer;
+            list-style: none;
+        }
+
+        .league-match-disclosure > summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .league-result-score {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+            gap: 10px;
+            align-items: center;
+            color: var(--text);
+        }
+
+        .league-result-score strong {
+            padding: 5px 9px;
+            border-radius: 7px;
+            background: var(--primary);
+            color: #fff;
+            white-space: nowrap;
+        }
+
+        .league-result-score span:last-child {
+            text-align: right;
+        }
+
+        .league-result-meta,
+        .league-result-action {
+            color: #96a3b4;
+            font-size: 12px;
+        }
+
+        .league-result-action {
+            color: var(--primary);
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .league-match-disclosure[open] .league-result-action {
+            font-size: 0;
+        }
+
+        .league-match-disclosure[open] .league-result-action::before {
+            font-size: 12px;
+            content: 'Hide match details';
+        }
+
+        .league-match-details {
+            padding: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .league-power-grid {
+            grid-template-columns: minmax(300px, 0.8fr) minmax(0, 1.2fr);
+        }
+
+        .league-power-card {
+            min-width: 0;
+        }
+
+        .league-compact-table th:not(:first-child),
+        .league-compact-table td:not(:first-child) {
+            width: 64px;
+            padding-inline: 7px;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .league-player-power-table th:first-child,
+        .league-player-power-table td:first-child {
+            width: 32px;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .league-player-power-table th:nth-child(2),
+        .league-player-power-table td:nth-child(2) {
+            width: auto;
+            text-align: left;
+            white-space: normal;
+        }
+
+        .league-compact-table .positive {
+            color: #69d391;
+        }
+
+        .league-compact-table .negative {
+            color: #ff8585;
         }
 
         .league-result {
@@ -1379,7 +1513,7 @@
         }
 
         .league-leaderboard-table {
-            max-width: 780px;
+            width: min(100%, 720px);
         }
 
         .league-leaderboard-table th:first-child,
@@ -1389,6 +1523,7 @@
 
         @media (max-width: 900px) {
             .league-competition-grid,
+            .league-power-grid,
             .league-teams-grid,
             .league-match-summary-grid,
             .league-halves-grid,
@@ -1411,7 +1546,42 @@
             }
 
             .league-season-hero {
-                padding: 18px 12px;
+                padding: 2px 0;
+            }
+
+            .league-standings-table {
+                min-width: 0;
+                font-size: 11px;
+            }
+
+            .league-standings-table th,
+            .league-standings-table td {
+                padding: 7px 4px;
+            }
+
+            .league-standings-table th:first-child,
+            .league-standings-table td:first-child {
+                width: auto;
+                min-width: 108px;
+            }
+
+            .league-standings-table th:not(:first-child),
+            .league-standings-table td:not(:first-child) {
+                width: 28px;
+                padding-inline: 3px;
+            }
+
+            .league-match-disclosure > summary {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+
+            .league-result-meta {
+                order: 2;
+            }
+
+            .league-result-action {
+                order: 3;
             }
 
             .league-team-body {
@@ -2070,9 +2240,9 @@
 
     <div class="tabs">
         <div class="tab" data-tab="whats-new">What's New</div>
-        <div class="tab active" data-tab="players">Players</div>
+        <div class="tab" data-tab="players">Players</div>
         <div class="tab" data-tab="archive">Archive</div>
-        <div class="tab" data-tab="ldc-rs-league-season-1">LDC RS League Season 1</div>
+        <div class="tab active" data-tab="ldc-rs-league-season-1">LDC RS League Season 1</div>
         <div class="tab" data-tab="compare">Upgrade Lab & Player Comparison</div>
         <div class="tab" data-tab="help">Help & Commands</div>
     </div>
@@ -2090,7 +2260,7 @@
         </div>
     </div>
 
-    <div class="tab-content active" id="players-tab">
+    <div class="tab-content" id="players-tab">
         <div class="filters">
             <select id="sort-select">
                 <option value="recently-added">Recently Added</option>
@@ -2202,7 +2372,7 @@
         </div>
     </div>
 
-    <div class="tab-content" id="ldc-rs-league-season-1-tab">
+    <div class="tab-content active" id="ldc-rs-league-season-1-tab">
         <div id="ldc-rs-league-season-1-container"></div>
     </div>
 
