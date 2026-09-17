@@ -145,7 +145,7 @@ const ldcRsLeagueSeason1 = {
                 provider: 'youtube',
                 url: 'https://www.youtube.com/watch?v=92OWXudDb7Q',
                 videoId: '92OWXudDb7Q',
-                thumbnail: 'https://i.ytimg.com/vi/92OWXudDb7Q/maxresdefault.jpg'
+                thumbnail: 'league-assets/xtw2-rooney-match-1-thumbnail.jpg'
             },
             mvp: 'Drkuu',
             cleanSheetHalves: [

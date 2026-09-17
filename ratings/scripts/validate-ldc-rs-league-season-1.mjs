@@ -105,8 +105,9 @@ assert.deepEqual(JSON.parse(JSON.stringify(match.recording)), {
     provider: 'youtube',
     url: 'https://www.youtube.com/watch?v=92OWXudDb7Q',
     videoId: '92OWXudDb7Q',
-    thumbnail: 'https://i.ytimg.com/vi/92OWXudDb7Q/maxresdefault.jpg'
+    thumbnail: 'league-assets/xtw2-rooney-match-1-thumbnail.jpg'
 });
+assert.equal(fs.existsSync(path.join(root, match.recording.thumbnail)), true);
 assert.deepEqual(JSON.parse(JSON.stringify(match.cleanSheetHalves)), [
     { player: 'atrocity exhibition', value: 1 },
     { player: 'Naeh', value: 1 }
@@ -422,7 +423,7 @@ assert.match(resultsMarkup, /View full details →/);
 assert.match(resultsMarkup, /<small>MVP<\/small><strong>Drkuu<\/strong>/);
 assert.match(resultsMarkup, /Berbatov ×2 · Drkuu · Naeh · ilaola OG/);
 assert.match(resultsMarkup, /class="league-match-recording-card" href="https:\/\/www\.youtube\.com\/watch\?v=92OWXudDb7Q" target="_blank" rel="noopener noreferrer"/);
-assert.match(resultsMarkup, /src="https:\/\/i\.ytimg\.com\/vi\/92OWXudDb7Q\/maxresdefault\.jpg"[^>]*loading="lazy"/);
+assert.match(resultsMarkup, /src="league-assets\/xtw2-rooney-match-1-thumbnail\.jpg"[^>]*loading="lazy"/);
 assert.match(resultsMarkup, /league-match-recording-play/);
 assert.match(resultsMarkup, /Watch full match/);
 assert.match(resultsMarkup, /Watch match recording/);
