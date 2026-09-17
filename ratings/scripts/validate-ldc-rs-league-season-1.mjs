@@ -411,7 +411,7 @@ assert.match(html, /\.league-season-stats/);
 assert.match(html, /\.league-match-disclosure/);
 assert.match(html, /\.league-match-recording-card/);
 assert.match(html, /\.league-latest-preview/);
-assert.match(html, /grid-template-columns:\s*minmax\(0, 1fr\) minmax\(240px, 320px\)/);
+assert.match(html, /grid-template-columns:\s*minmax\(0, 3fr\) minmax\(340px, 2fr\);\s*gap:\s*10px/);
 assert.match(html, /\.league-latest-summary\s*\{[\s\S]*?grid-template-columns:\s*minmax\(0, 1fr\);[\s\S]*?max-width:\s*440px/);
 assert.match(html, /aspect-ratio:\s*16\s*\/\s*9/);
 assert.match(html, /\.league-starting-vi-grid/);
