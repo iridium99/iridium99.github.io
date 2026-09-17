@@ -13,7 +13,7 @@ const context = {
     document: { getElementById: () => null }
 };
 vm.createContext(context);
-vm.runInContext(`${leagueScript}\nthis.season = ldcRsLeagueSeason1; this.modelVersions = { team: LEAGUE_TEAM_POWER_MODEL_VERSION, player: LEAGUE_PLAYER_POWER_MODEL_VERSION, prediction: LEAGUE_PREDICTION_MODEL_VERSION }; this.calculate = calculateLdcRsLeagueStandings; this.teamHistory = calculateLeagueTeamPowerHistory; this.teamPower = calculateLeagueTeamPowerRatings; this.predict = calculateLeagueMatchPrediction; this.unplayedPredictions = calculateLeagueUnplayedMatchupPredictions; this.playerPower = calculateLeaguePlayerPowerRankings; this.playerMatchPower = calculateLeaguePlayerMatchPower; this.playerConfidence = calculateLeaguePlayerPowerConfidence; this.opponentMultiplier = calculateLeagueOpponentMultiplier; this.matchPlayerTotals = calculateLeagueMatchPlayerTotals; this.seasonPlayerTotals = calculateLeagueSeasonPlayerTotals; this.leaderboardRows = calculateLeagueSeasonLeaderboardRows; this.leaderboardRowsFromTotals = calculateLeagueLeaderboardRowsFromTotals; this.leaderboardMedals = calculateLeagueLeaderboardMedals; this.matchTeamTotals = calculateLeagueMatchTeamTotals; this.participation = deriveLeagueMatchParticipation; this.matchEvents = deriveLeagueMatchEvents; this.statisticsRows = getLeagueStatisticsRows; this.formatClock = formatLeagueClock; this.renderResults = renderLdcRsLeagueResults; this.renderEvents = renderLeagueEventTimeline; this.renderLeaderboard = renderLeagueSeasonLeaderboard; this.renderPredictions = renderLeaguePredictions; this.renderPlayerPower = renderLeaguePlayerPowerRankings; this.expandedMatches = leagueExpandedMatches; this.matchModes = leagueMatchDetailModes; this.statisticsPeriods = leagueStatisticsPeriods; this.setPitchMode = (mode) => { leaguePitchMode = mode; }; this.setLeaderboardMode = (metric, rate) => { leagueSeasonStatMode = metric; leagueSeasonRateMode = rate; };`, context);
+vm.runInContext(`${leagueScript}\nthis.season = ldcRsLeagueSeason1; this.modelVersions = { team: LEAGUE_TEAM_POWER_MODEL_VERSION, player: LEAGUE_PLAYER_POWER_MODEL_VERSION, prediction: LEAGUE_PREDICTION_MODEL_VERSION }; this.calculate = calculateLdcRsLeagueStandings; this.teamHistory = calculateLeagueTeamPowerHistory; this.teamPower = calculateLeagueTeamPowerRatings; this.predict = calculateLeagueMatchPrediction; this.unplayedPredictions = calculateLeagueUnplayedMatchupPredictions; this.playerPower = calculateLeaguePlayerPowerRankings; this.playerMatchPower = calculateLeaguePlayerMatchPower; this.playerConfidence = calculateLeaguePlayerPowerConfidence; this.opponentMultiplier = calculateLeagueOpponentMultiplier; this.matchPlayerTotals = calculateLeagueMatchPlayerTotals; this.seasonPlayerTotals = calculateLeagueSeasonPlayerTotals; this.leaderboardRows = calculateLeagueSeasonLeaderboardRows; this.leaderboardRowsFromTotals = calculateLeagueLeaderboardRowsFromTotals; this.leaderboardMedals = calculateLeagueLeaderboardMedals; this.matchTeamTotals = calculateLeagueMatchTeamTotals; this.participation = deriveLeagueMatchParticipation; this.matchEvents = deriveLeagueMatchEvents; this.statisticsRows = getLeagueStatisticsRows; this.formatClock = formatLeagueClock; this.renderResults = renderLdcRsLeagueResults; this.renderEvents = renderLeagueEventTimeline; this.renderLeaderboard = renderLeagueSeasonLeaderboard; this.renderPredictions = renderLeaguePredictions; this.renderPlayerPower = renderLeaguePlayerPowerRankings; this.expandedMatches = leagueExpandedMatches; this.matchModes = leagueMatchDetailModes; this.statisticsPeriods = leagueStatisticsPeriods; this.setLeaderboardMode = (metric, rate) => { leagueSeasonStatMode = metric; leagueSeasonRateMode = rate; };`, context);
 
 const season = context.season;
 assert.equal(season.title, 'LDC RS League Season 1');
@@ -210,15 +210,6 @@ const firstFirstHalfIndex = events.findIndex((event) => event.half === 1);
 assert.equal(halftimeIndexes.every((index) => index > lastSecondHalfIndex && index < firstFirstHalfIndex), true);
 assert.equal(events.findIndex((event) => event.playerIn === 'Wakanda') < events.findIndex((event) => event.eventType === 'own-goal'), true);
 assert.equal(events.findIndex((event) => event.eventType === 'goal' && event.player === 'Naeh') < events.findIndex((event) => event.playerIn === 'Naeh'), true);
-assert.match(match.pitch.orientation, /x=0 is own goal/);
-assert.deepEqual(JSON.parse(JSON.stringify(match.pitch.observations)), []);
-Object.values(match.pitch.views).forEach((view) => {
-    Object.values(view.teams).flat().forEach((position) => {
-        assert.equal(position.confidence, 'estimated');
-        assert.equal(position.x >= 0 && position.x <= 100, true);
-        assert.equal(position.y >= 0 && position.y <= 100, true);
-    });
-});
 
 const standings = context.calculate(season);
 assert.equal(standings.length, 6);
@@ -433,7 +424,13 @@ match.substitutions.forEach((substitution) => {
     assert.equal(canonicalPlayers.has(substitution.playerOut), true, `Unknown substituted player ${substitution.playerOut}`);
 });
 Object.values(match.goalkeepers).flatMap((half) => Object.values(half)).forEach((player) => assert.equal(canonicalPlayers.has(player), true, `Unknown goalkeeper ${player}`));
-Object.values(match.pitch.views).flatMap((view) => Object.values(view.teams).flat()).forEach((position) => assert.equal(canonicalPlayers.has(position.player), true, `Unknown positioned player ${position.player}`));
+Object.values(match.startingLineups).flat().forEach((entry) => assert.equal(canonicalPlayers.has(entry.player), true, `Unknown starting-lineup player ${entry.player}`));
+const appearingPlayersByTeam = Object.fromEntries(['x-to-win-2', 'rooney-tunes'].map((teamId) => [teamId, new Set(
+    match.halves.flatMap((half) => half.playerStats[teamId].map((row) => row.player))
+)]));
+Object.entries(match.positionStints).forEach(([teamId, entries]) => {
+    assert.deepEqual(new Set(entries.map(({ player }) => player)), appearingPlayersByTeam[teamId], `Every ${teamId} appearance has position stints`);
+});
 match.scoringEvents.forEach((event) => {
     assert.equal(canonicalPlayers.has(event.player), true, `Unknown scoring player ${event.player}`);
     if (event.assist) assert.equal(canonicalPlayers.has(event.assist), true, `Unknown assisting player ${event.assist}`);
@@ -448,11 +445,8 @@ assert.match(html, /\.league-power-grid/);
 assert.match(html, /\.league-teams-grid/);
 assert.match(html, /\.league-match-section/);
 assert.match(html, /\.league-season-stats/);
-assert.match(html, /\.league-pitch/);
-assert.match(html, /\.league-shirt-icon/);
 assert.match(html, /\.league-match-disclosure/);
-assert.match(html, /\.league-mini-pitch/);
-assert.match(html, /\.league-pitch-direction/);
+assert.match(html, /\.league-starting-vi-grid/);
 assert.match(html, /\.league-standings-table th:not\(:first-child\)/);
 assert.doesNotMatch(leagueScript, /Six teams play a double round robin/);
 assert.doesNotMatch(leagueScript, /league-format-facts/);
@@ -463,14 +457,32 @@ assert.doesNotMatch(resultsMarkup, /data-match-id="match-1-x-to-win-2-v-rooney-t
 assert.match(resultsMarkup, /View full details →/);
 assert.match(resultsMarkup, /<small>MVP<\/small><strong>Drkuu<\/strong>/);
 assert.match(resultsMarkup, /Berbatov ×2 · Drkuu · Naeh · ilaola OG/);
-assert.equal((resultsMarkup.match(/league-mini-pitch-team/g) || []).length, 2);
-assert.equal((resultsMarkup.match(/league-mini-pitch-player/g) || []).length, 12);
-assert.equal((resultsMarkup.match(/league-mini-pitch-direction/g) || []).length, 2);
-assert.match(resultsMarkup, /aria-label="Attacking direction: left to right">ATTACKING →/);
-assert.match(resultsMarkup, /league-mini-pitch-title">XTW starting six/);
-assert.match(resultsMarkup, /league-mini-pitch-title">RT starting six/);
-assert.match(resultsMarkup, /league-mini-pitch-player[\s\S]*?>[\s\S]*?<strong>Naeh<\/strong>/);
-assert.match(resultsMarkup, /league-mini-pitch-player[\s\S]*?>[\s\S]*?<strong>KK<\/strong>/);
+assert.match(resultsMarkup, /<h2 class="league-starting-vi-title">Starting VI<\/h2>/);
+assert.equal((resultsMarkup.match(/league-starting-vi-team/g) || []).length, 2);
+assert.doesNotMatch(resultsMarkup, /league-mini-pitch|league-pitch|ATTACKING →/);
+[
+    ['GK', 'Naeh'],
+    ['CDM', 'atrocity exhibition'],
+    ['CM', 'maccy'],
+    ['CM', 'Drkuu'],
+    ['LW', 'elex'],
+    ['ST', 'Berbatov']
+].forEach(([position, player]) => {
+    assert.match(resultsMarkup, new RegExp(`<li><b>${position}<\\/b><span>${player}<\\/span><\\/li>`));
+});
+[
+    ['GK', 'KK'],
+    ['CB', '1m bad'],
+    ['CDM', 'MRN'],
+    ['CM', 'Vonmacron'],
+    ['CAM', 'fkfk'],
+    ['ST', 'ilaola']
+].forEach(([position, player]) => {
+    assert.match(resultsMarkup, new RegExp(`<li><b>${position}<\\/b><span>${player}<\\/span><\\/li>`));
+});
+const supportedPositions = new Set(['GK', 'CB', 'CDM', 'CM', 'CAM', 'LW', 'RW', 'ST']);
+Object.values(match.startingLineups).flat().forEach(({ position }) => assert.equal(supportedPositions.has(position), true));
+Object.values(match.positionStints).flat().forEach(({ stints }) => stints.forEach(({ position }) => assert.equal(supportedPositions.has(position), true)));
 assert.doesNotMatch(resultsMarkup, /league-latest-stats|league-latest-events/);
 assert.match(resultsMarkup, /league-latest-team"><img src="league-assets\/x-to-win-2\.webp"/);
 [...resultsMarkup.matchAll(/<summary>([\s\S]*?)<\/summary>/g)].forEach(([, summaryMarkup]) => {
@@ -530,15 +542,38 @@ assert.match(expandedMarkup, /Match timeline/);
 assert.match(expandedMarkup, /Naeh in, maccy out/);
 assert.match(expandedMarkup, /ilaola own goal/);
 context.matchModes.set(match.id, 'players');
-context.setPitchMode('observed');
 expandedMarkup = context.renderResults(season);
 assert.match(expandedMarkup, /data-match-id="match-1-x-to-win-2-v-rooney-tunes" open/);
-assert.match(expandedMarkup, /Average \/ observed positions/);
+assert.match(expandedMarkup, /Starting VI/);
+assert.match(expandedMarkup, /Substitutes &amp; role changes/);
 assert.match(expandedMarkup, /Player match statistics/);
+assert.equal(expandedMarkup.indexOf('Starting VI') < expandedMarkup.indexOf('Substitutes &amp; role changes'), true);
+assert.equal(expandedMarkup.indexOf('Substitutes &amp; role changes') < expandedMarkup.indexOf('Player match statistics'), true);
+[
+    ['Wakanda', 'CDM', 'on for Drkuu'],
+    ['Naeh', 'GK → ST', 'returned in 2H for maccy'],
+    ['Drkuu', 'CM → CAM'],
+    ['atrocity exhibition', 'CDM → GK'],
+    ['click', 'CDM', 'on for ilaola'],
+    ['ilaola', 'ST', 'off in 1H, returned at HT'],
+    ['fkfk', 'CAM', 'off at HT']
+].forEach(([player, position, note]) => {
+    assert.match(expandedMarkup, new RegExp(`${player}[\\s\\S]*?${position}`));
+    if (note) assert.match(expandedMarkup, new RegExp(note));
+});
+assert.match(expandedMarkup, /<th>Player<\/th><th>Pos<\/th><th>Time<\/th>/);
+[
+    ['atrocity exhibition', 'CDM → GK'],
+    ['Naeh', 'GK → ST'],
+    ['Drkuu', 'CM → CAM'],
+    ['Wakanda', 'CDM'],
+    ['Berbatov', 'ST'],
+    ['click', 'CDM']
+].forEach(([player, position]) => assert.match(expandedMarkup, new RegExp(`<td>${player}<\\/td>\\s*<td>${position}<\\/td>`)));
+assert.doesNotMatch(expandedMarkup, /CM → CM|CDM → CDM|ST → ST/);
 assert.match(expandedMarkup, />9:48</);
 assert.doesNotMatch(expandedMarkup, /≥9:47/);
-assert.match(expandedMarkup, /league-shirt-pattern-pinstripes/);
-assert.equal((expandedMarkup.match(/league-pitch-direction/g) || []).length, 2);
+assert.doesNotMatch(expandedMarkup, /Lineups &amp; positional view|Average positions|ATTACKING →|Kit: black with gold details|Kit: team-image colours/);
 assert.match(expandedMarkup, /<td>39<\/td><td>22<\/td><td>1<\/td>/);
 assert.doesNotMatch(expandedMarkup, /<td class="league-positive">39<\/td>/);
 [
@@ -678,6 +713,6 @@ assert.match(html, /width: max-content/);
 assert.match(html, /\.league-table-leader/);
 assert.match(html, /\.league-timeline-event-own-goal/);
 assert.match(html, /\.league-medal-gold/);
-assert.match(html, /\.league-shirt-icon\.league-shirt-pattern-pinstripes/);
+assert.doesNotMatch(html, /\.league-pitch|\.league-shirt-icon|\.league-kit-source/);
 
 console.log('LDC RS League Season 1 validation passed.');
