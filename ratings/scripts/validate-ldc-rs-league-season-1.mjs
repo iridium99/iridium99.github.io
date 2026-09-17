@@ -410,6 +410,8 @@ assert.match(html, /\.league-match-section/);
 assert.match(html, /\.league-season-stats/);
 assert.match(html, /\.league-match-disclosure/);
 assert.match(html, /\.league-match-recording-card/);
+assert.match(html, /\.league-latest-preview/);
+assert.match(html, /grid-template-columns:\s*minmax\(0, 1fr\) minmax\(240px, 320px\)/);
 assert.match(html, /aspect-ratio:\s*16\s*\/\s*9/);
 assert.match(html, /\.league-starting-vi-grid/);
 assert.match(html, /\.league-standings-table th:not\(:first-child\)/);
@@ -418,6 +420,7 @@ assert.doesNotMatch(leagueScript, /league-format-facts/);
 
 const resultsMarkup = context.renderResults(season);
 assert.match(resultsMarkup, /<details class="league-match-disclosure league-match-latest" data-match-id=/);
+assert.match(resultsMarkup, /<div class="league-latest-preview">[\s\S]*?<\/details>\s*<a class="league-match-recording-card"/);
 assert.doesNotMatch(resultsMarkup, /data-match-id="match-1-x-to-win-2-v-rooney-tunes" open/);
 assert.match(resultsMarkup, /View full details →/);
 assert.match(resultsMarkup, /<small>MVP<\/small><strong>Drkuu<\/strong>/);

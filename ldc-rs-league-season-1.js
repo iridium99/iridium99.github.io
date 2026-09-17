@@ -1030,15 +1030,17 @@ function renderLdcRsLeagueResults(season) {
                                 <span class="league-result-meta">MVP: ${escapeLeagueText(match.mvp)} · Scorers ${escapeLeagueText(scorers)}</span>
                                 <span class="league-result-action"><span class="league-action-open">Match details →</span><span class="league-action-close">Close details</span></span>
                             `;
-                    return `
+                    const disclosure = `
                         <details class="league-match-disclosure${isMostRecent ? ' league-match-latest' : ''}" data-match-id="${match.id}" ${leagueExpandedMatches.has(match.id) ? 'open' : ''}>
                             <summary>
                                 ${summary}
                             </summary>
                             <div class="league-match-details">${renderLeagueMatchView(season, match)}</div>
                         </details>
-                        ${isMostRecent ? renderLeagueMatchRecording(match) : ''}
                     `;
+                    return isMostRecent
+                        ? `<div class="league-latest-preview">${disclosure}${renderLeagueMatchRecording(match)}</div>`
+                        : disclosure;
                 }).join('')}
             </div>
         </section>

@@ -876,6 +876,30 @@
             background: linear-gradient(135deg, rgba(74, 144, 217, 0.08), rgba(255, 255, 255, 0.015));
         }
 
+        .league-latest-preview {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(240px, 320px);
+            overflow: hidden;
+            border: 1px solid rgba(148, 163, 184, 0.22);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.025);
+        }
+
+        .league-latest-preview .league-match-disclosure {
+            min-width: 0;
+            border: 0;
+            border-radius: 0;
+            background: transparent;
+        }
+
+        .league-latest-preview .league-match-disclosure[open] {
+            grid-column: 1 / -1;
+        }
+
+        .league-latest-preview:has(.league-match-disclosure[open]) .league-match-recording-card {
+            display: none;
+        }
+
         .league-latest-scoreline,
         .league-latest-summary,
         .league-latest-lineup-preview,
@@ -887,20 +911,22 @@
         .league-latest-scoreline {
             display: grid;
             grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-            gap: 12px;
+            gap: 8px;
             align-items: center;
+            max-width: 640px;
         }
 
         .league-latest-team {
             display: flex;
             gap: 9px;
             align-items: center;
+            justify-content: flex-end;
             min-width: 0;
         }
 
         .league-latest-team:last-child {
-            justify-content: flex-end;
-            text-align: right;
+            justify-content: flex-start;
+            text-align: left;
         }
 
         .league-latest-team img {
@@ -966,6 +992,12 @@
             background: #0b1220;
             color: #fff;
             text-decoration: none;
+        }
+
+        .league-latest-preview .league-match-recording-card {
+            align-self: start;
+            margin: 12px 12px 12px 0;
+            width: calc(100% - 12px);
         }
 
         .league-match-recording-card img {
@@ -2285,6 +2317,17 @@
 
             .league-substitution small {
                 grid-column: 1;
+            }
+        }
+
+        @media (max-width: 720px) {
+            .league-latest-preview {
+                grid-template-columns: 1fr;
+            }
+
+            .league-latest-preview .league-match-recording-card {
+                margin: 0 12px 12px;
+                width: calc(100% - 24px);
             }
         }
         
