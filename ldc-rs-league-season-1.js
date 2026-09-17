@@ -1,6 +1,5 @@
 const LEAGUE_TEAM_POWER_MODEL_VERSION = 1;
 const LEAGUE_PLAYER_POWER_MODEL_VERSION = 1;
-const LEAGUE_PREDICTION_MODEL_VERSION = 2;
 
 const ldcRsLeagueSeason1 = {
     id: 'ldc-rs-league-season-1',
@@ -25,17 +24,6 @@ const ldcRsLeagueSeason1 = {
                 'og-fc': 1480,
                 'hax-united': 1471,
                 'rooney-tunes': 1446
-            }
-        },
-        prediction: {
-            modelVersion: LEAGUE_PREDICTION_MODEL_VERSION,
-            calibrationStatus: 'provisional',
-            maximumDrawProbability: 0.28,
-            minimumDrawProbability: 0.10,
-            drawDecayScale: 300,
-            confidence: {
-                lowMaximumCompletedMatchesPerTeam: 1,
-                mediumMaximumCompletedMatchesPerTeam: 3
             }
         },
         player: {
@@ -126,7 +114,7 @@ const ldcRsLeagueSeason1 = {
             owner: 'Vonmacron',
             captain: 'Vonmacron',
             coCaptain: 'MRN',
-            roster: ['KK', 'MRN', 'click', 'Vonmacron', 'Antax', 'sergicanos', 'Minicostaud', 'Kahn', 'Swajin', 'ilaola', 'fkfk', '1m bad']
+            roster: ['KK', 'MRN', 'click', 'Vonmacron', 'Antax', 'Minicostaud', 'Kahn', 'Swajin', 'ilaola', 'fkfk', '1m bad', 'FITOCHI', 'Luqman', 'JV']
         }
     ],
     // Standings, match totals, and season leaderboards are calculated from this source.
@@ -152,6 +140,12 @@ const ldcRsLeagueSeason1 = {
                 display: '1:57 2H',
                 score: '5–0',
                 triggeringPlayer: 'Naeh'
+            },
+            recording: {
+                provider: 'youtube',
+                url: 'https://www.youtube.com/watch?v=92OWXudDb7Q',
+                videoId: '92OWXudDb7Q',
+                thumbnail: 'https://i.ytimg.com/vi/92OWXudDb7Q/maxresdefault.jpg'
             },
             mvp: 'Drkuu',
             cleanSheetHalves: [
@@ -467,89 +461,21 @@ function calculateLeagueTeamPowerRatings(season) {
     })).sort((a, b) => b.rating - a.rating || a.order - b.order);
 }
 
-function calculateLeaguePredictionConfidence(config, teamARow, teamBRow) {
-    const completedMatchesPerTeam = Math.min(teamARow.played || 0, teamBRow.played || 0);
-    if (completedMatchesPerTeam <= config.confidence.lowMaximumCompletedMatchesPerTeam) return 'Low confidence';
-    if (completedMatchesPerTeam <= config.confidence.mediumMaximumCompletedMatchesPerTeam) return 'Medium confidence';
-    return 'Higher confidence';
-}
-
-function calculateLeagueMatchPrediction(season, teamAId, teamBId, ratingRows = calculateLeagueTeamPowerRatings(season), options = {}) {
-    const config = season.powerRatingConfig.prediction;
-    const ratingRowsByTeam = new Map(ratingRows.map((row) => [row.teamId, row]));
-    const teamARow = ratingRowsByTeam.get(teamAId);
-    const teamBRow = ratingRowsByTeam.get(teamBId);
-    // Reserved public input for a future authoritative lineup model. It is neutral
-    // unless explicitly supplied and never reads private individual player tiers.
-    const lineupStrengthAdjustment = options.lineupStrengthAdjustment || {};
-    const ratingA = teamARow.rating + (lineupStrengthAdjustment.teamA || 0);
-    const ratingB = teamBRow.rating + (lineupStrengthAdjustment.teamB || 0);
-    const expectedA = 1 / (1 + (10 ** ((ratingB - ratingA) / season.powerRatingConfig.team.expectationDivisor)));
-    const ratingGap = Math.abs(ratingA - ratingB);
-    // Provisional until Season 1 has enough completed fixtures to calibrate the
-    // maximum, floor, and decay scale against its observed draw frequency.
-    const drawProbability = Math.max(
-        config.minimumDrawProbability,
-        config.maximumDrawProbability * Math.exp(-ratingGap / config.drawDecayScale)
-    );
-    const nonDrawProbability = 1 - drawProbability;
-    const teamAProbability = nonDrawProbability * expectedA;
-    const teamBProbability = nonDrawProbability * (1 - expectedA);
-    const teamAPercentage = Math.round(teamAProbability * 100);
-    const teamBPercentage = Math.round(teamBProbability * 100);
-    const drawPercentage = 100 - teamAPercentage - teamBPercentage;
-
-    return {
-        teamAId,
-        teamBId,
-        teamAProbability,
-        drawProbability,
-        teamBProbability,
-        teamAPercentage,
-        drawPercentage,
-        teamBPercentage,
-        confidence: calculateLeaguePredictionConfidence(config, teamARow, teamBRow),
-        completedMatches: {
-            teamA: teamARow.played || 0,
-            teamB: teamBRow.played || 0
-        },
-        lineupStrengthAdjustment: {
-            teamA: lineupStrengthAdjustment.teamA || 0,
-            teamB: lineupStrengthAdjustment.teamB || 0
-        }
-    };
-}
-
-function calculateLeagueUnplayedMatchupPredictions(season) {
-    const ratingRows = calculateLeagueTeamPowerRatings(season);
-    const predictions = [];
-
-    season.teams.forEach((teamA, index) => {
-        season.teams.slice(index + 1).forEach((teamB) => {
-            const playedMeetings = season.matches.filter((match) => (
-                (match.homeTeamId === teamA.id && match.awayTeamId === teamB.id)
-                || (match.homeTeamId === teamB.id && match.awayTeamId === teamA.id)
-            )).length;
-            const remainingMeetings = Math.max(0, 2 - playedMeetings);
-            if (!remainingMeetings) return;
-            predictions.push({
-                ...calculateLeagueMatchPrediction(season, teamA.id, teamB.id, ratingRows),
-                remainingMeetings
-            });
-        });
-    });
-
-    return predictions;
-}
-
 function getLeagueTeamsById(season) {
     return new Map(season.teams.map((team) => [team.id, team]));
 }
 
-function getLeaguePlayerTeams(season) {
+function getLeagueMatchPlayerTeams(season, match) {
     const playerTeams = new Map();
     season.teams.forEach((team) => {
         team.roster.forEach((player) => playerTeams.set(player, team.id));
+    });
+    // Match records are authoritative for historical participation. This keeps a
+    // player's old match affiliation intact after their current roster changes.
+    match.halves.forEach((half) => {
+        Object.entries(half.playerStats).forEach(([teamId, rows]) => {
+            rows.forEach(({ player }) => playerTeams.set(player, teamId));
+        });
     });
     return playerTeams;
 }
@@ -614,7 +540,7 @@ function deriveLeagueMatchParticipation(match) {
 
 function calculateLeagueMatchPlayerTotals(season, match) {
     const totals = new Map();
-    const playerTeams = getLeaguePlayerTeams(season);
+    const playerTeams = getLeagueMatchPlayerTeams(season, match);
     const participationRows = deriveLeagueMatchParticipation(match);
     const participantNames = new Set(participationRows.map(({ player }) => player));
     const ensurePlayer = (player) => {
@@ -994,33 +920,6 @@ function renderLeagueTeamPowerRatings(season) {
     `;
 }
 
-function renderLeaguePredictions(season) {
-    const teamsById = getLeagueTeamsById(season);
-    const predictions = calculateLeagueUnplayedMatchupPredictions(season);
-    return `
-        <section class="world-cup-card league-predictions" aria-labelledby="league-predictions-heading">
-            <div class="world-cup-header">
-                <h2 class="world-cup-title" id="league-predictions-heading">Predictions</h2>
-                <span class="league-update-note">Provisional · current team power ratings</span>
-            </div>
-            <div class="league-predictions-strip">
-                ${predictions.map((prediction) => {
-                    const teamA = teamsById.get(prediction.teamAId);
-                    const teamB = teamsById.get(prediction.teamBId);
-                    const highest = Math.max(prediction.teamAPercentage, prediction.drawPercentage, prediction.teamBPercentage);
-                    return `<article class="league-prediction-card">
-                        <div class="league-prediction-line ${prediction.teamAPercentage === highest ? 'league-probability-highest' : ''}"><img src="${escapeLeagueText(teamA.image)}" alt=""><span>${escapeLeagueText(teamA.name)}</span><strong>${prediction.teamAPercentage}%</strong></div>
-                        <div class="league-prediction-line league-prediction-draw ${prediction.drawPercentage === highest ? 'league-probability-highest' : ''}"><span>Draw</span><strong>${prediction.drawPercentage}%</strong></div>
-                        <div class="league-prediction-line ${prediction.teamBPercentage === highest ? 'league-probability-highest' : ''}"><img src="${escapeLeagueText(teamB.image)}" alt=""><span>${escapeLeagueText(teamB.name)}</span><strong>${prediction.teamBPercentage}%</strong></div>
-                        <div class="league-prediction-bar" aria-hidden="true"><i style="width:${prediction.teamAPercentage}%;--segment:${teamA.kit.accent || teamA.kit.primary}"></i><i style="width:${prediction.drawPercentage}%;--segment:#7b8796"></i><i style="width:${prediction.teamBPercentage}%;--segment:${teamB.kit.accent || teamB.kit.primary}"></i></div>
-                        <small>Provisional · ${prediction.confidence} · ${prediction.remainingMeetings} ${prediction.remainingMeetings === 1 ? 'meeting' : 'meetings'} remaining</small>
-                    </article>`;
-                }).join('')}
-            </div>
-        </section>
-    `;
-}
-
 function renderLeaguePlayerPowerRankings(season) {
     const rows = calculateLeaguePlayerPowerRankings(season).slice(0, 10);
     const teamsById = getLeagueTeamsById(season);
@@ -1068,6 +967,21 @@ function renderLeagueStartingVi(season, match, className = 'league-starting-vi')
 
 function renderLeagueLatestLineupPreview(season, match) {
     return renderLeagueStartingVi(season, match, 'league-latest-lineup-preview');
+}
+
+function renderLeagueMatchRecording(match, variant = 'preview') {
+    if (!match.recording?.url || !match.recording.thumbnail) return '';
+    const label = variant === 'preview' ? 'Watch full match' : 'Watch match recording';
+    if (variant === 'link') {
+        return `<a class="league-match-recording-link" href="${escapeLeagueText(match.recording.url)}" target="_blank" rel="noopener noreferrer"><span aria-hidden="true">▶</span>${label}</a>`;
+    }
+    return `
+        <a class="league-match-recording-card" href="${escapeLeagueText(match.recording.url)}" target="_blank" rel="noopener noreferrer" aria-label="${label} on YouTube">
+            <img src="${escapeLeagueText(match.recording.thumbnail)}" alt="Match recording thumbnail" loading="lazy">
+            <span class="league-match-recording-play" aria-hidden="true">▶</span>
+            <span class="league-match-recording-label">${label}</span>
+        </a>
+    `;
 }
 
 function renderLdcRsLeagueResults(season) {
@@ -1123,6 +1037,7 @@ function renderLdcRsLeagueResults(season) {
                             </summary>
                             <div class="league-match-details">${renderLeagueMatchView(season, match)}</div>
                         </details>
+                        ${isMostRecent ? renderLeagueMatchRecording(match) : ''}
                     `;
                 }).join('')}
             </div>
@@ -1284,7 +1199,7 @@ function renderLeagueEventTimeline(season, match) {
     const events = deriveLeagueMatchEvents(match);
     const homeTeam = teamsById.get(match.homeTeamId);
     const awayTeam = teamsById.get(match.awayTeamId);
-    const playerTeams = getLeaguePlayerTeams(season);
+    const playerTeams = getLeagueMatchPlayerTeams(season, match);
     const resolveEventTeamId = (event) => event.teamId || playerTeams.get(event.player);
     const eventGroups = events.reduce((groups, event) => {
         const currentGroup = groups.at(-1);
@@ -1368,6 +1283,7 @@ function renderLeagueMatchView(season, match) {
                     <span>${escapeLeagueText(homeTeam.name)}</span><strong>${match.homeGoals}<i>–</i>${match.awayGoals}</strong><span>${escapeLeagueText(awayTeam.name)}</span>
                 </div>
                 <p class="league-match-mvp"><span>MVP</span> ${escapeLeagueText(match.mvp)}</p>
+                ${renderLeagueMatchRecording(match, 'link')}
             </div>
             <div class="league-match-tabs" role="tablist" aria-label="Match details">
                 ${[['statistics', 'Statistics'], ['events', 'Events'], ['players', 'Players']].map(([key, label]) => `<button type="button" role="tab" aria-selected="${activeTab === key}" aria-controls="${match.id}-${key}-panel" data-league-match-tab="${key}" data-match-id="${match.id}" class="${activeTab === key ? 'active' : ''}">${label}</button>`).join('')}
@@ -1593,8 +1509,6 @@ function renderLdcRsLeagueSeason(focusSelector = null) {
                 ${renderLeagueTeamPowerRatings(season)}
                 ${renderLeaguePlayerPowerRankings(season)}
             </div>
-
-            ${renderLeaguePredictions(season)}
 
             ${renderLdcRsLeagueResults(season)}
 

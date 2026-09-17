@@ -13,7 +13,7 @@ const context = {
     document: { getElementById: () => null }
 };
 vm.createContext(context);
-vm.runInContext(`${leagueScript}\nthis.season = ldcRsLeagueSeason1; this.modelVersions = { team: LEAGUE_TEAM_POWER_MODEL_VERSION, player: LEAGUE_PLAYER_POWER_MODEL_VERSION, prediction: LEAGUE_PREDICTION_MODEL_VERSION }; this.calculate = calculateLdcRsLeagueStandings; this.teamHistory = calculateLeagueTeamPowerHistory; this.teamPower = calculateLeagueTeamPowerRatings; this.predict = calculateLeagueMatchPrediction; this.unplayedPredictions = calculateLeagueUnplayedMatchupPredictions; this.playerPower = calculateLeaguePlayerPowerRankings; this.playerMatchPower = calculateLeaguePlayerMatchPower; this.playerConfidence = calculateLeaguePlayerPowerConfidence; this.opponentMultiplier = calculateLeagueOpponentMultiplier; this.matchPlayerTotals = calculateLeagueMatchPlayerTotals; this.seasonPlayerTotals = calculateLeagueSeasonPlayerTotals; this.leaderboardRows = calculateLeagueSeasonLeaderboardRows; this.leaderboardRowsFromTotals = calculateLeagueLeaderboardRowsFromTotals; this.leaderboardMedals = calculateLeagueLeaderboardMedals; this.matchTeamTotals = calculateLeagueMatchTeamTotals; this.participation = deriveLeagueMatchParticipation; this.matchEvents = deriveLeagueMatchEvents; this.statisticsRows = getLeagueStatisticsRows; this.formatClock = formatLeagueClock; this.renderResults = renderLdcRsLeagueResults; this.renderEvents = renderLeagueEventTimeline; this.renderLeaderboard = renderLeagueSeasonLeaderboard; this.renderPredictions = renderLeaguePredictions; this.renderPlayerPower = renderLeaguePlayerPowerRankings; this.expandedMatches = leagueExpandedMatches; this.matchModes = leagueMatchDetailModes; this.statisticsPeriods = leagueStatisticsPeriods; this.setLeaderboardMode = (metric, rate) => { leagueSeasonStatMode = metric; leagueSeasonRateMode = rate; };`, context);
+vm.runInContext(`${leagueScript}\nthis.season = ldcRsLeagueSeason1; this.modelVersions = { team: LEAGUE_TEAM_POWER_MODEL_VERSION, player: LEAGUE_PLAYER_POWER_MODEL_VERSION }; this.calculate = calculateLdcRsLeagueStandings; this.teamHistory = calculateLeagueTeamPowerHistory; this.teamPower = calculateLeagueTeamPowerRatings; this.playerPower = calculateLeaguePlayerPowerRankings; this.playerMatchPower = calculateLeaguePlayerMatchPower; this.playerConfidence = calculateLeaguePlayerPowerConfidence; this.opponentMultiplier = calculateLeagueOpponentMultiplier; this.matchPlayerTotals = calculateLeagueMatchPlayerTotals; this.seasonPlayerTotals = calculateLeagueSeasonPlayerTotals; this.leaderboardRows = calculateLeagueSeasonLeaderboardRows; this.leaderboardRowsFromTotals = calculateLeagueLeaderboardRowsFromTotals; this.leaderboardMedals = calculateLeagueLeaderboardMedals; this.matchTeamTotals = calculateLeagueMatchTeamTotals; this.participation = deriveLeagueMatchParticipation; this.matchEvents = deriveLeagueMatchEvents; this.statisticsRows = getLeagueStatisticsRows; this.formatClock = formatLeagueClock; this.renderResults = renderLdcRsLeagueResults; this.renderEvents = renderLeagueEventTimeline; this.renderLeaderboard = renderLeagueSeasonLeaderboard; this.renderTeam = renderLdcRsLeagueTeam; this.renderPlayerPower = renderLeaguePlayerPowerRankings; this.expandedMatches = leagueExpandedMatches; this.matchModes = leagueMatchDetailModes; this.statisticsPeriods = leagueStatisticsPeriods; this.setLeaderboardMode = (metric, rate) => { leagueSeasonStatMode = metric; leagueSeasonRateMode = rate; };`, context);
 
 const season = context.season;
 assert.equal(season.title, 'LDC RS League Season 1');
@@ -32,7 +32,7 @@ const expectedRosters = {
     'OG FC': ['𝐌𝐨𝐬𝐭𝐚𝐟𝐚 𝐙𝐢𝐤𝐨', 'Mbappe', 'Nistel', 'Nijad', 'MeeRo', 'Dynaxz', 'Lookman', 'Brutus', 'MaksLuburic', 'Olise', 'saygex', 'Wizop', 'ToughBaby'],
     'X TO WIN 2': ['Drkuu', 'Ibrahim', 'SamueleRicci', 'Berbatov', 'Naeh', 'SVimes', 'maccy', 'atrocity exhibition', 'elex', 'mitrita KING', 'Wakanda', 'tsukuyomi.', 'wee', 'Johnny Sins'],
     HUQQA: ['Menéur', 'Lena', 'Ollhurse', 'Perkz', 'Mattéo Guendouzi', 'unknown-user', 'barn', 'Razor', 'Grmii', 'Himothy', 'Kimmich', 'whân'],
-    'ROONEY TUNES': ['KK', 'MRN', 'click', 'Vonmacron', 'Antax', 'sergicanos', 'Minicostaud', 'Kahn', 'Swajin', 'ilaola', 'fkfk', '1m bad']
+    'ROONEY TUNES': ['KK', 'MRN', 'click', 'Vonmacron', 'Antax', 'Minicostaud', 'Kahn', 'Swajin', 'ilaola', 'fkfk', '1m bad', 'FITOCHI', 'Luqman', 'JV']
 };
 
 season.teams.forEach((team) => {
@@ -46,6 +46,15 @@ season.teams.forEach((team) => {
     assert.equal(fs.existsSync(path.join(root, team.image)), true, `${team.name} local image exists`);
 });
 assert.equal(season.teams.find((team) => team.name === 'X TO WIN 2').roster.length, 14);
+const rooneyTunes = season.teams.find((team) => team.id === 'rooney-tunes');
+assert.equal(rooneyTunes.roster.length, 14);
+assert.equal(new Set(rooneyTunes.roster).size, 14);
+assert.equal(rooneyTunes.roster.includes('sergicanos'), false);
+['FITOCHI', 'Luqman', 'JV'].forEach((player) => assert.equal(rooneyTunes.roster.includes(player), true));
+const rooneyRosterMarkup = context.renderTeam(rooneyTunes);
+assert.match(rooneyRosterMarkup, /14 players/);
+assert.doesNotMatch(rooneyRosterMarkup, /sergicanos/);
+['FITOCHI', 'Luqman', 'JV'].forEach((player) => assert.match(rooneyRosterMarkup, new RegExp(`<li>${player}<\\/li>`)));
 assert.equal(leagueScript.includes("'Boat'"), false);
 assert.deepEqual(JSON.parse(JSON.stringify(season.teams.find((team) => team.id === 'x-to-win-2').kit)), {
     primary: '#080808', secondary: '#d4af37', accent: '#d4af37', pattern: 'pinstripes', source: 'configured-team-kit'
@@ -66,14 +75,6 @@ assert.deepEqual(JSON.parse(JSON.stringify(season.powerRatingConfig)), {
             'rooney-tunes': 1446
         }
     },
-    prediction: {
-        modelVersion: 2,
-        calibrationStatus: 'provisional',
-        maximumDrawProbability: 0.28,
-        minimumDrawProbability: 0.1,
-        drawDecayScale: 300,
-        confidence: { lowMaximumCompletedMatchesPerTeam: 1, mediumMaximumCompletedMatchesPerTeam: 3 }
-    },
     player: {
         modelVersion: 1,
         goal: 5,
@@ -89,7 +90,7 @@ assert.deepEqual(JSON.parse(JSON.stringify(season.powerRatingConfig)), {
         confidence: { lowAppearances: 1, mediumAppearances: 3 }
     }
 });
-assert.deepEqual(JSON.parse(JSON.stringify(context.modelVersions)), { team: 1, player: 1, prediction: 2 });
+assert.deepEqual(JSON.parse(JSON.stringify(context.modelVersions)), { team: 1, player: 1 });
 assert.doesNotMatch(leagueScript, /(player|ability|roster)Tier\s*[:=]/i);
 assert.doesNotMatch(leagueScript, /tierLabel\s*[:=]/i);
 
@@ -100,6 +101,12 @@ assert.equal(match.awayTeamId, 'rooney-tunes');
 assert.equal(match.homeGoals, 5);
 assert.equal(match.awayGoals, 0);
 assert.equal(match.mvp, 'Drkuu');
+assert.deepEqual(JSON.parse(JSON.stringify(match.recording)), {
+    provider: 'youtube',
+    url: 'https://www.youtube.com/watch?v=92OWXudDb7Q',
+    videoId: '92OWXudDb7Q',
+    thumbnail: 'https://i.ytimg.com/vi/92OWXudDb7Q/maxresdefault.jpg'
+});
 assert.deepEqual(JSON.parse(JSON.stringify(match.cleanSheetHalves)), [
     { player: 'atrocity exhibition', value: 1 },
     { player: 'Naeh', value: 1 }
@@ -232,6 +239,12 @@ assert.deepEqual(JSON.parse(JSON.stringify(context.matchTeamTotals(match, 'roone
 
 const playerTotals = context.matchPlayerTotals(season, match);
 const stat = (player) => playerTotals.find((row) => row.player === player);
+['FITOCHI', 'Luqman', 'JV'].forEach((player) => {
+    assert.equal(stat(player), undefined, `${player} has no fabricated Match 1 statistics`);
+    assert.equal(context.participation(match).some((row) => row.player === player), false, `${player} has no Match 1 appearance`);
+    assert.equal(match.positionStints['rooney-tunes'].some((row) => row.player === player), false, `${player} has no Match 1 position`);
+    assert.equal(match.scoringEvents.some((event) => event.player === player || event.assist === player), false, `${player} has no Match 1 event`);
+});
 const playerKeys = ['kicks', 'passes', 'shotsOnGoal', 'goals', 'assists', 'ownGoals', 'mvps', 'cleanSheetHalves'];
 const expectedPlayerTotals = {
     maccy: [26, 17, 5, 0, 0, 0, 0, 0],
@@ -304,68 +317,10 @@ assert.deepEqual(
     JSON.parse(JSON.stringify(originalHistoricalPlayerPower.map(({ player, score }) => ({ player, score }))))
 );
 
-const predictions = context.unplayedPredictions(season);
-assert.equal(predictions.length, 15);
-predictions.forEach((prediction) => {
-    assert.equal(Math.abs(prediction.teamAProbability + prediction.drawProbability + prediction.teamBProbability - 1) < 1e-12, true);
-    assert.equal(Math.abs(prediction.teamAPercentage + prediction.drawPercentage + prediction.teamBPercentage - 100) < 1e-9, true);
-    assert.equal(Number.isInteger(prediction.teamAPercentage), true);
-    assert.equal(prediction.confidence, 'Low confidence');
-});
-const xtwVsBaguette = context.predict(season, 'x-to-win-2', 'baguette-z-apex', teamPower);
-assert.equal(xtwVsBaguette.teamAProbability > xtwVsBaguette.teamBProbability, true);
-const equalPrediction = context.predict(season, 'x-to-win-2', 'baguette-z-apex', [
-    { teamId: 'x-to-win-2', rating: 1500 }, { teamId: 'baguette-z-apex', rating: 1500 }
-]);
-assert.equal(Math.abs(equalPrediction.teamAProbability - equalPrediction.teamBProbability) < 1e-12, true);
-assert.equal(equalPrediction.teamAPercentage, equalPrediction.teamBPercentage);
-assert.equal(equalPrediction.drawProbability, season.powerRatingConfig.prediction.maximumDrawProbability);
-assert.deepEqual(JSON.parse(JSON.stringify(equalPrediction.lineupStrengthAdjustment)), { teamA: 0, teamB: 0 });
-const predictionAtGap = (gap) => context.predict(season, 'x-to-win-2', 'baguette-z-apex', [
-    { teamId: 'x-to-win-2', rating: 1500 + gap },
-    { teamId: 'baguette-z-apex', rating: 1500 }
-]);
-const gap50Prediction = predictionAtGap(50);
-const gap100Prediction = predictionAtGap(100);
-const gap150Prediction = predictionAtGap(150);
-const gap200Prediction = predictionAtGap(200);
-const gap300Prediction = predictionAtGap(300);
-const minimumDrawPrediction = predictionAtGap(2000);
-assert.equal(equalPrediction.drawProbability > gap50Prediction.drawProbability, true);
-assert.equal(gap50Prediction.drawProbability > gap100Prediction.drawProbability, true);
-assert.equal(gap100Prediction.drawProbability > gap150Prediction.drawProbability, true);
-assert.equal(gap150Prediction.drawProbability > gap200Prediction.drawProbability, true);
-assert.equal(gap200Prediction.drawProbability > gap300Prediction.drawProbability, true);
-assert.equal(equalPrediction.drawProbability - gap100Prediction.drawProbability > 0.07, true);
-assert.equal(gap100Prediction.drawProbability - gap200Prediction.drawProbability > 0.05, true);
-assert.equal(Math.abs(gap50Prediction.drawProbability - 0.237) < 0.002, true);
-assert.equal(Math.abs(gap100Prediction.drawProbability - 0.201) < 0.002, true);
-assert.equal(Math.abs(gap150Prediction.drawProbability - 0.170) < 0.002, true);
-assert.equal(Math.abs(gap200Prediction.drawProbability - 0.144) < 0.002, true);
-assert.equal(Math.abs(gap300Prediction.drawProbability - 0.103) < 0.002, true);
-assert.equal(minimumDrawPrediction.drawProbability, season.powerRatingConfig.prediction.minimumDrawProbability);
-const swappedGap100Prediction = context.predict(season, 'baguette-z-apex', 'x-to-win-2', [
-    { teamId: 'x-to-win-2', rating: 1600 },
-    { teamId: 'baguette-z-apex', rating: 1500 }
-]);
-assert.equal(swappedGap100Prediction.drawProbability, gap100Prediction.drawProbability);
-assert.equal(Math.abs(swappedGap100Prediction.teamAProbability - gap100Prediction.teamBProbability) < 1e-12, true);
-assert.equal(Math.abs(swappedGap100Prediction.teamBProbability - gap100Prediction.teamAProbability) < 1e-12, true);
-[equalPrediction, gap50Prediction, gap100Prediction, gap150Prediction, gap200Prediction, gap300Prediction, minimumDrawPrediction, swappedGap100Prediction].forEach((prediction) => {
-    assert.equal(Math.abs(prediction.teamAProbability + prediction.drawProbability + prediction.teamBProbability - 1) < 1e-12, true);
-    assert.equal(prediction.teamAPercentage + prediction.drawPercentage + prediction.teamBPercentage, 100);
-});
-assert.equal(JSON.stringify(predictionAtGap(100)), JSON.stringify(gap100Prediction));
-assert.equal(context.predict(season, 'x-to-win-2', 'baguette-z-apex', [
-    { teamId: 'x-to-win-2', rating: 1500, played: 2 }, { teamId: 'baguette-z-apex', rating: 1500, played: 2 }
-]).confidence, 'Medium confidence');
-assert.equal(context.predict(season, 'x-to-win-2', 'baguette-z-apex', [
-    { teamId: 'x-to-win-2', rating: 1500, played: 4 }, { teamId: 'baguette-z-apex', rating: 1500, played: 4 }
-]).confidence, 'Higher confidence');
-const predictionMarkup = context.renderPredictions(season);
-assert.match(predictionMarkup, /Provisional/);
-assert.match(predictionMarkup, /league-prediction-card/);
-assert.doesNotMatch(predictionMarkup, /scoreline|betting|odds/i);
+assert.doesNotMatch(leagueScript, /prediction/i);
+assert.doesNotMatch(html, /league-prediction|league-predictions/i);
+assert.doesNotMatch(html, /Predictions/i);
+assert.match(leagueScript, /Team Power Ratings/);
 assert.equal(context.seasonPlayerTotals(season).find((row) => row.player === 'Berbatov').goalContributions, 3);
 
 const playerPower = context.playerPower(season);
@@ -416,15 +371,15 @@ assert.equal(context.formatClock(504.5, true), '~8:25');
 assert.equal(context.formatClock(588, false, false), '9:48');
 assert.equal(playerTotals.every((row) => row.appearances === 1), true);
 
-const canonicalPlayers = new Set(season.teams.flatMap((team) => team.roster));
-match.halves.flatMap((half) => Object.values(half.playerStats).flat()).forEach((row) => assert.equal(canonicalPlayers.has(row.player), true, `Unknown player ${row.player}`));
-Object.values(match.lineups).flatMap((half) => Object.values(half).flat()).forEach((player) => assert.equal(canonicalPlayers.has(player), true, `Unknown lineup player ${player}`));
+const historicalPlayers = new Set(match.halves.flatMap((half) => Object.values(half.playerStats).flat().map((row) => row.player)));
+match.halves.flatMap((half) => Object.values(half.playerStats).flat()).forEach((row) => assert.equal(historicalPlayers.has(row.player), true, `Missing historical player ${row.player}`));
+Object.values(match.lineups).flatMap((half) => Object.values(half).flat()).forEach((player) => assert.equal(historicalPlayers.has(player), true, `Missing historical lineup player ${player}`));
 match.substitutions.forEach((substitution) => {
-    assert.equal(canonicalPlayers.has(substitution.playerIn), true, `Unknown substitute ${substitution.playerIn}`);
-    assert.equal(canonicalPlayers.has(substitution.playerOut), true, `Unknown substituted player ${substitution.playerOut}`);
+    assert.equal(historicalPlayers.has(substitution.playerIn), true, `Missing historical substitute ${substitution.playerIn}`);
+    assert.equal(historicalPlayers.has(substitution.playerOut), true, `Missing historical substituted player ${substitution.playerOut}`);
 });
-Object.values(match.goalkeepers).flatMap((half) => Object.values(half)).forEach((player) => assert.equal(canonicalPlayers.has(player), true, `Unknown goalkeeper ${player}`));
-Object.values(match.startingLineups).flat().forEach((entry) => assert.equal(canonicalPlayers.has(entry.player), true, `Unknown starting-lineup player ${entry.player}`));
+Object.values(match.goalkeepers).flatMap((half) => Object.values(half)).forEach((player) => assert.equal(historicalPlayers.has(player), true, `Missing historical goalkeeper ${player}`));
+Object.values(match.startingLineups).flat().forEach((entry) => assert.equal(historicalPlayers.has(entry.player), true, `Missing historical starting-lineup player ${entry.player}`));
 const appearingPlayersByTeam = Object.fromEntries(['x-to-win-2', 'rooney-tunes'].map((teamId) => [teamId, new Set(
     match.halves.flatMap((half) => half.playerStats[teamId].map((row) => row.player))
 )]));
@@ -432,9 +387,16 @@ Object.entries(match.positionStints).forEach(([teamId, entries]) => {
     assert.deepEqual(new Set(entries.map(({ player }) => player)), appearingPlayersByTeam[teamId], `Every ${teamId} appearance has position stints`);
 });
 match.scoringEvents.forEach((event) => {
-    assert.equal(canonicalPlayers.has(event.player), true, `Unknown scoring player ${event.player}`);
-    if (event.assist) assert.equal(canonicalPlayers.has(event.assist), true, `Unknown assisting player ${event.assist}`);
+    assert.equal(historicalPlayers.has(event.player), true, `Missing historical scoring player ${event.player}`);
+    if (event.assist) assert.equal(historicalPlayers.has(event.assist), true, `Missing historical assisting player ${event.assist}`);
 });
+const changedCurrentRosterSeason = {
+    ...season,
+    teams: season.teams.map((team) => team.id === 'rooney-tunes'
+        ? { ...team, roster: team.roster.filter((player) => player !== 'click') }
+        : team)
+};
+assert.equal(context.matchPlayerTotals(changedCurrentRosterSeason, match).find((row) => row.player === 'click').teamId, 'rooney-tunes');
 
 assert.match(html, /data-tab="ldc-rs-league-season-1">LDC RS League Season 1</);
 assert.match(html, /class="tab active" data-tab="ldc-rs-league-season-1"/);
@@ -446,6 +408,8 @@ assert.match(html, /\.league-teams-grid/);
 assert.match(html, /\.league-match-section/);
 assert.match(html, /\.league-season-stats/);
 assert.match(html, /\.league-match-disclosure/);
+assert.match(html, /\.league-match-recording-card/);
+assert.match(html, /aspect-ratio:\s*16\s*\/\s*9/);
 assert.match(html, /\.league-starting-vi-grid/);
 assert.match(html, /\.league-standings-table th:not\(:first-child\)/);
 assert.doesNotMatch(leagueScript, /Six teams play a double round robin/);
@@ -457,6 +421,12 @@ assert.doesNotMatch(resultsMarkup, /data-match-id="match-1-x-to-win-2-v-rooney-t
 assert.match(resultsMarkup, /View full details →/);
 assert.match(resultsMarkup, /<small>MVP<\/small><strong>Drkuu<\/strong>/);
 assert.match(resultsMarkup, /Berbatov ×2 · Drkuu · Naeh · ilaola OG/);
+assert.match(resultsMarkup, /class="league-match-recording-card" href="https:\/\/www\.youtube\.com\/watch\?v=92OWXudDb7Q" target="_blank" rel="noopener noreferrer"/);
+assert.match(resultsMarkup, /src="https:\/\/i\.ytimg\.com\/vi\/92OWXudDb7Q\/maxresdefault\.jpg"[^>]*loading="lazy"/);
+assert.match(resultsMarkup, /league-match-recording-play/);
+assert.match(resultsMarkup, /Watch full match/);
+assert.match(resultsMarkup, /Watch match recording/);
+assert.doesNotMatch(resultsMarkup, /<iframe|autoplay/i);
 assert.match(resultsMarkup, /<h2 class="league-starting-vi-title">Starting VI<\/h2>/);
 assert.equal((resultsMarkup.match(/league-starting-vi-team/g) || []).length, 2);
 assert.doesNotMatch(resultsMarkup, /league-mini-pitch|league-pitch|ATTACKING →/);
@@ -503,6 +473,11 @@ const twoMatchResultsMarkup = context.renderResults({
 assert.equal((twoMatchResultsMarkup.match(/league-match-latest/g) || []).length, 1);
 assert.match(twoMatchResultsMarkup, /class="league-match-disclosure" data-match-id="older-completed-match"/);
 assert.match(twoMatchResultsMarkup, /data-match-id="older-completed-match"[\s\S]*?Match details →/);
+const noRecordingMarkup = context.renderResults({
+    ...season,
+    matches: [{ ...match, recording: undefined }]
+});
+assert.doesNotMatch(noRecordingMarkup, /league-match-recording-(card|link|play)/);
 
 const totalStats = context.statisticsRows(season, match, 'total');
 assert.deepEqual(JSON.parse(JSON.stringify(totalStats.rows.map((row) => row.label))), ['Kicks', 'Passes', 'Shots on Goal']);
