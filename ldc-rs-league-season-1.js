@@ -103,7 +103,7 @@ const ldcRsLeagueSeason1 = {
             owner: 'Ollhurse',
             captain: 'Lena',
             coCaptain: 'Ollhurse',
-            roster: ['Menéur', 'Lena', 'Ollhurse', 'Perkz', 'Mattéo Guendouzi', 'unknown-user', 'barn', 'Razor', 'Grmii', 'Himothy', 'Kimmich', 'whân']
+            roster: ['Menéur', 'Lena', 'Ollhurse', 'Perkz', 'Saviolo', 'unknown-user', 'barn', 'Razor', 'Grmii', 'Himothy', 'Kimmich', 'whân']
         },
         {
             id: 'rooney-tunes',
@@ -514,6 +514,138 @@ const ldcRsLeagueSeason1 = {
                 { player: 'Nistel', teamId: 'og-fc', half: 2, status: 'goalkeeper', cleanSheetEligible: true },
                 { player: 'GK', teamId: 'hax-united', half: 1, status: 'goalkeeper', cleanSheetEligible: true },
                 { player: 'GK', teamId: 'hax-united', half: 2, status: 'goalkeeper', cleanSheetEligible: true }
+            ]
+        },
+        {
+            id: 'match-3-huqqa-v-baguette-z-apex',
+            homeTeamId: 'huqqa',
+            awayTeamId: 'baguette-z-apex',
+            homeGoals: 1,
+            awayGoals: 0,
+            duration: {
+                totalSeconds: 989,
+                endTimeKnown: true,
+                halves: [
+                    { half: 1, seconds: 477, display: '7:57', endTimeKnown: true },
+                    { half: 2, seconds: 512, display: '8:32', endTimeKnown: true }
+                ]
+            },
+            conclusion: { type: 'full-time', score: '1–0' },
+            mvp: 'Grmii',
+            cleanSheetHalves: [
+                { player: 'Lena', value: 2 },
+                { player: 'luur', value: 1 }
+            ],
+            scoringEvents: [
+                {
+                    score: '1–0', type: 'goal', player: 'Grmii', assist: null,
+                    attribution: 'manual-adjudication-overrides-automatic-source',
+                    timing: { type: 'exact', seconds: 47, halfSeconds: 47, cumulativeSeconds: 47, display: '00:47 (1H)', halfDisplay: '0:47', cumulativeDisplay: '0:47', timelineDisplay: '0:47 1H' }
+                }
+            ],
+            halves: [
+                {
+                    label: 'First half', sourceGameTime: '7:57', homeGoals: 1, awayGoals: 0,
+                    teamStats: {
+                        huqqa: { possession: 51.7, kicks: 124, passes: 58, shotsOnGoal: 3 },
+                        'baguette-z-apex': { possession: 48.3, kicks: 121, passes: 56, shotsOnGoal: 3 }
+                    },
+                    playerStats: { huqqa: [], 'baguette-z-apex': [] }
+                },
+                {
+                    label: 'Second half', sourceGameTime: '8:32', homeGoals: 0, awayGoals: 0,
+                    teamStats: {
+                        huqqa: { possession: 45.4, kicks: 121, passes: 54, shotsOnGoal: 6 },
+                        'baguette-z-apex': { possession: 54.6, kicks: 132, passes: 60, shotsOnGoal: 2 }
+                    },
+                    playerStats: { huqqa: [], 'baguette-z-apex': [] }
+                }
+            ],
+            fullMatchPlayerStats: {
+                huqqa: [
+                    { player: 'Grmii', kicks: 37, passes: 19, shotsOnGoal: 2 },
+                    { player: 'Saviolo', kicks: 31, passes: 9, shotsOnGoal: 3 },
+                    { player: 'Ollhurse', kicks: 34, passes: 16, shotsOnGoal: 2 },
+                    { player: 'Perkz', kicks: 59, passes: 31, shotsOnGoal: 2 },
+                    { player: 'Lena', kicks: 46, passes: 24, shotsOnGoal: 0 },
+                    { player: 'Kimmich', kicks: 38, passes: 13, shotsOnGoal: 0 }
+                ],
+                'baguette-z-apex': [
+                    { player: 'zenix', kicks: 31, passes: 13, shotsOnGoal: 2 },
+                    { player: 'V4KS', kicks: 48, passes: 20, shotsOnGoal: 1 },
+                    { player: 'Spero', kicks: 22, passes: 7, shotsOnGoal: 0 },
+                    { player: 'evilpedri', kicks: 35, passes: 15, shotsOnGoal: 0 },
+                    { player: 'luur', kicks: 54, passes: 29, shotsOnGoal: 0 },
+                    { player: 'oskar', kicks: 22, passes: 9, shotsOnGoal: 1 },
+                    { player: 'Shield', kicks: 10, passes: 5, shotsOnGoal: 0 },
+                    { player: 'Nympex', kicks: 31, passes: 18, shotsOnGoal: 1 }
+                ]
+            },
+            lineups: {
+                firstHalf: {
+                    huqqa: ['Lena', 'Kimmich', 'Ollhurse', 'Perkz', 'Grmii', 'Saviolo'],
+                    'baguette-z-apex': ['luur', 'V4KS', 'evilpedri', 'oskar', 'zenix', 'Spero']
+                },
+                secondHalf: {
+                    huqqa: ['Lena', 'Kimmich', 'Ollhurse', 'Perkz', 'Grmii', 'Saviolo'],
+                    'baguette-z-apex': ['luur', 'V4KS', 'evilpedri', 'Nympex', 'zenix', 'Shield']
+                }
+            },
+            startingLineups: {
+                huqqa: [
+                    { player: 'Lena', position: 'GK' }, { player: 'Kimmich', position: 'CDM' },
+                    { player: 'Ollhurse', position: 'CM' }, { player: 'Perkz', position: 'LW' },
+                    { player: 'Grmii', position: 'RW' }, { player: 'Saviolo', position: 'ST' }
+                ],
+                'baguette-z-apex': [
+                    { player: 'luur', position: 'GK' }, { player: 'V4KS', position: 'CDM' },
+                    { player: 'evilpedri', position: 'CM' }, { player: 'oskar', position: 'CAM' },
+                    { player: 'zenix', position: 'LW' }, { player: 'Spero', position: 'ST' }
+                ]
+            },
+            positionStints: {
+                huqqa: [
+                    { player: 'Lena', stints: [{ half: 1, position: 'GK' }, { half: 2, position: 'GK' }] },
+                    { player: 'Kimmich', stints: [{ half: 1, position: 'CDM' }, { half: 2, position: 'CDM' }] },
+                    { player: 'Ollhurse', stints: [{ half: 1, position: 'CM' }, { half: 2, position: 'CM' }] },
+                    { player: 'Perkz', stints: [{ half: 1, position: 'LW' }, { half: 2, position: 'LW' }] },
+                    { player: 'Grmii', stints: [{ half: 1, position: 'RW' }, { half: 2, position: 'RW' }] },
+                    { player: 'Saviolo', stints: [{ half: 1, position: 'ST' }, { half: 2, position: 'ST' }] }
+                ],
+                'baguette-z-apex': [
+                    { player: 'luur', stints: [{ half: 1, position: 'GK' }, { half: 2, position: 'GK' }] },
+                    { player: 'V4KS', stints: [{ half: 1, position: 'CDM' }, { half: 2, position: 'CDM' }] },
+                    { player: 'evilpedri', stints: [{ half: 1, position: 'CM' }, { half: 2, position: 'CM' }] },
+                    { player: 'zenix', stints: [{ half: 1, position: 'LW' }, { half: 2, position: 'LW' }] },
+                    { player: 'oskar', stints: [{ half: 1, position: 'CAM' }], note: 'off at HT', highlight: true },
+                    { player: 'Nympex', stints: [{ half: 2, position: 'CAM' }], note: 'on for oskar at HT', highlight: true },
+                    { player: 'Spero', stints: [{ half: 1, position: 'ST' }, { half: 2, position: 'ST' }], note: 'off at HT, returned in 2H for Shield', highlight: true },
+                    { player: 'Shield', stints: [{ half: 2, position: 'ST', until: 'substituted' }], note: 'on for Spero at HT', highlight: true }
+                ]
+            },
+            substitutions: [
+                {
+                    teamId: 'baguette-z-apex', half: 'halftime', playerIn: 'Nympex', playerOut: 'oskar',
+                    timing: { type: 'halftime', display: 'Halftime' }
+                },
+                {
+                    teamId: 'baguette-z-apex', half: 'halftime', playerIn: 'Shield', playerOut: 'Spero',
+                    timing: { type: 'halftime', display: 'Halftime' }
+                },
+                {
+                    teamId: 'baguette-z-apex', half: 2, playerIn: 'Spero', playerOut: 'Shield',
+                    timing: { type: 'observed-interval', observedStart: 318.150, observedEnd: 340.500, display: '05:18.150–05:40.500 (2H)', timelineDisplay: '5:18–5:40 2H', approximateDisplay: '5:29 2H', estimated: true }
+                }
+            ],
+            goalkeepers: {
+                firstHalf: { huqqa: 'Lena', 'baguette-z-apex': 'luur' },
+                secondHalf: { huqqa: 'Lena', 'baguette-z-apex': 'luur' }
+            },
+            goalkeeperAssignments: [
+                { player: 'Lena', teamId: 'huqqa', half: 1, status: 'goalkeeper', cleanSheetEligible: true },
+                { player: 'Lena', teamId: 'huqqa', half: 2, status: 'goalkeeper', cleanSheetEligible: true },
+                { player: 'luur', teamId: 'baguette-z-apex', half: 1, status: 'goalkeeper', cleanSheetEligible: true },
+                { player: 'luur', teamId: 'baguette-z-apex', half: 2, status: 'goalkeeper', cleanSheetEligible: true }
             ]
         }
     ]
@@ -1125,7 +1257,7 @@ function renderLdcRsLeagueResults(season) {
         <section class="world-cup-card league-results-card" aria-labelledby="league-results-heading">
             <div class="world-cup-header"><h2 class="world-cup-title" id="league-results-heading">Recent matches</h2><span class="league-update-note">Select a result for the full record</span></div>
             <div class="league-results-list">
-                ${season.matches.map((match) => {
+                ${[...season.matches].reverse().map((match) => {
                     const isMostRecent = match.id === mostRecentMatchId;
                     const homeTeam = teamsById.get(match.homeTeamId);
                     const awayTeam = teamsById.get(match.awayTeamId);

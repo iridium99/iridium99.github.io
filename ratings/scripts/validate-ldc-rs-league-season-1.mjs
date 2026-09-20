@@ -26,14 +26,14 @@ assert.deepEqual(JSON.parse(JSON.stringify(season.format)), {
 });
 assert.equal(season.teams.length, 6);
 assert.equal(season.matches.length, 1);
-assert.equal(fullSeason.matches.length, 2);
+assert.equal(fullSeason.matches.length, 3);
 
 const expectedRosters = {
     'Baguette Z Apex': ['Spero', 'V4KS', 'luur', 'zenix', 'oskar', 'Nympex', 'amaanofc', 'evilpedri', 'x', 'myrulez', 'Faya', 'Shield', 'Kaka'],
     'HAX UNITED': ['GK', 'Braga.', 'Misimaro', 'Pedri.', 'GGG', 'A7mdBibo', 'Arshavin', 'Blimpus', 'dierfetje', 'bananajoe', 'ShadiOzz', 'Szcesny', '$limani'],
     'OG FC': ['𝐌𝐨𝐬𝐭𝐚𝐟𝐚 𝐙𝐢𝐤𝐨', 'Mbappe', 'Nistel', 'Nijad', 'MeeRo', 'Dynaxz', 'Lookman', 'Brutus', 'MaksLuburic', 'Olise', 'saygex', 'Wizop', 'ToughBaby'],
     'X TO WIN 2': ['Drkuu', 'Ibrahim', 'SamueleRicci', 'Berbatov', 'Naeh', 'SVimes', 'maccy', 'atrocity exhibition', 'elex', 'mitrita KING', 'Wakanda', 'tsukuyomi.', 'wee', 'Johnny Sins'],
-    HUQQA: ['Menéur', 'Lena', 'Ollhurse', 'Perkz', 'Mattéo Guendouzi', 'unknown-user', 'barn', 'Razor', 'Grmii', 'Himothy', 'Kimmich', 'whân'],
+    HUQQA: ['Menéur', 'Lena', 'Ollhurse', 'Perkz', 'Saviolo', 'unknown-user', 'barn', 'Razor', 'Grmii', 'Himothy', 'Kimmich', 'whân'],
     'ROONEY TUNES': ['KK', 'MRN', 'click', 'Vonmacron', 'Antax', 'Minicostaud', 'Kahn', 'Swajin', 'ilaola', 'fkfk', '1m bad', 'FITOCHI', 'Luqman', 'JV']
 };
 
@@ -53,6 +53,10 @@ assert.equal(rooneyTunes.roster.length, 14);
 assert.equal(new Set(rooneyTunes.roster).size, 14);
 assert.equal(rooneyTunes.roster.includes('sergicanos'), false);
 ['FITOCHI', 'Luqman', 'JV'].forEach((player) => assert.equal(rooneyTunes.roster.includes(player), true));
+const huqqa = season.teams.find((team) => team.id === 'huqqa');
+assert.equal(huqqa.roster.includes('Saviolo'), true);
+assert.equal(huqqa.roster.includes('Mattéo Guendouzi'), false);
+assert.equal(new Set(huqqa.roster).size, huqqa.roster.length);
 const rooneyRosterMarkup = context.renderTeam(rooneyTunes);
 assert.match(rooneyRosterMarkup, /14 players/);
 assert.doesNotMatch(rooneyRosterMarkup, /sergicanos/);
@@ -776,18 +780,96 @@ assert.match(match2EventsMarkup, /2:08 2H · 10:10 total/);
 assert.match(match2EventsMarkup, /2:19 2H · 10:21 total/);
 assert.match(match2EventsMarkup, /6:33 2H · 14:35 total/);
 
+// Match 3: HUQQA 1–0 Baguette Z Apex.
+const match3 = fullSeason.matches[2];
+assert.equal(match3.id, 'match-3-huqqa-v-baguette-z-apex');
+assert.deepEqual(JSON.parse(JSON.stringify([match3.homeTeamId, match3.awayTeamId, match3.homeGoals, match3.awayGoals, match3.mvp])), ['huqqa', 'baguette-z-apex', 1, 0, 'Grmii']);
+assert.deepEqual(JSON.parse(JSON.stringify(match3.duration)), {
+    totalSeconds: 989,
+    endTimeKnown: true,
+    halves: [
+        { half: 1, seconds: 477, display: '7:57', endTimeKnown: true },
+        { half: 2, seconds: 512, display: '8:32', endTimeKnown: true }
+    ]
+});
+assert.equal(match3.conclusion.type, 'full-time');
+assert.equal(match3.recording, undefined);
+assert.deepEqual(JSON.parse(JSON.stringify(match3.scoringEvents.map(({ score, type, player, assist, timing }) => ({ score, type, player, assist, seconds: timing.seconds, timelineDisplay: timing.timelineDisplay })))), [
+    { score: '1–0', type: 'goal', player: 'Grmii', assist: null, seconds: 47, timelineDisplay: '0:47 1H' }
+]);
+['888', 'Latisty', 'Perkz shitty pc', "Kimmich'", 'Shidou', 'zen!', '.oskar', 'Nympex.', 'ShIeLd'].forEach((alias) => assert.equal(leagueScript.includes(`'${alias}'`), false));
+
+assert.deepEqual(JSON.parse(JSON.stringify(context.matchTeamTotals(match3, 'huqqa'))), { kicks: 245, passes: 112, shotsOnGoal: 9 });
+assert.deepEqual(JSON.parse(JSON.stringify(context.matchTeamTotals(match3, 'baguette-z-apex'))), { kicks: 253, passes: 116, shotsOnGoal: 5 });
+Object.entries(match3.fullMatchPlayerStats).forEach(([teamId, rows]) => {
+    const summed = rows.reduce((total, row) => ({ kicks: total.kicks + row.kicks, passes: total.passes + row.passes, shotsOnGoal: total.shotsOnGoal + row.shotsOnGoal }), { kicks: 0, passes: 0, shotsOnGoal: 0 });
+    assert.deepEqual(JSON.parse(JSON.stringify(summed)), JSON.parse(JSON.stringify(context.matchTeamTotals(match3, teamId))), `${teamId} Match 3 player totals reconcile`);
+});
+
+const match3PlayerTotals = context.matchPlayerTotals(fullSeason, match3);
+const match3Stat = (player) => match3PlayerTotals.find((row) => row.player === player);
+assert.equal(match3PlayerTotals.length, 14);
+assert.deepEqual(JSON.parse(JSON.stringify(Object.fromEntries(playerKeys.map((key) => [key, match3Stat('Grmii')[key]])))), { kicks: 37, passes: 19, shotsOnGoal: 2, goals: 1, assists: 0, ownGoals: 0, mvps: 1, cleanSheetHalves: 0 });
+assert.deepEqual(JSON.parse(JSON.stringify({ clean: match3Stat('Lena').cleanSheetHalves, gk: match3Stat('Lena').goalkeeperHalvesPlayed })), { clean: 2, gk: 2 });
+assert.deepEqual(JSON.parse(JSON.stringify({ clean: match3Stat('luur').cleanSheetHalves, gk: match3Stat('luur').goalkeeperHalvesPlayed })), { clean: 1, gk: 2 });
+
+assert.deepEqual(JSON.parse(JSON.stringify(match3.startingLineups.huqqa)), [
+    { player: 'Lena', position: 'GK' }, { player: 'Kimmich', position: 'CDM' }, { player: 'Ollhurse', position: 'CM' },
+    { player: 'Perkz', position: 'LW' }, { player: 'Grmii', position: 'RW' }, { player: 'Saviolo', position: 'ST' }
+]);
+assert.deepEqual(JSON.parse(JSON.stringify(match3.startingLineups['baguette-z-apex'])), [
+    { player: 'luur', position: 'GK' }, { player: 'V4KS', position: 'CDM' }, { player: 'evilpedri', position: 'CM' },
+    { player: 'oskar', position: 'CAM' }, { player: 'zenix', position: 'LW' }, { player: 'Spero', position: 'ST' }
+]);
+const match3Position = (teamId, player) => match3.positionStints[teamId].find((entry) => entry.player === player);
+assert.equal(match3Position('baguette-z-apex', 'Nympex').stints[0].position, 'CAM');
+assert.equal(match3Position('baguette-z-apex', 'Shield').stints[0].position, 'ST');
+assert.equal(match3Position('baguette-z-apex', 'Spero').stints.at(-1).position, 'ST');
+assert.equal(match3.substitutions.filter((substitution) => substitution.teamId === 'huqqa').length, 0);
+assert.deepEqual(JSON.parse(JSON.stringify(match3.substitutions.map(({ playerIn, playerOut, half, timing }) => ({ playerIn, playerOut, half, type: timing.type, observedStart: timing.observedStart, observedEnd: timing.observedEnd })))), [
+    { playerIn: 'Nympex', playerOut: 'oskar', half: 'halftime', type: 'halftime' },
+    { playerIn: 'Shield', playerOut: 'Spero', half: 'halftime', type: 'halftime' },
+    { playerIn: 'Spero', playerOut: 'Shield', half: 2, type: 'observed-interval', observedStart: 318.15, observedEnd: 340.5 }
+]);
+
+const match3Participation = context.participation(match3);
+const match3Time = (player) => match3Participation.find((row) => row.player === player);
+['Lena', 'Kimmich', 'Ollhurse', 'Perkz', 'Grmii', 'Saviolo', 'luur', 'V4KS', 'evilpedri', 'zenix'].forEach((player) => assert.deepEqual(JSON.parse(JSON.stringify(match3Time(player))), { player, appearances: 1, seconds: 989, estimated: false, incomplete: false }));
+assert.deepEqual(JSON.parse(JSON.stringify(match3Time('oskar'))), { player: 'oskar', appearances: 1, seconds: 477, estimated: false, incomplete: false });
+assert.deepEqual(JSON.parse(JSON.stringify(match3Time('Nympex'))), { player: 'Nympex', appearances: 1, seconds: 512, estimated: false, incomplete: false });
+assert.equal(Math.abs(match3Time('Shield').seconds - 329.325) < 1e-9, true);
+assert.equal(Math.abs(match3Time('Spero').seconds - 659.675) < 1e-9, true);
+['Shield', 'Spero'].forEach((player) => assert.deepEqual(JSON.parse(JSON.stringify({ appearances: match3Time(player).appearances, estimated: match3Time(player).estimated, incomplete: match3Time(player).incomplete })), { appearances: 1, estimated: true, incomplete: false }));
+
+const match3Events = context.matchEvents(match3);
+assert.equal(match3Events.length, 4);
+assert.deepEqual(JSON.parse(JSON.stringify(match3Events.map(({ eventType, player, playerIn, playerOut, displayTime }) => ({ eventType, player, playerIn, playerOut, displayTime })))), [
+    { eventType: 'substitution', playerIn: 'Spero', playerOut: 'Shield', displayTime: '5:18–5:40 2H' },
+    { eventType: 'halftime-substitution', playerIn: 'Nympex', playerOut: 'oskar', displayTime: 'HT' },
+    { eventType: 'halftime-substitution', playerIn: 'Shield', playerOut: 'Spero', displayTime: 'HT' },
+    { eventType: 'goal', player: 'Grmii', displayTime: '0:47 1H' }
+]);
+const match3EventsMarkup = context.renderEvents(fullSeason, match3);
+assert.match(match3EventsMarkup, /Spero in, Shield out/);
+assert.match(match3EventsMarkup, /Nympex in, oskar out/);
+assert.match(match3EventsMarkup, /Shield in, Spero out/);
+assert.match(match3EventsMarkup, /Grmii scores![\s\S]*?1–0/);
+
 const fullStandings = context.calculate(fullSeason);
 const standing = (teamId) => fullStandings.find((row) => row.teamId === teamId);
-assert.deepEqual(JSON.parse(JSON.stringify(fullStandings.map((row) => row.teamId))), ['x-to-win-2', 'og-fc', 'baguette-z-apex', 'huqqa', 'hax-united', 'rooney-tunes']);
+assert.deepEqual(JSON.parse(JSON.stringify(fullStandings.map((row) => row.teamId))), ['x-to-win-2', 'og-fc', 'huqqa', 'hax-united', 'baguette-z-apex', 'rooney-tunes']);
 assert.deepEqual(JSON.parse(JSON.stringify(Object.fromEntries(['P', 'W', 'D', 'L', 'GF', 'GA', 'GD', 'Pts'].map((key) => [key, standing('og-fc')[key]])))), { P: 1, W: 1, D: 0, L: 0, GF: 3, GA: 2, GD: 1, Pts: 3 });
+assert.deepEqual(JSON.parse(JSON.stringify(Object.fromEntries(['P', 'W', 'D', 'L', 'GF', 'GA', 'GD', 'Pts'].map((key) => [key, standing('huqqa')[key]])))), { P: 1, W: 1, D: 0, L: 0, GF: 1, GA: 0, GD: 1, Pts: 3 });
 assert.deepEqual(JSON.parse(JSON.stringify(Object.fromEntries(['P', 'W', 'D', 'L', 'GF', 'GA', 'GD', 'Pts'].map((key) => [key, standing('hax-united')[key]])))), { P: 1, W: 0, D: 0, L: 1, GF: 2, GA: 3, GD: -1, Pts: 0 });
+assert.deepEqual(JSON.parse(JSON.stringify(Object.fromEntries(['P', 'W', 'D', 'L', 'GF', 'GA', 'GD', 'Pts'].map((key) => [key, standing('baguette-z-apex')[key]])))), { P: 1, W: 0, D: 0, L: 1, GF: 0, GA: 1, GD: -1, Pts: 0 });
 assert.deepEqual(JSON.parse(JSON.stringify(standing('x-to-win-2').form.map(({ result }) => result))), ['W']);
 assert.deepEqual(JSON.parse(JSON.stringify(standing('og-fc').form.map(({ result }) => result))), ['W']);
+assert.deepEqual(JSON.parse(JSON.stringify(standing('huqqa').form.map(({ result }) => result))), ['W']);
 assert.deepEqual(JSON.parse(JSON.stringify(standing('hax-united').form.map(({ result }) => result))), ['L']);
+assert.deepEqual(JSON.parse(JSON.stringify(standing('baguette-z-apex').form.map(({ result }) => result))), ['L']);
 assert.deepEqual(JSON.parse(JSON.stringify(standing('rooney-tunes').form.map(({ result }) => result))), ['L']);
-assert.equal(standing('baguette-z-apex').form.length, 0);
 const standingsMarkup = context.renderStandings(fullSeason);
-assert.match(standingsMarkup, /2 of 30 results recorded/);
+assert.match(standingsMarkup, /3 of 30 results recorded/);
 assert.match(standingsMarkup, /<th>FORM<\/th>/);
 assert.match(standingsMarkup, /league-form-w/);
 assert.match(standingsMarkup, /league-form-l/);
@@ -795,19 +877,29 @@ assert.match(standingsMarkup, /league-form-l/);
 const match2PrePower = context.teamHistory(fullSeason).preMatchRatings.get(match2.id);
 assert.equal(match2PrePower.homePreMatchRating, 1480);
 assert.equal(match2PrePower.awayPreMatchRating, 1471);
+const fullTeamHistory = context.teamHistory(fullSeason);
+const match3PrePower = fullTeamHistory.preMatchRatings.get(match3.id);
+assert.equal(match3PrePower.homePreMatchRating, 1519);
+assert.equal(match3PrePower.awayPreMatchRating, 1545);
+assert.equal(Math.abs(fullTeamHistory.ratings.get('huqqa') - 1536.1951141493278) < 1e-9, true);
+assert.equal(Math.abs(fullTeamHistory.ratings.get('baguette-z-apex') - 1527.8048858506722) < 1e-9, true);
 const fullPlayerPower = context.playerPower(fullSeason);
-assert.deepEqual(JSON.parse(JSON.stringify(fullPlayerPower.slice(0, 10).map((row) => row.player))), ['Berbatov', 'Drkuu', 'Mbappe', 'Naeh', 'bananajoe', '𝐌𝐨𝐬𝐭𝐚𝐟𝐚 𝐙𝐢𝐤𝐨', 'atrocity exhibition', 'Arshavin', 'MaksLuburic', 'elex']);
+assert.deepEqual(JSON.parse(JSON.stringify(fullPlayerPower.slice(0, 10).map((row) => row.player))), ['Berbatov', 'Drkuu', 'Grmii', 'Mbappe', 'Naeh', 'bananajoe', '𝐌𝐨𝐬𝐭𝐚𝐟𝐚 𝐙𝐢𝐤𝐨', 'atrocity exhibition', 'Lena', 'Arshavin']);
 assert.equal(fullPlayerPower.find((row) => row.player === 'Mbappe').opponentPreMatchRating, undefined);
 assert.equal(context.playerMatchPower(fullSeason, match2, match2PrePower).find((row) => row.player === 'Mbappe').opponentPreMatchRating, 1471);
+assert.equal(context.playerMatchPower(fullSeason, match3, match3PrePower).find((row) => row.player === 'Grmii').opponentPreMatchRating, 1545);
+assert.equal(context.playerMatchPower(fullSeason, match3, match3PrePower).find((row) => row.player === 'luur').opponentPreMatchRating, 1519);
 assert.doesNotMatch(context.renderPlayerPower(fullSeason), /opponent|pre-match rating|multiplier|movement/i);
 assert.equal(JSON.stringify(context.playerPower(fullSeason)), JSON.stringify(context.playerPower(fullSeason)));
 
 const fullSeasonTotals = context.seasonPlayerTotals(fullSeason);
-assert.equal(fullSeasonTotals.length, 29);
+assert.equal(fullSeasonTotals.length, 43);
 assert.equal(fullSeasonTotals.find((row) => row.player === 'Mbappe').mvps, 1);
 assert.equal(fullSeasonTotals.find((row) => row.player === 'saygex').assists, 1);
 assert.equal(fullSeasonTotals.find((row) => row.player === 'Nistel').ownGoals, 1);
 assert.equal(fullSeasonTotals.find((row) => row.player === 'Misimaro').goalkeeperHalvesPlayed, 0);
+assert.deepEqual(JSON.parse(JSON.stringify(Object.fromEntries(['goals', 'assists', 'mvps', 'kicks', 'passes', 'shotsOnGoal', 'appearances', 'minutes'].map((key) => [key, fullSeasonTotals.find((row) => row.player === 'Grmii')[key]])))), { goals: 1, assists: 0, mvps: 1, kicks: 37, passes: 19, shotsOnGoal: 2, appearances: 1, minutes: 989 });
+assert.deepEqual(JSON.parse(JSON.stringify(Object.fromEntries(['cleanSheetHalves', 'goalkeeperHalvesPlayed', 'appearances', 'minutes'].map((key) => [key, fullSeasonTotals.find((row) => row.player === 'Lena')[key]])))), { cleanSheetHalves: 2, goalkeeperHalvesPlayed: 2, appearances: 1, minutes: 989 });
 ['appearances', 'minutes', 'goals', 'assists', 'goalContributions', 'ownGoals', 'mvps', 'kicks', 'passes', 'shotsOnGoal', 'cleanSheetHalves'].forEach((metric) => {
     const rows = context.leaderboardRows(fullSeason, metric, 'totals');
     assert.equal(rows.length > 0, true, `${metric} leaderboard derives from the complete season`);
@@ -842,18 +934,23 @@ assert.match(frequencyMarkup, /<td>0<\/td><td>[^<]+<\/td><td>—<\/td>/);
 });
 context.setLeaderboardMode('cleanSheetHalves', 'clean-sheet-rate');
 const fullCleanRate = context.leaderboardRows(fullSeason, 'cleanSheetHalves', 'clean-sheet-rate');
-assert.deepEqual(JSON.parse(JSON.stringify(fullCleanRate.filter((row) => ['Nistel', 'GK'].includes(row.player)).map(({ player, goalkeeperHalvesPlayed, cleanSheetHalves, leaderboardValue }) => ({ player, goalkeeperHalvesPlayed, cleanSheetHalves, leaderboardValue })))), [
-    { player: 'GK', goalkeeperHalvesPlayed: 2, cleanSheetHalves: 0, leaderboardValue: 0 },
-    { player: 'Nistel', goalkeeperHalvesPlayed: 2, cleanSheetHalves: 0, leaderboardValue: 0 }
-]);
+const cleanRate = (player) => fullCleanRate.find((row) => row.player === player);
+assert.deepEqual(JSON.parse(JSON.stringify({ player: cleanRate('Lena').player, gk: cleanRate('Lena').goalkeeperHalvesPlayed, clean: cleanRate('Lena').cleanSheetHalves, rate: cleanRate('Lena').leaderboardValue })), { player: 'Lena', gk: 2, clean: 2, rate: 1 });
+assert.deepEqual(JSON.parse(JSON.stringify({ player: cleanRate('luur').player, gk: cleanRate('luur').goalkeeperHalvesPlayed, clean: cleanRate('luur').cleanSheetHalves, rate: cleanRate('luur').leaderboardValue })), { player: 'luur', gk: 2, clean: 1, rate: 0.5 });
+assert.equal(fullCleanRate.some((row) => row.goalkeeperHalvesPlayed === 0), false);
 
 const fullResultsMarkup = context.renderResults(fullSeason);
-assert.equal((fullResultsMarkup.match(/league-match-disclosure/g) || []).length, 2);
+assert.equal((fullResultsMarkup.match(/league-match-disclosure/g) || []).length, 3);
 assert.equal((fullResultsMarkup.match(/league-match-recording-card/g) || []).length, 0, 'latest match has no invented recording card');
-assert.match(fullResultsMarkup, /OG FC[\s\S]*?3–2[\s\S]*?HAX UNITED/);
-assert.match(fullResultsMarkup, /<small>MVP<\/small><strong>Mbappe<\/strong>/);
-assert.match(fullResultsMarkup, /𝐌𝐨𝐬𝐭𝐚𝐟𝐚 𝐙𝐢𝐤𝐨 · bananajoe · Mbappe · Nistel OG · Misimaro OG/);
+assert.match(html, /\.league-latest-preview:not\(:has\(\.league-match-recording-card\)\)/);
+assert.match(fullResultsMarkup, /HUQQA[\s\S]*?1–0[\s\S]*?Baguette Z Apex/);
+assert.match(fullResultsMarkup, /<small>Scorers<\/small><strong>Grmii<\/strong>/);
+assert.match(fullResultsMarkup, /<small>MVP<\/small><strong>Grmii<\/strong>/);
+assert.match(fullResultsMarkup, /OG FC[\s\S]*?3 – 2[\s\S]*?HAX UNITED/);
+assert.match(fullResultsMarkup, /𝐌𝐨𝐬𝐭𝐚𝐟𝐚 𝐙𝐢𝐤𝐨, bananajoe, Mbappe, Nistel OG, Misimaro OG/);
 assert.match(fullResultsMarkup, /data-match-id="match-1-x-to-win-2-v-rooney-tunes"/);
+assert.equal(fullResultsMarkup.indexOf('match-3-huqqa-v-baguette-z-apex') < fullResultsMarkup.indexOf('match-2-og-fc-v-hax-united'), true);
+assert.equal(fullResultsMarkup.indexOf('match-2-og-fc-v-hax-united') < fullResultsMarkup.indexOf('match-1-x-to-win-2-v-rooney-tunes'), true);
 assert.doesNotMatch(leagueScript, /(player|ability|roster)Tier\s*[:=]/i);
 assert.match(html, /\.league-form-result/);
 assert.doesNotMatch(html, /\.league-prediction|\.league-probability-highest/);
