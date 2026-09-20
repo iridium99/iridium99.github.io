@@ -13,7 +13,7 @@ const context = {
     document: { getElementById: () => null }
 };
 vm.createContext(context);
-vm.runInContext(`${leagueScript}\nthis.season = ldcRsLeagueSeason1; this.modelVersions = { team: LEAGUE_TEAM_POWER_MODEL_VERSION, player: LEAGUE_PLAYER_POWER_MODEL_VERSION, prediction: LEAGUE_PREDICTION_MODEL_VERSION }; this.calculate = calculateLdcRsLeagueStandings; this.teamHistory = calculateLeagueTeamPowerHistory; this.teamPower = calculateLeagueTeamPowerRatings; this.prediction = calculateLeagueMatchPrediction; this.predictions = calculateLeagueUnplayedMatchupPredictions; this.playerPower = calculateLeaguePlayerPowerRankings; this.playerMatchPower = calculateLeaguePlayerMatchPower; this.playerConfidence = calculateLeaguePlayerPowerConfidence; this.opponentMultiplier = calculateLeagueOpponentMultiplier; this.matchPlayerTotals = calculateLeagueMatchPlayerTotals; this.seasonPlayerTotals = calculateLeagueSeasonPlayerTotals; this.leaderboardRows = calculateLeagueSeasonLeaderboardRows; this.leaderboardRowsFromTotals = calculateLeagueLeaderboardRowsFromTotals; this.leaderboardMedals = calculateLeagueLeaderboardMedals; this.matchTeamTotals = calculateLeagueMatchTeamTotals; this.participation = deriveLeagueMatchParticipation; this.matchEvents = deriveLeagueMatchEvents; this.statisticsRows = getLeagueStatisticsRows; this.formatClock = formatLeagueClock; this.renderStandings = renderLdcRsLeagueStandings; this.renderTeamPower = renderLeagueTeamPowerRatings; this.renderPredictions = renderLeaguePredictions; this.renderResults = renderLdcRsLeagueResults; this.renderEvents = renderLeagueEventTimeline; this.renderLeaderboard = renderLeagueSeasonLeaderboard; this.renderTeam = renderLdcRsLeagueTeam; this.renderPlayerPower = renderLeaguePlayerPowerRankings; this.expandedMatches = leagueExpandedMatches; this.matchModes = leagueMatchDetailModes; this.statisticsPeriods = leagueStatisticsPeriods; this.setLeaderboardMode = (metric, rate) => { leagueSeasonStatMode = metric; leagueSeasonRateMode = rate; }; this.setTeamPowerMode = (mode) => { leagueTeamPowerMode = mode; };`, context);
+vm.runInContext(`${leagueScript}\nthis.season = ldcRsLeagueSeason1; this.modelVersions = { team: LEAGUE_TEAM_POWER_MODEL_VERSION, player: LEAGUE_PLAYER_POWER_MODEL_VERSION }; this.calculate = calculateLdcRsLeagueStandings; this.teamHistory = calculateLeagueTeamPowerHistory; this.teamPower = calculateLeagueTeamPowerRatings; this.playerPower = calculateLeaguePlayerPowerRankings; this.playerMatchPower = calculateLeaguePlayerMatchPower; this.playerConfidence = calculateLeaguePlayerPowerConfidence; this.opponentMultiplier = calculateLeagueOpponentMultiplier; this.matchPlayerTotals = calculateLeagueMatchPlayerTotals; this.seasonPlayerTotals = calculateLeagueSeasonPlayerTotals; this.leaderboardRows = calculateLeagueSeasonLeaderboardRows; this.leaderboardRowsFromTotals = calculateLeagueLeaderboardRowsFromTotals; this.leaderboardMedals = calculateLeagueLeaderboardMedals; this.matchTeamTotals = calculateLeagueMatchTeamTotals; this.participation = deriveLeagueMatchParticipation; this.matchEvents = deriveLeagueMatchEvents; this.statisticsRows = getLeagueStatisticsRows; this.formatClock = formatLeagueClock; this.renderStandings = renderLdcRsLeagueStandings; this.renderTeamPower = renderLeagueTeamPowerRatings; this.renderResults = renderLdcRsLeagueResults; this.renderEvents = renderLeagueEventTimeline; this.renderLeaderboard = renderLeagueSeasonLeaderboard; this.renderTeam = renderLdcRsLeagueTeam; this.renderPlayerPower = renderLeaguePlayerPowerRankings; this.expandedMatches = leagueExpandedMatches; this.matchModes = leagueMatchDetailModes; this.statisticsPeriods = leagueStatisticsPeriods; this.setLeaderboardMode = (metric, rate) => { leagueSeasonStatMode = metric; leagueSeasonRateMode = rate; }; this.setTeamPowerMode = (mode) => { leagueTeamPowerMode = mode; };`, context);
 
 const fullSeason = context.season;
 const season = { ...fullSeason, matches: [fullSeason.matches[0]] };
@@ -78,14 +78,6 @@ assert.deepEqual(JSON.parse(JSON.stringify(season.powerRatingConfig)), {
             'rooney-tunes': 1446
         }
     },
-    prediction: {
-        modelVersion: 2,
-        calibrationStatus: 'provisional',
-        maximumDrawProbability: 0.28,
-        minimumDrawProbability: 0.1,
-        drawDecayScale: 300,
-        confidence: { lowMaximumCompletedMatchesPerTeam: 1, mediumMaximumCompletedMatchesPerTeam: 3 }
-    },
     player: {
         modelVersion: 1,
         goal: 5,
@@ -101,7 +93,7 @@ assert.deepEqual(JSON.parse(JSON.stringify(season.powerRatingConfig)), {
         confidence: { lowAppearances: 1, mediumAppearances: 3 }
     }
 });
-assert.deepEqual(JSON.parse(JSON.stringify(context.modelVersions)), { team: 1, player: 1, prediction: 2 });
+assert.deepEqual(JSON.parse(JSON.stringify(context.modelVersions)), { team: 1, player: 1 });
 assert.doesNotMatch(leagueScript, /(player|ability|roster)Tier\s*[:=]/i);
 assert.doesNotMatch(leagueScript, /tierLabel\s*[:=]/i);
 
@@ -329,8 +321,8 @@ assert.deepEqual(
     JSON.parse(JSON.stringify(originalHistoricalPlayerPower.map(({ player, score }) => ({ player, score }))))
 );
 
-assert.match(leagueScript, /calculateLeagueMatchPrediction/);
-assert.match(html, /league-prediction|league-predictions/i);
+assert.doesNotMatch(leagueScript, /prediction|drawProbability|drawDecayScale|winProbability|lossProbability|drawPercentage|remainingMeetings|calculateLeagueMatchPrediction/i);
+assert.doesNotMatch(html, /league-prediction|league-predictions/i);
 assert.match(leagueScript, /Team Power Ratings/);
 assert.equal(context.seasonPlayerTotals(season).find((row) => row.player === 'Berbatov').goalContributions, 3);
 
@@ -834,15 +826,6 @@ assert.equal(fullPlayerPower.find((row) => row.player === 'Mbappe').opponentPreM
 assert.equal(context.playerMatchPower(fullSeason, match2, match2PrePower).find((row) => row.player === 'Mbappe').opponentPreMatchRating, 1471);
 assert.equal(JSON.stringify(context.playerPower(fullSeason)), JSON.stringify(context.playerPower(fullSeason)));
 
-const predictions = context.predictions(fullSeason);
-assert.equal(predictions.length, 15);
-assert.equal(predictions.reduce((total, prediction) => total + prediction.remainingMeetings, 0), 28);
-assert.equal(predictions.every((prediction) => prediction.teamAPercentage + prediction.drawPercentage + prediction.teamBPercentage === 100), true);
-assert.equal(predictions.every((prediction) => prediction.confidence === 'Low confidence'), true);
-assert.equal(JSON.stringify(predictions), JSON.stringify(context.predictions(fullSeason)));
-assert.equal(context.prediction(fullSeason, 'og-fc', 'hax-united').teamAPercentage > context.prediction(fullSeason, 'og-fc', 'hax-united').teamBPercentage, true);
-assert.match(context.renderPredictions(fullSeason), /primary roster-informed ratings/);
-
 const fullSeasonTotals = context.seasonPlayerTotals(fullSeason);
 assert.equal(fullSeasonTotals.length, 29);
 assert.equal(fullSeasonTotals.find((row) => row.player === 'Mbappe').mvps, 1);
@@ -885,6 +868,6 @@ assert.match(fullResultsMarkup, /𝐌𝐨𝐬𝐭𝐚𝐟𝐚 𝐙𝐢𝐤𝐨 �
 assert.match(fullResultsMarkup, /data-match-id="match-1-x-to-win-2-v-rooney-tunes"/);
 assert.doesNotMatch(leagueScript, /(player|ability|roster)Tier\s*[:=]/i);
 assert.match(html, /\.league-form-result/);
-assert.match(html, /\.league-predictions-strip/);
+assert.doesNotMatch(html, /\.league-prediction|\.league-probability-highest/);
 
 console.log('LDC RS League Season 1 validation passed.');
