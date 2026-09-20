@@ -1,5 +1,6 @@
 const LEAGUE_TEAM_POWER_MODEL_VERSION = 1;
 const LEAGUE_PLAYER_POWER_MODEL_VERSION = 1;
+const LEAGUE_PREDICTION_MODEL_VERSION = 2;
 
 const ldcRsLeagueSeason1 = {
     id: 'ldc-rs-league-season-1',
@@ -17,6 +18,7 @@ const ldcRsLeagueSeason1 = {
             expectationDivisor: 400,
             marginStep: 0.20,
             marginCap: 4,
+            equalStartRating: 1500,
             startingRatings: {
                 'x-to-win-2': 1581,
                 'baguette-z-apex': 1545,
@@ -24,6 +26,17 @@ const ldcRsLeagueSeason1 = {
                 'og-fc': 1480,
                 'hax-united': 1471,
                 'rooney-tunes': 1446
+            }
+        },
+        prediction: {
+            modelVersion: LEAGUE_PREDICTION_MODEL_VERSION,
+            calibrationStatus: 'provisional',
+            maximumDrawProbability: 0.28,
+            minimumDrawProbability: 0.10,
+            drawDecayScale: 300,
+            confidence: {
+                lowMaximumCompletedMatchesPerTeam: 1,
+                mediumMaximumCompletedMatchesPerTeam: 3
             }
         },
         player: {
@@ -70,7 +83,7 @@ const ldcRsLeagueSeason1 = {
             owner: 'GK',
             captain: 'GK',
             coCaptain: 'Misimaro',
-            roster: ['GK', 'Braga.', 'Misimaro', 'Pedri.', 'GGG', 'A7mdBibo', 'Arshavin', 'Blimpus', 'dierfetje', 'bananajoe', 'ShadiOzz', 'Szcesny']
+            roster: ['GK', 'Braga.', 'Misimaro', 'Pedri.', 'GGG', 'A7mdBibo', 'Arshavin', 'Blimpus', 'dierfetje', 'bananajoe', 'ShadiOzz', 'Szcesny', '$limani']
         },
         {
             id: 'og-fc',
@@ -360,6 +373,161 @@ const ldcRsLeagueSeason1 = {
                 { player: 'KK', teamId: 'rooney-tunes', half: 1, status: 'goalkeeper', cleanSheetEligible: true },
                 { player: 'KK', teamId: 'rooney-tunes', half: 2, status: 'goalkeeper', cleanSheetEligible: true }
             ]
+        },
+        {
+            id: 'match-2-og-fc-v-hax-united',
+            homeTeamId: 'og-fc',
+            awayTeamId: 'hax-united',
+            homeGoals: 3,
+            awayGoals: 2,
+            duration: {
+                totalSeconds: 986,
+                endTimeKnown: true,
+                halves: [
+                    { half: 1, seconds: 482, display: '8:02', endTimeKnown: true },
+                    { half: 2, seconds: 504, display: '8:24', endTimeKnown: true }
+                ]
+            },
+            conclusion: { type: 'full-time', score: '3–2' },
+            mvp: 'Mbappe',
+            cleanSheetHalves: [],
+            scoringEvents: [
+                {
+                    score: '1–0', type: 'goal', player: '𝐌𝐨𝐬𝐭𝐚𝐟𝐚 𝐙𝐢𝐤𝐨', assist: 'saygex',
+                    attribution: 'manual-adjudication-overrides-automatic-source',
+                    timing: { type: 'exact', seconds: 185, halfSeconds: 185, cumulativeSeconds: 185, display: '03:05 (1H)', halfDisplay: '3:05', cumulativeDisplay: '3:05', timelineDisplay: '3:05 1H' }
+                },
+                {
+                    score: '1–1', type: 'own-goal', player: 'Nistel', assist: null, benefitsTeamId: 'hax-united',
+                    attribution: 'manual-adjudication-overrides-automatic-source',
+                    timing: { type: 'exact', seconds: 320, halfSeconds: 320, cumulativeSeconds: 320, display: '05:20 (1H)', halfDisplay: '5:20', cumulativeDisplay: '5:20', timelineDisplay: '5:20 1H' }
+                },
+                {
+                    score: '1–2', type: 'goal', player: 'bananajoe', assist: 'Arshavin',
+                    attribution: 'manual-adjudication-overrides-automatic-source',
+                    timing: { type: 'exact', seconds: 128, halfSeconds: 128, cumulativeSeconds: 610, display: '02:08 (2H)', halfDisplay: '2:08', cumulativeDisplay: '10:10', timelineDisplay: '2:08 2H · 10:10 total' }
+                },
+                {
+                    score: '2–2', type: 'goal', player: 'Mbappe', assist: 'MaksLuburic',
+                    attribution: 'manual-adjudication-overrides-automatic-source',
+                    timing: { type: 'exact', seconds: 139, halfSeconds: 139, cumulativeSeconds: 621, display: '02:19 (2H)', halfDisplay: '2:19', cumulativeDisplay: '10:21', timelineDisplay: '2:19 2H · 10:21 total' }
+                },
+                {
+                    score: '3–2', type: 'own-goal', player: 'Misimaro', assist: null, benefitsTeamId: 'og-fc',
+                    attribution: 'manual-adjudication-overrides-automatic-source',
+                    timing: { type: 'exact', seconds: 393, halfSeconds: 393, cumulativeSeconds: 875, display: '06:33 (2H)', halfDisplay: '6:33', cumulativeDisplay: '14:35', timelineDisplay: '6:33 2H · 14:35 total' }
+                }
+            ],
+            halves: [
+                {
+                    label: 'First half', sourceGameTime: '8:02', homeGoals: 1, awayGoals: 1,
+                    teamStats: {
+                        'og-fc': { possession: 46.3, kicks: 116, passes: 48, shotsOnGoal: 4 },
+                        'hax-united': { possession: 53.7, kicks: 124, passes: 56, shotsOnGoal: 5 }
+                    },
+                    playerStats: { 'og-fc': [], 'hax-united': [] }
+                },
+                {
+                    label: 'Second half', sourceGameTime: '8:24', homeGoals: 2, awayGoals: 1,
+                    teamStats: {
+                        'og-fc': { possession: 46.5, kicks: 124, passes: 44, shotsOnGoal: 2 },
+                        'hax-united': { possession: 53.5, kicks: 150, passes: 67, shotsOnGoal: 7 }
+                    },
+                    playerStats: { 'og-fc': [], 'hax-united': [] }
+                }
+            ],
+            fullMatchPlayerStats: {
+                'og-fc': [
+                    { player: 'ToughBaby', kicks: 47, passes: 23, shotsOnGoal: 0 },
+                    { player: 'saygex', kicks: 33, passes: 15, shotsOnGoal: 0 },
+                    { player: '𝐌𝐨𝐬𝐭𝐚𝐟𝐚 𝐙𝐢𝐤𝐨', kicks: 25, passes: 4, shotsOnGoal: 1 },
+                    { player: 'Nijad', kicks: 12, passes: 5, shotsOnGoal: 0 },
+                    { player: 'MaksLuburic', kicks: 27, passes: 5, shotsOnGoal: 2 },
+                    { player: 'Nistel', kicks: 35, passes: 15, shotsOnGoal: 2 },
+                    { player: 'Mbappe', kicks: 47, passes: 21, shotsOnGoal: 1 },
+                    { player: 'Dynaxz', kicks: 14, passes: 4, shotsOnGoal: 0 }
+                ],
+                'hax-united': [
+                    { player: 'GK', kicks: 44, passes: 20, shotsOnGoal: 0 },
+                    { player: 'Pedri', kicks: 39, passes: 19, shotsOnGoal: 2 },
+                    { player: 'Misimaro', kicks: 26, passes: 9, shotsOnGoal: 0 },
+                    { player: 'bananajoe', kicks: 51, passes: 22, shotsOnGoal: 5 },
+                    { player: '$limani', kicks: 56, passes: 28, shotsOnGoal: 0 },
+                    { player: 'Arshavin', kicks: 43, passes: 19, shotsOnGoal: 5 },
+                    { player: 'GGG', kicks: 15, passes: 6, shotsOnGoal: 0 }
+                ]
+            },
+            lineups: {
+                firstHalf: {
+                    'og-fc': ['Nistel', 'Nijad', 'MaksLuburic', 'Mbappe', 'saygex', '𝐌𝐨𝐬𝐭𝐚𝐟𝐚 𝐙𝐢𝐤𝐨'],
+                    'hax-united': ['GK', 'Pedri', '$limani', 'Misimaro', 'Arshavin', 'bananajoe']
+                },
+                secondHalf: {
+                    'og-fc': ['Nistel', 'ToughBaby', 'MaksLuburic', 'Mbappe', 'saygex', '𝐌𝐨𝐬𝐭𝐚𝐟𝐚 𝐙𝐢𝐤𝐨'],
+                    'hax-united': ['GK', 'Pedri', '$limani', 'GGG', 'Arshavin', 'bananajoe']
+                }
+            },
+            startingLineups: {
+                'og-fc': [
+                    { player: 'Nistel', position: 'GK' }, { player: 'Nijad', position: 'CB' },
+                    { player: 'MaksLuburic', position: 'CM' }, { player: 'Mbappe', position: 'CAM' },
+                    { player: 'saygex', position: 'LW' }, { player: '𝐌𝐨𝐬𝐭𝐚𝐟𝐚 𝐙𝐢𝐤𝐨', position: 'ST' }
+                ],
+                'hax-united': [
+                    { player: 'GK', position: 'GK' }, { player: 'Pedri', position: 'CDM' },
+                    { player: '$limani', position: 'CM' }, { player: 'Misimaro', position: 'CAM' },
+                    { player: 'Arshavin', position: 'LW' }, { player: 'bananajoe', position: 'ST' }
+                ]
+            },
+            positionStints: {
+                'og-fc': [
+                    { player: 'Nistel', stints: [{ half: 1, position: 'GK' }, { half: 2, position: 'GK' }] },
+                    { player: 'Nijad', stints: [{ half: 1, position: 'CB', until: 'substituted' }] },
+                    { player: 'ToughBaby', stints: [{ half: 1, position: 'CB' }, { half: 2, position: 'CB' }], note: 'on for Nijad', highlight: true },
+                    { player: 'MaksLuburic', stints: [{ half: 1, position: 'CM' }, { half: 2, position: 'CM', until: 'substituted' }] },
+                    { player: 'Dynaxz', stints: [{ half: 2, position: 'CM' }], note: 'on for MaksLuburic', highlight: true },
+                    { player: 'Mbappe', stints: [{ half: 1, position: 'CAM' }, { half: 2, position: 'CAM' }] },
+                    { player: 'saygex', stints: [{ half: 1, position: 'LW' }, { half: 2, position: 'LW' }] },
+                    { player: '𝐌𝐨𝐬𝐭𝐚𝐟𝐚 𝐙𝐢𝐤𝐨', stints: [{ half: 1, position: 'ST' }, { half: 2, position: 'ST' }] }
+                ],
+                'hax-united': [
+                    { player: 'GK', stints: [{ half: 1, position: 'GK' }, { half: 2, position: 'GK' }] },
+                    { player: 'Pedri', stints: [{ half: 1, position: 'CDM' }, { half: 2, position: 'CDM' }] },
+                    { player: '$limani', stints: [{ half: 1, position: 'CM' }, { half: 2, position: 'CM' }] },
+                    { player: 'Misimaro', stints: [{ half: 1, position: 'CAM' }, { half: 2, position: 'ST' }], note: 'off at HT, returned in 2H for bananajoe', highlight: true },
+                    { player: 'GGG', stints: [{ half: 2, position: 'CAM' }], note: 'on for Misimaro at HT', highlight: true },
+                    { player: 'Arshavin', stints: [{ half: 1, position: 'LW' }, { half: 2, position: 'LW' }] },
+                    { player: 'bananajoe', stints: [{ half: 1, position: 'ST' }, { half: 2, position: 'ST', until: 'substituted' }] }
+                ]
+            },
+            substitutions: [
+                {
+                    teamId: 'og-fc', half: 1, playerIn: 'ToughBaby', playerOut: 'Nijad',
+                    timing: { type: 'observed-interval', observedStart: 313.933, observedEnd: 320.333, display: '05:13.933–05:20.333 (1H)', timelineDisplay: '5:14–5:20 1H', approximateDisplay: '5:17 1H', estimated: true }
+                },
+                {
+                    teamId: 'hax-united', half: 'halftime', playerIn: 'GGG', playerOut: 'Misimaro',
+                    timing: { type: 'halftime', display: 'Halftime' }
+                },
+                {
+                    teamId: 'og-fc', half: 2, playerIn: 'Dynaxz', playerOut: 'MaksLuburic',
+                    timing: { type: 'observed-interval', observedStart: 214.4, observedEnd: 239.733, display: '03:34.400–03:59.733 (2H)', timelineDisplay: '3:34–4:00 2H', approximateDisplay: '3:47 2H', estimated: true }
+                },
+                {
+                    teamId: 'hax-united', half: 2, playerIn: 'Misimaro', playerOut: 'bananajoe',
+                    timing: { type: 'observed-interval', observedStart: 271.5, observedEnd: 297.033, display: '04:31.500–04:57.033 (2H)', timelineDisplay: '4:32–4:57 2H', approximateDisplay: '4:44 2H', estimated: true }
+                }
+            ],
+            goalkeepers: {
+                firstHalf: { 'og-fc': 'Nistel', 'hax-united': 'GK' },
+                secondHalf: { 'og-fc': 'Nistel', 'hax-united': 'GK' }
+            },
+            goalkeeperAssignments: [
+                { player: 'Nistel', teamId: 'og-fc', half: 1, status: 'goalkeeper', cleanSheetEligible: true },
+                { player: 'Nistel', teamId: 'og-fc', half: 2, status: 'goalkeeper', cleanSheetEligible: true },
+                { player: 'GK', teamId: 'hax-united', half: 1, status: 'goalkeeper', cleanSheetEligible: true },
+                { player: 'GK', teamId: 'hax-united', half: 2, status: 'goalkeeper', cleanSheetEligible: true }
+            ]
         }
     ]
 };
@@ -376,7 +544,8 @@ function calculateLdcRsLeagueStandings(season) {
         GF: 0,
         GA: 0,
         GD: 0,
-        Pts: 0
+        Pts: 0,
+        form: []
     }]));
 
     season.matches.forEach((match) => {
@@ -407,6 +576,11 @@ function calculateLdcRsLeagueStandings(season) {
             home.Pts += 1;
             away.Pts += 1;
         }
+
+        const homeResult = match.homeGoals === match.awayGoals ? 'D' : match.homeGoals > match.awayGoals ? 'W' : 'L';
+        const awayResult = homeResult === 'D' ? 'D' : homeResult === 'W' ? 'L' : 'W';
+        home.form.push({ result: homeResult, opponentTeamId: match.awayTeamId, goalsFor: match.homeGoals, goalsAgainst: match.awayGoals, matchId: match.id });
+        away.form.push({ result: awayResult, opponentTeamId: match.homeTeamId, goalsFor: match.awayGoals, goalsAgainst: match.homeGoals, matchId: match.id });
     });
 
     return [...table.values()]
@@ -414,9 +588,10 @@ function calculateLdcRsLeagueStandings(season) {
         .sort((a, b) => b.Pts - a.Pts || b.GD - a.GD || b.GF - a.GF || a.order - b.order);
 }
 
-function calculateLeagueTeamPowerHistory(season) {
+function calculateLeagueTeamPowerHistory(season, model = 'roster-informed') {
     const config = season.powerRatingConfig.team;
-    const ratings = new Map(season.teams.map((team) => [team.id, config.startingRatings[team.id]]));
+    const startingRating = (teamId) => model === 'results-only' ? config.equalStartRating : config.startingRatings[teamId];
+    const ratings = new Map(season.teams.map((team) => [team.id, startingRating(team.id)]));
     const played = new Map(season.teams.map((team) => [team.id, 0]));
     const preMatchRatings = new Map();
 
@@ -446,19 +621,69 @@ function calculateLeagueTeamPowerHistory(season) {
     return { ratings, played, preMatchRatings };
 }
 
-function calculateLeagueTeamPowerRatings(season) {
+function calculateLeagueTeamPowerRatings(season, model = 'roster-informed') {
     const config = season.powerRatingConfig.team;
-    const history = calculateLeagueTeamPowerHistory(season);
+    const history = calculateLeagueTeamPowerHistory(season, model);
+    const startingRating = (teamId) => model === 'results-only' ? config.equalStartRating : config.startingRatings[teamId];
 
     return season.teams.map((team, order) => ({
         teamId: team.id,
         team: team.name,
         rating: history.ratings.get(team.id),
-        startingRating: config.startingRatings[team.id],
-        movement: history.ratings.get(team.id) - config.startingRatings[team.id],
+        startingRating: startingRating(team.id),
+        movement: history.ratings.get(team.id) - startingRating(team.id),
         played: history.played.get(team.id),
         order
     })).sort((a, b) => b.rating - a.rating || a.order - b.order);
+}
+
+function calculateLeaguePredictionConfidence(config, teamARow, teamBRow) {
+    const completedMatchesPerTeam = Math.min(teamARow.played || 0, teamBRow.played || 0);
+    if (completedMatchesPerTeam <= config.confidence.lowMaximumCompletedMatchesPerTeam) return 'Low confidence';
+    if (completedMatchesPerTeam <= config.confidence.mediumMaximumCompletedMatchesPerTeam) return 'Medium confidence';
+    return 'Higher confidence';
+}
+
+function calculateLeagueMatchPrediction(season, teamAId, teamBId, ratingRows = calculateLeagueTeamPowerRatings(season), options = {}) {
+    const config = season.powerRatingConfig.prediction;
+    const ratingRowsByTeam = new Map(ratingRows.map((row) => [row.teamId, row]));
+    const teamARow = ratingRowsByTeam.get(teamAId);
+    const teamBRow = ratingRowsByTeam.get(teamBId);
+    const lineupStrengthAdjustment = options.lineupStrengthAdjustment || {};
+    const ratingA = teamARow.rating + (lineupStrengthAdjustment.teamA || 0);
+    const ratingB = teamBRow.rating + (lineupStrengthAdjustment.teamB || 0);
+    const expectedA = 1 / (1 + (10 ** ((ratingB - ratingA) / season.powerRatingConfig.team.expectationDivisor)));
+    const ratingGap = Math.abs(ratingA - ratingB);
+    const drawProbability = Math.max(config.minimumDrawProbability, config.maximumDrawProbability * Math.exp(-ratingGap / config.drawDecayScale));
+    const nonDrawProbability = 1 - drawProbability;
+    const teamAProbability = nonDrawProbability * expectedA;
+    const teamBProbability = nonDrawProbability * (1 - expectedA);
+    const teamAPercentage = Math.round(teamAProbability * 100);
+    const teamBPercentage = Math.round(teamBProbability * 100);
+    return {
+        teamAId, teamBId, teamAProbability, drawProbability, teamBProbability,
+        teamAPercentage,
+        drawPercentage: 100 - teamAPercentage - teamBPercentage,
+        teamBPercentage,
+        confidence: calculateLeaguePredictionConfidence(config, teamARow, teamBRow),
+        completedMatches: { teamA: teamARow.played || 0, teamB: teamBRow.played || 0 }
+    };
+}
+
+function calculateLeagueUnplayedMatchupPredictions(season) {
+    const ratingRows = calculateLeagueTeamPowerRatings(season, 'roster-informed');
+    const predictions = [];
+    season.teams.forEach((teamA, index) => {
+        season.teams.slice(index + 1).forEach((teamB) => {
+            const playedMeetings = season.matches.filter((match) => (
+                (match.homeTeamId === teamA.id && match.awayTeamId === teamB.id)
+                || (match.homeTeamId === teamB.id && match.awayTeamId === teamA.id)
+            )).length;
+            const remainingMeetings = Math.max(0, 2 - playedMeetings);
+            if (remainingMeetings) predictions.push({ ...calculateLeagueMatchPrediction(season, teamA.id, teamB.id, ratingRows), remainingMeetings });
+        });
+    });
+    return predictions;
 }
 
 function getLeagueTeamsById(season) {
@@ -476,6 +701,9 @@ function getLeagueMatchPlayerTeams(season, match) {
         Object.entries(half.playerStats).forEach(([teamId, rows]) => {
             rows.forEach(({ player }) => playerTeams.set(player, teamId));
         });
+    });
+    Object.entries(match.fullMatchPlayerStats || {}).forEach(([teamId, rows]) => {
+        rows.forEach(({ player }) => playerTeams.set(player, teamId));
     });
     return playerTeams;
 }
@@ -566,13 +794,14 @@ function calculateLeagueMatchPlayerTotals(season, match) {
         return totals.get(player);
     };
 
-    match.halves.forEach((half) => {
-        Object.values(half.playerStats).flat().forEach((statLine) => {
+    const authoritativePlayerStats = match.fullMatchPlayerStats
+        ? Object.values(match.fullMatchPlayerStats).flat()
+        : match.halves.flatMap((half) => Object.values(half.playerStats).flat());
+    authoritativePlayerStats.forEach((statLine) => {
             const total = ensurePlayer(statLine.player);
             total.kicks += statLine.kicks;
             total.passes += statLine.passes;
             total.shotsOnGoal += statLine.shotsOnGoal;
-        });
     });
 
     match.scoringEvents.forEach((event) => {
@@ -724,9 +953,11 @@ function deriveLeagueMatchEvents(match) {
                 eventType: event.type === 'own-goal' ? 'own-goal' : 'goal',
                 displayTime: event.timing.timelineDisplay,
                 detailTime: event.timing.display.replace(/ \((1H|2H)\)$/, ' $1'),
-                sortValue: halfOffset + event.timing.seconds,
+                sortValue: event.timing.cumulativeSeconds ?? halfOffset + event.timing.seconds,
                 sortBasis: 'exact-match-clock',
                 exactSecond: event.timing.seconds,
+                halfLocalSecond: event.timing.halfSeconds ?? event.timing.seconds,
+                cumulativeSecond: event.timing.cumulativeSeconds ?? halfOffset + event.timing.seconds,
                 timingUncertain: false,
                 groupKey: `${half}:exact:${event.timing.seconds}:${index}`,
                 sourceOrder: index,
@@ -869,7 +1100,8 @@ function escapeLeagueText(value) {
 
 function renderLdcRsLeagueStandings(season) {
     const standings = calculateLdcRsLeagueStandings(season);
-    const headers = ['Team', 'P', 'W', 'D', 'L', 'GF', 'GA', 'GD', 'Pts'];
+    const teamsById = getLeagueTeamsById(season);
+    const headers = ['Team', 'P', 'W', 'D', 'L', 'GF', 'GA', 'GD', 'FORM', 'Pts'];
 
     return `
         <div class="world-cup-card league-standings-card">
@@ -885,7 +1117,9 @@ function renderLdcRsLeagueStandings(season) {
                             <tr class="${index === 0 ? 'league-table-leader' : ''}">
                                 <td><span class="league-rank">${index + 1}</span>${escapeLeagueText(row.team)}</td>
                                 <td>${row.P}</td><td class="${row.W ? 'league-positive' : ''}">${row.W}</td><td>${row.D}</td><td class="${row.L ? 'league-negative' : ''}">${row.L}</td>
-                                <td>${row.GF}</td><td>${row.GA}</td><td class="${row.GD > 0 ? 'league-positive' : row.GD < 0 ? 'league-negative' : 'league-neutral'}">${row.GD}</td><td class="league-points">${row.Pts}</td>
+                                <td>${row.GF}</td><td>${row.GA}</td><td class="${row.GD > 0 ? 'league-positive' : row.GD < 0 ? 'league-negative' : 'league-neutral'}">${row.GD > 0 ? '+' : ''}${row.GD}</td>
+                                <td><span class="league-form" aria-label="Last ${Math.min(row.form.length, 5)} league results">${row.form.slice(-5).map((entry) => `<span class="league-form-result league-form-${entry.result.toLowerCase()}" title="vs ${escapeLeagueText(teamsById.get(entry.opponentTeamId).name)}, ${entry.goalsFor}–${entry.goalsAgainst}">${entry.result}</span>`).join('') || '<span class="league-form-empty">—</span>'}</span></td>
+                                <td class="league-points">${row.Pts}</td>
                             </tr>
                         `).join('')}
                     </tbody>
@@ -900,21 +1134,55 @@ function formatLeagueRatingMovement(value) {
     return `${value > 0 ? '+' : '−'}${Math.abs(value).toFixed(1)}`;
 }
 
+let leagueTeamPowerMode = 'roster-informed';
+
 function renderLeagueTeamPowerRatings(season) {
-    const rows = calculateLeagueTeamPowerRatings(season);
+    const rows = calculateLeagueTeamPowerRatings(season, leagueTeamPowerMode);
+    const isResultsOnly = leagueTeamPowerMode === 'results-only';
     return `
         <section class="world-cup-card league-power-card" aria-labelledby="league-team-power-heading">
             <div class="world-cup-header">
                 <h2 class="world-cup-title" id="league-team-power-heading">Team Power Ratings</h2>
-                <span class="league-update-note">Current rating · movement from starting prior</span>
+                <div class="world-cup-toggle league-power-toggle" role="group" aria-label="Team power model">
+                    <button type="button" data-league-power-model="roster-informed" class="${isResultsOnly ? '' : 'active'}">Roster-informed</button>
+                    <button type="button" data-league-power-model="results-only" class="${isResultsOnly ? 'active' : ''}">Results-only</button>
+                </div>
             </div>
+            <p class="league-model-note">${isResultsOnly ? 'Every team starts at 1500; recorded results only.' : 'Starts from aggregate team-strength priors, then updates from recorded results.'} Standings remain official.</p>
             <div class="world-cup-table-wrap league-compact-table-wrap">
                 <table class="world-cup-table league-compact-table league-team-power-table">
                     <thead><tr><th>Team</th><th>Rating</th><th>Movement</th><th>P</th></tr></thead>
                     <tbody>${rows.map((row) => `
-                        <tr><td>${escapeLeagueText(row.team)}</td><td>${Math.round(row.rating)}</td><td class="${row.movement > 0 ? 'positive' : row.movement < 0 ? 'negative' : ''}">${formatLeagueRatingMovement(row.movement)}</td><td>${row.played}</td></tr>
+                        <tr><td>${escapeLeagueText(row.team)}</td><td>${isResultsOnly ? row.rating.toFixed(1) : Math.round(row.rating)}</td><td class="${row.movement > 0 ? 'positive' : row.movement < 0 ? 'negative' : ''}">${formatLeagueRatingMovement(row.movement)}</td><td>${row.played}</td></tr>
                     `).join('')}</tbody>
                 </table>
+            </div>
+        </section>
+    `;
+}
+
+function renderLeaguePredictions(season) {
+    const teamsById = getLeagueTeamsById(season);
+    const predictions = calculateLeagueUnplayedMatchupPredictions(season);
+    return `
+        <section class="world-cup-card league-predictions" aria-labelledby="league-predictions-heading">
+            <div class="world-cup-header">
+                <h2 class="world-cup-title" id="league-predictions-heading">Predictions</h2>
+                <span class="league-update-note">Provisional · primary roster-informed ratings</span>
+            </div>
+            <div class="league-predictions-strip">
+                ${predictions.map((prediction) => {
+                    const teamA = teamsById.get(prediction.teamAId);
+                    const teamB = teamsById.get(prediction.teamBId);
+                    const highest = Math.max(prediction.teamAPercentage, prediction.drawPercentage, prediction.teamBPercentage);
+                    return `<article class="league-prediction-card">
+                        <div class="league-prediction-line ${prediction.teamAPercentage === highest ? 'league-probability-highest' : ''}"><img src="${escapeLeagueText(teamA.image)}" alt=""><span>${escapeLeagueText(teamA.name)}</span><strong>${prediction.teamAPercentage}%</strong></div>
+                        <div class="league-prediction-line league-prediction-draw ${prediction.drawPercentage === highest ? 'league-probability-highest' : ''}"><span>Draw</span><strong>${prediction.drawPercentage}%</strong></div>
+                        <div class="league-prediction-line ${prediction.teamBPercentage === highest ? 'league-probability-highest' : ''}"><img src="${escapeLeagueText(teamB.image)}" alt=""><span>${escapeLeagueText(teamB.name)}</span><strong>${prediction.teamBPercentage}%</strong></div>
+                        <div class="league-prediction-bar" aria-hidden="true"><i style="width:${prediction.teamAPercentage}%;--segment:${teamA.kit.accent || teamA.kit.primary}"></i><i style="width:${prediction.drawPercentage}%;--segment:#7b8796"></i><i style="width:${prediction.teamBPercentage}%;--segment:${teamB.kit.accent || teamB.kit.primary}"></i></div>
+                        <small>Provisional · ${prediction.confidence} · ${prediction.remainingMeetings} ${prediction.remainingMeetings === 1 ? 'meeting' : 'meetings'} remaining</small>
+                    </article>`;
+                }).join('')}
             </div>
         </section>
     `;
@@ -1223,7 +1491,7 @@ function renderLeagueEventTimeline(season, match) {
                 ? `${event.player} own goal`
                 : `${event.playerIn} in, ${event.playerOut} out`;
         const detail = isGoal || isOwnGoal
-            ? `${event.assist ? `Assist by ${event.assist} · ` : ''}${event.score}${event.mercyRuleMatchEnd ? ' · Mercy-rule match end' : ''}`
+            ? `${event.assist ? `Assist by ${event.assist} · ` : ''}${isOwnGoal && event.benefitsTeamId ? `Benefits ${teamsById.get(event.benefitsTeamId).name} · ` : ''}${event.score}${event.mercyRuleMatchEnd ? ' · Mercy-rule match end' : ''}`
             : event.detailTime;
         return `<article class="league-timeline-event league-timeline-event-${event.eventType}">
             <span class="league-timeline-event-meta"><span class="league-timeline-team">${escapeLeagueText(team.shortName)}</span><span>${type}</span></span>
@@ -1280,7 +1548,7 @@ function renderLeagueMatchView(season, match) {
     return `
         <section class="league-match-section" aria-labelledby="${match.id}-heading">
             <div class="league-match-hero">
-                <p class="league-season-kicker">Official league match · Match 1</p>
+                <p class="league-season-kicker">Official league match · Match ${season.matches.findIndex((candidate) => candidate.id === match.id) + 1}</p>
                 <div class="league-scoreline" id="${match.id}-heading">
                     <span>${escapeLeagueText(homeTeam.name)}</span><strong>${match.homeGoals}<i>–</i>${match.awayGoals}</strong><span>${escapeLeagueText(awayTeam.name)}</span>
                 </div>
@@ -1316,6 +1584,7 @@ const leagueMedalMetrics = new Set(['appearances', 'minutes', 'goals', 'assists'
 
 function getLeagueLeaderboardRateMode(metric, requestedRateMode) {
     if (requestedRateMode === 'per-minute' && leaguePerMinuteMetrics.has(metric)) return requestedRateMode;
+    if (requestedRateMode === 'frequency' && leaguePerMinuteMetrics.has(metric)) return requestedRateMode;
     if (requestedRateMode === 'per-appearance' && metric === 'mvps') return requestedRateMode;
     if (requestedRateMode === 'clean-sheet-rate' && metric === 'cleanSheetHalves') return requestedRateMode;
     return 'totals';
@@ -1333,20 +1602,29 @@ function formatLeaguePerMinute(value, estimated = false, incomplete = false) {
     return `${incomplete ? '≤' : estimated ? '~' : ''}${formatted}`;
 }
 
+function formatLeagueFrequency(value, estimated = false, incomplete = false) {
+    if (!Number.isFinite(value)) return '—';
+    return `${incomplete ? '≥' : estimated ? '~' : ''}1 every ${value.toFixed(1)} min`;
+}
+
 function calculateLeagueLeaderboardRowsFromTotals(totals, metric, requestedRateMode = 'totals') {
     const rateMode = getLeagueLeaderboardRateMode(metric, requestedRateMode);
     const perMinute = rateMode === 'per-minute';
+    const frequency = rateMode === 'frequency';
     const perAppearance = rateMode === 'per-appearance';
     const cleanSheetRate = rateMode === 'clean-sheet-rate';
     return totals
         .filter((row) => {
             if (cleanSheetRate) return row.cleanSheetHalves > 0 || row.goalkeeperHalvesPlayed > 0;
+            if (frequency) return row.minutes > 0;
             if (perAppearance) return row[metric] > 0 && row.appearances > 0;
             return row[metric] > 0 && (!perMinute || row.minutes > 0);
         })
         .map((row) => {
             const actualMinutes = row.minutes / 60;
-            const leaderboardValue = cleanSheetRate
+            const leaderboardValue = frequency
+                ? row[metric] > 0 ? actualMinutes / row[metric] : null
+                : cleanSheetRate
                 ? row.goalkeeperHalvesPlayed > 0 ? row.cleanSheetHalves / row.goalkeeperHalvesPlayed : null
                 : perAppearance
                     ? row[metric] / row.appearances
@@ -1354,6 +1632,7 @@ function calculateLeagueLeaderboardRowsFromTotals(totals, metric, requestedRateM
             return {
                 ...row,
                 leaderboardValue,
+                rateMode,
                 cleanSheetRate: row.goalkeeperHalvesPlayed > 0 ? row.cleanSheetHalves / row.goalkeeperHalvesPlayed : null,
                 mvpsPerAppearance: row.appearances > 0 ? row.mvps / row.appearances : null,
                 goalsPerMinute: actualMinutes > 0 ? row.goals / actualMinutes : null,
@@ -1362,7 +1641,7 @@ function calculateLeagueLeaderboardRowsFromTotals(totals, metric, requestedRateM
             };
         })
         .sort((a, b) => Number.isFinite(b.leaderboardValue) - Number.isFinite(a.leaderboardValue)
-            || (Number.isFinite(a.leaderboardValue) && Number.isFinite(b.leaderboardValue) ? b.leaderboardValue - a.leaderboardValue : 0)
+            || (Number.isFinite(a.leaderboardValue) && Number.isFinite(b.leaderboardValue) ? (frequency ? a.leaderboardValue - b.leaderboardValue : b.leaderboardValue - a.leaderboardValue) : 0)
             || (metric === 'goalContributions' ? b.goals - a.goals || b.assists - a.assists : 0)
             || b.goalContributions - a.goalContributions
             || a.player.localeCompare(b.player));
@@ -1378,7 +1657,8 @@ function calculateLeagueLeaderboardMedals(rows, metric) {
     const equals = (a, b) => Math.abs(a - b) < 1e-9;
     const medals = new Map();
 
-    const valueTiers = rows.filter((row) => Number.isFinite(row.leaderboardValue)).sort((a, b) => b.leaderboardValue - a.leaderboardValue).reduce((tiers, row) => {
+    const frequency = rows.some((row) => row.rateMode === 'frequency');
+    const valueTiers = rows.filter((row) => Number.isFinite(row.leaderboardValue)).sort((a, b) => frequency ? a.leaderboardValue - b.leaderboardValue : b.leaderboardValue - a.leaderboardValue).reduce((tiers, row) => {
         const tier = tiers.find((candidate) => equals(candidate.value, row.leaderboardValue));
         if (tier) tier.rows.push(row);
         else tiers.push({ value: row.leaderboardValue, rows: [row] });
@@ -1407,13 +1687,17 @@ function renderLeagueSeasonLeaderboard(season) {
             ? formatLeagueClock(row.minutes, row.minutesEstimated, row.minutesIncomplete)
             : row[leagueSeasonStatMode];
     const rateOptions = leaguePerMinuteMetrics.has(leagueSeasonStatMode)
-        ? [['totals', 'Totals'], ['per-minute', 'Per minute']]
+        ? [['totals', 'Totals'], ['per-minute', 'Per minute'], ['frequency', '1 every X min']]
         : leagueSeasonStatMode === 'mvps'
             ? [['totals', 'Totals'], ['per-appearance', 'Per appearance']]
             : leagueSeasonStatMode === 'cleanSheetHalves'
                 ? [['totals', 'Totals'], ['clean-sheet-rate', 'Clean-sheet rate']]
                 : [['totals', 'Totals']];
-    const headerCells = leagueSeasonStatMode === 'goalContributions'
+    const headerCells = rateMode === 'frequency'
+        ? leagueSeasonStatMode === 'goalContributions'
+            ? '<th>Goals</th><th>Assists</th><th>G+A</th><th>Minutes</th><th>1 every</th>'
+            : `<th>${definition.label}</th><th>Minutes</th><th>1 every</th>`
+        : leagueSeasonStatMode === 'goalContributions'
         ? rateMode === 'per-minute' ? '<th>Goals/min</th><th>Assists/min</th><th>G+A/min</th>' : '<th>Goals</th><th>Assists</th><th>G+A</th>'
         : rateMode === 'clean-sheet-rate'
             ? '<th>CS halves</th><th>GK halves</th><th>CS rate</th>'
@@ -1444,7 +1728,12 @@ function renderLeagueSeasonLeaderboard(season) {
                             const goalContributionCells = rateMode === 'per-minute'
                                 ? `<td class="${row.goals ? 'league-positive' : ''}">${ratePrefix}${row.goals ? formatLeaguePerMinute(row.goalsPerMinute) : '0.000'}</td><td class="${row.assists ? 'league-assist' : ''}">${ratePrefix}${row.assists ? formatLeaguePerMinute(row.assistsPerMinute) : '0.000'}</td><td class="league-mvp">${formatLeaguePerMinute(row.goalContributionsPerMinute, row.minutesEstimated, row.minutesIncomplete)}</td>`
                                 : `<td class="${row.goals ? 'league-positive' : ''}">${row.goals}</td><td class="${row.assists ? 'league-assist' : ''}">${row.assists}</td><td class="league-mvp">${row.goalContributions}</td>`;
-                            const metricCells = leagueSeasonStatMode === 'goalContributions'
+                            const frequencyCells = leagueSeasonStatMode === 'goalContributions'
+                                ? `<td class="${row.goals ? 'league-positive' : ''}">${row.goals}</td><td class="${row.assists ? 'league-assist' : ''}">${row.assists}</td><td class="${row.goalContributions ? 'league-mvp' : ''}">${row.goalContributions}</td><td>${formatLeagueClock(row.minutes, row.minutesEstimated, row.minutesIncomplete)}</td><td>${formatLeagueFrequency(row.leaderboardValue, row.minutesEstimated, row.minutesIncomplete)}</td>`
+                                : `<td>${row[leagueSeasonStatMode]}</td><td>${formatLeagueClock(row.minutes, row.minutesEstimated, row.minutesIncomplete)}</td><td>${formatLeagueFrequency(row.leaderboardValue, row.minutesEstimated, row.minutesIncomplete)}</td>`;
+                            const metricCells = rateMode === 'frequency'
+                                ? frequencyCells
+                                : leagueSeasonStatMode === 'goalContributions'
                                 ? goalContributionCells
                                 : rateMode === 'clean-sheet-rate'
                                     ? `<td>${row.cleanSheetHalves}</td><td>${row.goalkeeperHalvesPlayed || '—'}</td><td>${row.cleanSheetRate === null ? '—' : `${Math.round(row.cleanSheetRate * 100)}%`}</td>`
@@ -1512,6 +1801,8 @@ function renderLdcRsLeagueSeason(focusSelector = null) {
                 ${renderLeaguePlayerPowerRankings(season)}
             </div>
 
+            ${renderLeaguePredictions(season)}
+
             ${renderLdcRsLeagueResults(season)}
 
             ${renderLeagueSeasonLeaderboard(season)}
@@ -1541,6 +1832,13 @@ function renderLdcRsLeagueSeason(focusSelector = null) {
             if (button.disabled) return;
             leagueSeasonRateMode = button.getAttribute('data-league-rate');
             renderLdcRsLeagueSeason(`[data-league-rate="${leagueSeasonRateMode}"]`);
+        });
+    });
+
+    container.querySelectorAll('[data-league-power-model]').forEach((button) => {
+        button.addEventListener('click', () => {
+            leagueTeamPowerMode = button.getAttribute('data-league-power-model');
+            renderLdcRsLeagueSeason(`[data-league-power-model="${leagueTeamPowerMode}"]`);
         });
     });
 

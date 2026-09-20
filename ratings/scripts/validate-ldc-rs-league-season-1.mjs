@@ -13,9 +13,10 @@ const context = {
     document: { getElementById: () => null }
 };
 vm.createContext(context);
-vm.runInContext(`${leagueScript}\nthis.season = ldcRsLeagueSeason1; this.modelVersions = { team: LEAGUE_TEAM_POWER_MODEL_VERSION, player: LEAGUE_PLAYER_POWER_MODEL_VERSION }; this.calculate = calculateLdcRsLeagueStandings; this.teamHistory = calculateLeagueTeamPowerHistory; this.teamPower = calculateLeagueTeamPowerRatings; this.playerPower = calculateLeaguePlayerPowerRankings; this.playerMatchPower = calculateLeaguePlayerMatchPower; this.playerConfidence = calculateLeaguePlayerPowerConfidence; this.opponentMultiplier = calculateLeagueOpponentMultiplier; this.matchPlayerTotals = calculateLeagueMatchPlayerTotals; this.seasonPlayerTotals = calculateLeagueSeasonPlayerTotals; this.leaderboardRows = calculateLeagueSeasonLeaderboardRows; this.leaderboardRowsFromTotals = calculateLeagueLeaderboardRowsFromTotals; this.leaderboardMedals = calculateLeagueLeaderboardMedals; this.matchTeamTotals = calculateLeagueMatchTeamTotals; this.participation = deriveLeagueMatchParticipation; this.matchEvents = deriveLeagueMatchEvents; this.statisticsRows = getLeagueStatisticsRows; this.formatClock = formatLeagueClock; this.renderResults = renderLdcRsLeagueResults; this.renderEvents = renderLeagueEventTimeline; this.renderLeaderboard = renderLeagueSeasonLeaderboard; this.renderTeam = renderLdcRsLeagueTeam; this.renderPlayerPower = renderLeaguePlayerPowerRankings; this.expandedMatches = leagueExpandedMatches; this.matchModes = leagueMatchDetailModes; this.statisticsPeriods = leagueStatisticsPeriods; this.setLeaderboardMode = (metric, rate) => { leagueSeasonStatMode = metric; leagueSeasonRateMode = rate; };`, context);
+vm.runInContext(`${leagueScript}\nthis.season = ldcRsLeagueSeason1; this.modelVersions = { team: LEAGUE_TEAM_POWER_MODEL_VERSION, player: LEAGUE_PLAYER_POWER_MODEL_VERSION, prediction: LEAGUE_PREDICTION_MODEL_VERSION }; this.calculate = calculateLdcRsLeagueStandings; this.teamHistory = calculateLeagueTeamPowerHistory; this.teamPower = calculateLeagueTeamPowerRatings; this.prediction = calculateLeagueMatchPrediction; this.predictions = calculateLeagueUnplayedMatchupPredictions; this.playerPower = calculateLeaguePlayerPowerRankings; this.playerMatchPower = calculateLeaguePlayerMatchPower; this.playerConfidence = calculateLeaguePlayerPowerConfidence; this.opponentMultiplier = calculateLeagueOpponentMultiplier; this.matchPlayerTotals = calculateLeagueMatchPlayerTotals; this.seasonPlayerTotals = calculateLeagueSeasonPlayerTotals; this.leaderboardRows = calculateLeagueSeasonLeaderboardRows; this.leaderboardRowsFromTotals = calculateLeagueLeaderboardRowsFromTotals; this.leaderboardMedals = calculateLeagueLeaderboardMedals; this.matchTeamTotals = calculateLeagueMatchTeamTotals; this.participation = deriveLeagueMatchParticipation; this.matchEvents = deriveLeagueMatchEvents; this.statisticsRows = getLeagueStatisticsRows; this.formatClock = formatLeagueClock; this.renderStandings = renderLdcRsLeagueStandings; this.renderTeamPower = renderLeagueTeamPowerRatings; this.renderPredictions = renderLeaguePredictions; this.renderResults = renderLdcRsLeagueResults; this.renderEvents = renderLeagueEventTimeline; this.renderLeaderboard = renderLeagueSeasonLeaderboard; this.renderTeam = renderLdcRsLeagueTeam; this.renderPlayerPower = renderLeaguePlayerPowerRankings; this.expandedMatches = leagueExpandedMatches; this.matchModes = leagueMatchDetailModes; this.statisticsPeriods = leagueStatisticsPeriods; this.setLeaderboardMode = (metric, rate) => { leagueSeasonStatMode = metric; leagueSeasonRateMode = rate; }; this.setTeamPowerMode = (mode) => { leagueTeamPowerMode = mode; };`, context);
 
-const season = context.season;
+const fullSeason = context.season;
+const season = { ...fullSeason, matches: [fullSeason.matches[0]] };
 assert.equal(season.title, 'LDC RS League Season 1');
 assert.deepEqual(JSON.parse(JSON.stringify(season.format)), {
     type: 'double-round-robin',
@@ -25,10 +26,11 @@ assert.deepEqual(JSON.parse(JSON.stringify(season.format)), {
 });
 assert.equal(season.teams.length, 6);
 assert.equal(season.matches.length, 1);
+assert.equal(fullSeason.matches.length, 2);
 
 const expectedRosters = {
     'Baguette Z Apex': ['Spero', 'V4KS', 'luur', 'zenix', 'oskar', 'Nympex', 'amaanofc', 'evilpedri', 'x', 'myrulez', 'Faya', 'Shield', 'Kaka'],
-    'HAX UNITED': ['GK', 'Braga.', 'Misimaro', 'Pedri.', 'GGG', 'A7mdBibo', 'Arshavin', 'Blimpus', 'dierfetje', 'bananajoe', 'ShadiOzz', 'Szcesny'],
+    'HAX UNITED': ['GK', 'Braga.', 'Misimaro', 'Pedri.', 'GGG', 'A7mdBibo', 'Arshavin', 'Blimpus', 'dierfetje', 'bananajoe', 'ShadiOzz', 'Szcesny', '$limani'],
     'OG FC': ['𝐌𝐨𝐬𝐭𝐚𝐟𝐚 𝐙𝐢𝐤𝐨', 'Mbappe', 'Nistel', 'Nijad', 'MeeRo', 'Dynaxz', 'Lookman', 'Brutus', 'MaksLuburic', 'Olise', 'saygex', 'Wizop', 'ToughBaby'],
     'X TO WIN 2': ['Drkuu', 'Ibrahim', 'SamueleRicci', 'Berbatov', 'Naeh', 'SVimes', 'maccy', 'atrocity exhibition', 'elex', 'mitrita KING', 'Wakanda', 'tsukuyomi.', 'wee', 'Johnny Sins'],
     HUQQA: ['Menéur', 'Lena', 'Ollhurse', 'Perkz', 'Mattéo Guendouzi', 'unknown-user', 'barn', 'Razor', 'Grmii', 'Himothy', 'Kimmich', 'whân'],
@@ -66,6 +68,7 @@ assert.deepEqual(JSON.parse(JSON.stringify(season.powerRatingConfig)), {
         expectationDivisor: 400,
         marginStep: 0.2,
         marginCap: 4,
+        equalStartRating: 1500,
         startingRatings: {
             'x-to-win-2': 1581,
             'baguette-z-apex': 1545,
@@ -74,6 +77,14 @@ assert.deepEqual(JSON.parse(JSON.stringify(season.powerRatingConfig)), {
             'hax-united': 1471,
             'rooney-tunes': 1446
         }
+    },
+    prediction: {
+        modelVersion: 2,
+        calibrationStatus: 'provisional',
+        maximumDrawProbability: 0.28,
+        minimumDrawProbability: 0.1,
+        drawDecayScale: 300,
+        confidence: { lowMaximumCompletedMatchesPerTeam: 1, mediumMaximumCompletedMatchesPerTeam: 3 }
     },
     player: {
         modelVersion: 1,
@@ -90,7 +101,7 @@ assert.deepEqual(JSON.parse(JSON.stringify(season.powerRatingConfig)), {
         confidence: { lowAppearances: 1, mediumAppearances: 3 }
     }
 });
-assert.deepEqual(JSON.parse(JSON.stringify(context.modelVersions)), { team: 1, player: 1 });
+assert.deepEqual(JSON.parse(JSON.stringify(context.modelVersions)), { team: 1, player: 1, prediction: 2 });
 assert.doesNotMatch(leagueScript, /(player|ability|roster)Tier\s*[:=]/i);
 assert.doesNotMatch(leagueScript, /tierLabel\s*[:=]/i);
 
@@ -318,9 +329,8 @@ assert.deepEqual(
     JSON.parse(JSON.stringify(originalHistoricalPlayerPower.map(({ player, score }) => ({ player, score }))))
 );
 
-assert.doesNotMatch(leagueScript, /prediction/i);
-assert.doesNotMatch(html, /league-prediction|league-predictions/i);
-assert.doesNotMatch(html, /Predictions/i);
+assert.match(leagueScript, /calculateLeagueMatchPrediction/);
+assert.match(html, /league-prediction|league-predictions/i);
 assert.match(leagueScript, /Team Power Ratings/);
 assert.equal(context.seasonPlayerTotals(season).find((row) => row.player === 'Berbatov').goalContributions, 3);
 
@@ -694,5 +704,187 @@ assert.match(html, /\.league-table-leader/);
 assert.match(html, /\.league-timeline-event-own-goal/);
 assert.match(html, /\.league-medal-gold/);
 assert.doesNotMatch(html, /\.league-pitch|\.league-shirt-icon|\.league-kit-source/);
+
+// Match 2 and all surfaces derived from the complete chronological record.
+const match2 = fullSeason.matches[1];
+assert.equal(match2.id, 'match-2-og-fc-v-hax-united');
+assert.deepEqual(JSON.parse(JSON.stringify([match2.homeTeamId, match2.awayTeamId, match2.homeGoals, match2.awayGoals, match2.mvp])), ['og-fc', 'hax-united', 3, 2, 'Mbappe']);
+assert.deepEqual(JSON.parse(JSON.stringify(match2.duration)), {
+    totalSeconds: 986,
+    endTimeKnown: true,
+    halves: [
+        { half: 1, seconds: 482, display: '8:02', endTimeKnown: true },
+        { half: 2, seconds: 504, display: '8:24', endTimeKnown: true }
+    ]
+});
+assert.equal(match2.conclusion.type, 'full-time');
+assert.equal(match2.recording, undefined);
+assert.deepEqual(JSON.parse(JSON.stringify(match2.scoringEvents.map(({ score, type, player, assist, benefitsTeamId }) => ({ score, type, player, assist, benefitsTeamId })))), [
+    { score: '1–0', type: 'goal', player: '𝐌𝐨𝐬𝐭𝐚𝐟𝐚 𝐙𝐢𝐤𝐨', assist: 'saygex' },
+    { score: '1–1', type: 'own-goal', player: 'Nistel', assist: null, benefitsTeamId: 'hax-united' },
+    { score: '1–2', type: 'goal', player: 'bananajoe', assist: 'Arshavin' },
+    { score: '2–2', type: 'goal', player: 'Mbappe', assist: 'MaksLuburic' },
+    { score: '3–2', type: 'own-goal', player: 'Misimaro', assist: null, benefitsTeamId: 'og-fc' }
+]);
+assert.deepEqual(JSON.parse(JSON.stringify(match2.scoringEvents.slice(2).map(({ timing }) => ({ halfSeconds: timing.halfSeconds, cumulativeSeconds: timing.cumulativeSeconds, halfDisplay: timing.halfDisplay, cumulativeDisplay: timing.cumulativeDisplay })))), [
+    { halfSeconds: 128, cumulativeSeconds: 610, halfDisplay: '2:08', cumulativeDisplay: '10:10' },
+    { halfSeconds: 139, cumulativeSeconds: 621, halfDisplay: '2:19', cumulativeDisplay: '10:21' },
+    { halfSeconds: 393, cumulativeSeconds: 875, halfDisplay: '6:33', cumulativeDisplay: '14:35' }
+]);
+assert.equal(match2.scoringEvents.every((event) => event.attribution === 'manual-adjudication-overrides-automatic-source'), true);
+
+const haxTeam = fullSeason.teams.find((team) => team.id === 'hax-united');
+assert.equal(haxTeam.roster.includes('$limani'), true);
+assert.equal(haxTeam.roster.filter((player) => player === '$limani').length, 1);
+assert.equal(haxTeam.roster.some((player) => player !== '$limani' && player.toLowerCase().includes('limani')), false);
+['döner', 'Maks Redondo', 'M.ZIKO', '𝗠.𝗭𝗜𝗞𝗢', 'HAX UNITED GK', 'Alexis Sanchez', '√G⁶'].forEach((alias) => assert.equal(leagueScript.includes(`'${alias}'`), false));
+
+assert.deepEqual(JSON.parse(JSON.stringify(context.matchTeamTotals(match2, 'og-fc'))), { kicks: 240, passes: 92, shotsOnGoal: 6 });
+assert.deepEqual(JSON.parse(JSON.stringify(context.matchTeamTotals(match2, 'hax-united'))), { kicks: 274, passes: 123, shotsOnGoal: 12 });
+Object.entries(match2.fullMatchPlayerStats).forEach(([teamId, rows]) => {
+    const summed = rows.reduce((total, row) => ({ kicks: total.kicks + row.kicks, passes: total.passes + row.passes, shotsOnGoal: total.shotsOnGoal + row.shotsOnGoal }), { kicks: 0, passes: 0, shotsOnGoal: 0 });
+    assert.deepEqual(JSON.parse(JSON.stringify(summed)), JSON.parse(JSON.stringify(context.matchTeamTotals(match2, teamId))), `${teamId} player totals reconcile`);
+});
+
+const match2PlayerTotals = context.matchPlayerTotals(fullSeason, match2);
+const match2Stat = (player) => match2PlayerTotals.find((row) => row.player === player);
+assert.deepEqual(JSON.parse(JSON.stringify(Object.fromEntries(playerKeys.map((key) => [key, match2Stat('Mbappe')[key]])))), { kicks: 47, passes: 21, shotsOnGoal: 1, goals: 1, assists: 0, ownGoals: 0, mvps: 1, cleanSheetHalves: 0 });
+assert.deepEqual(JSON.parse(JSON.stringify(Object.fromEntries(playerKeys.map((key) => [key, match2Stat('Misimaro')[key]])))), { kicks: 26, passes: 9, shotsOnGoal: 0, goals: 0, assists: 0, ownGoals: 1, mvps: 0, cleanSheetHalves: 0 });
+assert.deepEqual(JSON.parse(JSON.stringify({ clean: match2Stat('Nistel').cleanSheetHalves, gk: match2Stat('Nistel').goalkeeperHalvesPlayed })), { clean: 0, gk: 2 });
+assert.deepEqual(JSON.parse(JSON.stringify({ clean: match2Stat('GK').cleanSheetHalves, gk: match2Stat('GK').goalkeeperHalvesPlayed })), { clean: 0, gk: 2 });
+assert.equal(match2PlayerTotals.length, 15);
+assert.equal(match2Stat('$limani').teamId, 'hax-united');
+
+assert.deepEqual(JSON.parse(JSON.stringify(match2.startingLineups['og-fc'])), [
+    { player: 'Nistel', position: 'GK' }, { player: 'Nijad', position: 'CB' }, { player: 'MaksLuburic', position: 'CM' },
+    { player: 'Mbappe', position: 'CAM' }, { player: 'saygex', position: 'LW' }, { player: '𝐌𝐨𝐬𝐭𝐚𝐟𝐚 𝐙𝐢𝐤𝐨', position: 'ST' }
+]);
+assert.deepEqual(JSON.parse(JSON.stringify(match2.startingLineups['hax-united'])), [
+    { player: 'GK', position: 'GK' }, { player: 'Pedri', position: 'CDM' }, { player: '$limani', position: 'CM' },
+    { player: 'Misimaro', position: 'CAM' }, { player: 'Arshavin', position: 'LW' }, { player: 'bananajoe', position: 'ST' }
+]);
+const match2Position = (teamId, player) => match2.positionStints[teamId].find((entry) => entry.player === player);
+assert.equal(match2Position('og-fc', 'ToughBaby').stints[0].position, 'CB');
+assert.equal(match2Position('og-fc', 'Dynaxz').stints[0].position, 'CM');
+assert.equal(match2Position('hax-united', 'GGG').stints[0].position, 'CAM');
+assert.deepEqual(JSON.parse(JSON.stringify(match2Position('hax-united', 'Misimaro').stints.map(({ position }) => position))), ['CAM', 'ST']);
+assert.deepEqual(JSON.parse(JSON.stringify(match2.substitutions.map(({ playerIn, playerOut, half, timing }) => ({ playerIn, playerOut, half, type: timing.type, observedStart: timing.observedStart, observedEnd: timing.observedEnd })))), [
+    { playerIn: 'ToughBaby', playerOut: 'Nijad', half: 1, type: 'observed-interval', observedStart: 313.933, observedEnd: 320.333 },
+    { playerIn: 'GGG', playerOut: 'Misimaro', half: 'halftime', type: 'halftime' },
+    { playerIn: 'Dynaxz', playerOut: 'MaksLuburic', half: 2, type: 'observed-interval', observedStart: 214.4, observedEnd: 239.733 },
+    { playerIn: 'Misimaro', playerOut: 'bananajoe', half: 2, type: 'observed-interval', observedStart: 271.5, observedEnd: 297.033 }
+]);
+const match2Participation = context.participation(match2);
+const match2Time = (player) => match2Participation.find((row) => row.player === player);
+assert.equal(Math.abs(match2Time('Nijad').seconds - 317.133) < 1e-9, true);
+assert.equal(Math.abs(match2Time('Dynaxz').seconds - 276.9335) < 1e-9, true);
+assert.equal(Math.abs(match2Time('GGG').seconds - 504) < 1e-9, true);
+assert.equal(Math.abs(match2Time('Misimaro').seconds - 701.7335) < 1e-9, true);
+['Nijad', 'Dynaxz', 'Misimaro'].forEach((player) => assert.deepEqual(JSON.parse(JSON.stringify({ appearances: match2Time(player).appearances, estimated: match2Time(player).estimated, incomplete: match2Time(player).incomplete })), { appearances: 1, estimated: true, incomplete: false }));
+assert.deepEqual(JSON.parse(JSON.stringify({ appearances: match2Time('GGG').appearances, estimated: match2Time('GGG').estimated, incomplete: match2Time('GGG').incomplete })), { appearances: 1, estimated: false, incomplete: false });
+assert.deepEqual(JSON.parse(JSON.stringify(match2Time('$limani'))), { player: '$limani', appearances: 1, seconds: 986, estimated: false, incomplete: false });
+
+const match2Events = context.matchEvents(match2);
+assert.equal(match2Events.length, 9);
+assert.deepEqual(JSON.parse(JSON.stringify(match2Events.filter((event) => ['goal', 'own-goal'].includes(event.eventType)).map(({ player, sortValue }) => ({ player, sortValue })))), [
+    { player: 'Misimaro', sortValue: 875 }, { player: 'Mbappe', sortValue: 621 }, { player: 'bananajoe', sortValue: 610 },
+    { player: 'Nistel', sortValue: 320 }, { player: '𝐌𝐨𝐬𝐭𝐚𝐟𝐚 𝐙𝐢𝐤𝐨', sortValue: 185 }
+]);
+const match2EventsMarkup = context.renderEvents(fullSeason, match2);
+assert.match(match2EventsMarkup, /Misimaro own goal[\s\S]*?Benefits OG FC/);
+assert.match(match2EventsMarkup, /Nistel own goal[\s\S]*?Benefits HAX UNITED/);
+assert.match(match2EventsMarkup, /2:08 2H · 10:10 total/);
+assert.match(match2EventsMarkup, /2:19 2H · 10:21 total/);
+assert.match(match2EventsMarkup, /6:33 2H · 14:35 total/);
+
+const fullStandings = context.calculate(fullSeason);
+const standing = (teamId) => fullStandings.find((row) => row.teamId === teamId);
+assert.deepEqual(JSON.parse(JSON.stringify(fullStandings.map((row) => row.teamId))), ['x-to-win-2', 'og-fc', 'baguette-z-apex', 'huqqa', 'hax-united', 'rooney-tunes']);
+assert.deepEqual(JSON.parse(JSON.stringify(Object.fromEntries(['P', 'W', 'D', 'L', 'GF', 'GA', 'GD', 'Pts'].map((key) => [key, standing('og-fc')[key]])))), { P: 1, W: 1, D: 0, L: 0, GF: 3, GA: 2, GD: 1, Pts: 3 });
+assert.deepEqual(JSON.parse(JSON.stringify(Object.fromEntries(['P', 'W', 'D', 'L', 'GF', 'GA', 'GD', 'Pts'].map((key) => [key, standing('hax-united')[key]])))), { P: 1, W: 0, D: 0, L: 1, GF: 2, GA: 3, GD: -1, Pts: 0 });
+assert.deepEqual(JSON.parse(JSON.stringify(standing('x-to-win-2').form.map(({ result }) => result))), ['W']);
+assert.deepEqual(JSON.parse(JSON.stringify(standing('og-fc').form.map(({ result }) => result))), ['W']);
+assert.deepEqual(JSON.parse(JSON.stringify(standing('hax-united').form.map(({ result }) => result))), ['L']);
+assert.deepEqual(JSON.parse(JSON.stringify(standing('rooney-tunes').form.map(({ result }) => result))), ['L']);
+assert.equal(standing('baguette-z-apex').form.length, 0);
+const standingsMarkup = context.renderStandings(fullSeason);
+assert.match(standingsMarkup, /2 of 30 results recorded/);
+assert.match(standingsMarkup, /<th>FORM<\/th>/);
+assert.match(standingsMarkup, /league-form-w/);
+assert.match(standingsMarkup, /league-form-l/);
+
+const rosterPower = context.teamPower(fullSeason, 'roster-informed');
+const rosterPowerById = new Map(rosterPower.map((row) => [row.teamId, row]));
+assert.equal(Math.abs(rosterPowerById.get('og-fc').rating - 1495.5856273634283) < 1e-9, true);
+assert.equal(Math.abs(rosterPowerById.get('hax-united').rating - 1455.4143726365717) < 1e-9, true);
+const resultsOnlyPower = context.teamPower(fullSeason, 'results-only');
+const resultsOnlyById = new Map(resultsOnlyPower.map((row) => [row.teamId, row]));
+assert.equal(Math.abs(resultsOnlyById.get('x-to-win-2').rating - 1528.8) < 1e-9, true);
+assert.equal(Math.abs(resultsOnlyById.get('og-fc').rating - 1516) < 1e-9, true);
+assert.equal(resultsOnlyById.get('baguette-z-apex').rating, 1500);
+assert.equal(resultsOnlyById.get('huqqa').rating, 1500);
+assert.equal(Math.abs(resultsOnlyById.get('hax-united').rating - 1484) < 1e-9, true);
+assert.equal(Math.abs(resultsOnlyById.get('rooney-tunes').rating - 1471.2) < 1e-9, true);
+const match2PrePower = context.teamHistory(fullSeason, 'roster-informed').preMatchRatings.get(match2.id);
+assert.equal(match2PrePower.homePreMatchRating, 1480);
+assert.equal(match2PrePower.awayPreMatchRating, 1471);
+const fullPlayerPower = context.playerPower(fullSeason);
+assert.deepEqual(JSON.parse(JSON.stringify(fullPlayerPower.slice(0, 10).map((row) => row.player))), ['Berbatov', 'Drkuu', 'Mbappe', 'Naeh', 'bananajoe', '𝐌𝐨𝐬𝐭𝐚𝐟𝐚 𝐙𝐢𝐤𝐨', 'atrocity exhibition', 'Arshavin', 'MaksLuburic', 'elex']);
+assert.equal(fullPlayerPower.find((row) => row.player === 'Mbappe').opponentPreMatchRating, undefined);
+assert.equal(context.playerMatchPower(fullSeason, match2, match2PrePower).find((row) => row.player === 'Mbappe').opponentPreMatchRating, 1471);
+assert.equal(JSON.stringify(context.playerPower(fullSeason)), JSON.stringify(context.playerPower(fullSeason)));
+
+const predictions = context.predictions(fullSeason);
+assert.equal(predictions.length, 15);
+assert.equal(predictions.reduce((total, prediction) => total + prediction.remainingMeetings, 0), 28);
+assert.equal(predictions.every((prediction) => prediction.teamAPercentage + prediction.drawPercentage + prediction.teamBPercentage === 100), true);
+assert.equal(predictions.every((prediction) => prediction.confidence === 'Low confidence'), true);
+assert.equal(JSON.stringify(predictions), JSON.stringify(context.predictions(fullSeason)));
+assert.equal(context.prediction(fullSeason, 'og-fc', 'hax-united').teamAPercentage > context.prediction(fullSeason, 'og-fc', 'hax-united').teamBPercentage, true);
+assert.match(context.renderPredictions(fullSeason), /primary roster-informed ratings/);
+
+const fullSeasonTotals = context.seasonPlayerTotals(fullSeason);
+assert.equal(fullSeasonTotals.length, 29);
+assert.equal(fullSeasonTotals.find((row) => row.player === 'Mbappe').mvps, 1);
+assert.equal(fullSeasonTotals.find((row) => row.player === 'saygex').assists, 1);
+assert.equal(fullSeasonTotals.find((row) => row.player === 'Nistel').ownGoals, 1);
+assert.equal(fullSeasonTotals.find((row) => row.player === 'Misimaro').goalkeeperHalvesPlayed, 0);
+['appearances', 'minutes', 'goals', 'assists', 'goalContributions', 'ownGoals', 'mvps', 'kicks', 'passes', 'shotsOnGoal', 'cleanSheetHalves'].forEach((metric) => {
+    const rows = context.leaderboardRows(fullSeason, metric, 'totals');
+    assert.equal(rows.length > 0, true, `${metric} leaderboard derives from the complete season`);
+});
+const frequencyFixtureRows = context.leaderboardRowsFromTotals([
+    { player: 'fast', teamId: 'x', goals: 2, assists: 0, goalContributions: 2, minutes: 600, minutesEstimated: false, minutesIncomplete: false },
+    { player: 'slow', teamId: 'x', goals: 1, assists: 0, goalContributions: 1, minutes: 600, minutesEstimated: true, minutesIncomplete: false },
+    { player: 'zero', teamId: 'x', goals: 0, assists: 0, goalContributions: 0, minutes: 600, minutesEstimated: false, minutesIncomplete: false }
+], 'goals', 'frequency');
+assert.deepEqual(JSON.parse(JSON.stringify(frequencyFixtureRows.map(({ player, leaderboardValue }) => ({ player, leaderboardValue })))), [
+    { player: 'fast', leaderboardValue: 5 }, { player: 'slow', leaderboardValue: 10 }, { player: 'zero', leaderboardValue: null }
+]);
+assert.deepEqual(JSON.parse(JSON.stringify([...context.leaderboardMedals(frequencyFixtureRows, 'goals').entries()])), [['fast', 'gold'], ['slow', 'silver']]);
+context.setLeaderboardMode('goals', 'frequency');
+const frequencyMarkup = context.renderLeaderboard(fullSeason);
+assert.match(frequencyMarkup, /data-league-rate="frequency" class="active"/);
+assert.match(frequencyMarkup, /1 every \d+\.\d min/);
+assert.match(frequencyMarkup, /<td>0<\/td><td>[^<]+<\/td><td>—<\/td>/);
+context.setLeaderboardMode('appearances', 'frequency');
+assert.doesNotMatch(context.renderLeaderboard(fullSeason), /1 every X min/);
+context.setLeaderboardMode('cleanSheetHalves', 'clean-sheet-rate');
+const fullCleanRate = context.leaderboardRows(fullSeason, 'cleanSheetHalves', 'clean-sheet-rate');
+assert.deepEqual(JSON.parse(JSON.stringify(fullCleanRate.filter((row) => ['Nistel', 'GK'].includes(row.player)).map(({ player, goalkeeperHalvesPlayed, cleanSheetHalves, leaderboardValue }) => ({ player, goalkeeperHalvesPlayed, cleanSheetHalves, leaderboardValue })))), [
+    { player: 'GK', goalkeeperHalvesPlayed: 2, cleanSheetHalves: 0, leaderboardValue: 0 },
+    { player: 'Nistel', goalkeeperHalvesPlayed: 2, cleanSheetHalves: 0, leaderboardValue: 0 }
+]);
+
+const fullResultsMarkup = context.renderResults(fullSeason);
+assert.equal((fullResultsMarkup.match(/league-match-disclosure/g) || []).length, 2);
+assert.equal((fullResultsMarkup.match(/league-match-recording-card/g) || []).length, 0, 'latest match has no invented recording card');
+assert.match(fullResultsMarkup, /OG FC[\s\S]*?3–2[\s\S]*?HAX UNITED/);
+assert.match(fullResultsMarkup, /<small>MVP<\/small><strong>Mbappe<\/strong>/);
+assert.match(fullResultsMarkup, /𝐌𝐨𝐬𝐭𝐚𝐟𝐚 𝐙𝐢𝐤𝐨 · bananajoe · Mbappe · Nistel OG · Misimaro OG/);
+assert.match(fullResultsMarkup, /data-match-id="match-1-x-to-win-2-v-rooney-tunes"/);
+assert.doesNotMatch(leagueScript, /(player|ability|roster)Tier\s*[:=]/i);
+assert.match(html, /\.league-form-result/);
+assert.match(html, /\.league-predictions-strip/);
 
 console.log('LDC RS League Season 1 validation passed.');
