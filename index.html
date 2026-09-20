@@ -768,8 +768,7 @@
             color: #fff;
         }
 
-        .league-competition-grid,
-        .league-power-grid {
+        .league-competition-grid {
             display: grid;
             grid-template-columns: minmax(0, 2fr) minmax(260px, 1fr);
             gap: 12px;
@@ -1319,23 +1318,8 @@
             border-top: 1px solid rgba(255, 255, 255, 0.08);
         }
 
-        .league-power-grid {
-            grid-template-columns: minmax(300px, 0.8fr) minmax(0, 1.2fr);
-        }
-
-        .league-power-card {
+        .league-player-power-card {
             min-width: 0;
-        }
-
-        .league-power-toggle {
-            justify-content: flex-end;
-        }
-
-        .league-model-note {
-            margin: 0 0 10px;
-            color: #96a3b4;
-            font-size: 11px;
-            line-height: 1.45;
         }
 
         .league-compact-table th:not(:first-child),
@@ -1344,10 +1328,6 @@
             padding-inline: 7px;
             text-align: center;
             white-space: nowrap;
-        }
-
-        .league-team-power-table {
-            min-width: 460px;
         }
 
         .league-player-power-table {
@@ -2154,7 +2134,6 @@
 
         @media (max-width: 900px) {
             .league-competition-grid,
-            .league-power-grid,
             .league-teams-grid,
             .league-match-summary-grid,
             .league-halves-grid,

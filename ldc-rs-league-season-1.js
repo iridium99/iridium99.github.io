@@ -17,7 +17,6 @@ const ldcRsLeagueSeason1 = {
             expectationDivisor: 400,
             marginStep: 0.20,
             marginCap: 4,
-            equalStartRating: 1500,
             startingRatings: {
                 'x-to-win-2': 1581,
                 'baguette-z-apex': 1545,
@@ -576,11 +575,9 @@ function calculateLdcRsLeagueStandings(season) {
         .sort((a, b) => b.Pts - a.Pts || b.GD - a.GD || b.GF - a.GF || a.order - b.order);
 }
 
-function calculateLeagueTeamPowerHistory(season, model = 'roster-informed') {
+function calculateLeagueTeamPowerHistory(season) {
     const config = season.powerRatingConfig.team;
-    const startingRating = (teamId) => model === 'results-only' ? config.equalStartRating : config.startingRatings[teamId];
-    const ratings = new Map(season.teams.map((team) => [team.id, startingRating(team.id)]));
-    const played = new Map(season.teams.map((team) => [team.id, 0]));
+    const ratings = new Map(season.teams.map((team) => [team.id, config.startingRatings[team.id]]));
     const preMatchRatings = new Map();
 
     season.matches.forEach((match, chronologicalIndex) => {
@@ -590,9 +587,7 @@ function calculateLeagueTeamPowerHistory(season, model = 'roster-informed') {
             matchId: match.id,
             chronologicalIndex,
             homePreMatchRating: homeRating,
-            awayPreMatchRating: awayRating,
-            homeCompletedMatches: played.get(match.homeTeamId),
-            awayCompletedMatches: played.get(match.awayTeamId)
+            awayPreMatchRating: awayRating
         });
         const expectedHome = 1 / (1 + (10 ** ((awayRating - homeRating) / config.expectationDivisor)));
         const homeResult = match.homeGoals === match.awayGoals ? 0.5 : match.homeGoals > match.awayGoals ? 1 : 0;
@@ -602,27 +597,9 @@ function calculateLeagueTeamPowerHistory(season, model = 'roster-informed') {
 
         ratings.set(match.homeTeamId, homeRating + change);
         ratings.set(match.awayTeamId, awayRating - change);
-        played.set(match.homeTeamId, played.get(match.homeTeamId) + 1);
-        played.set(match.awayTeamId, played.get(match.awayTeamId) + 1);
     });
 
-    return { ratings, played, preMatchRatings };
-}
-
-function calculateLeagueTeamPowerRatings(season, model = 'roster-informed') {
-    const config = season.powerRatingConfig.team;
-    const history = calculateLeagueTeamPowerHistory(season, model);
-    const startingRating = (teamId) => model === 'results-only' ? config.equalStartRating : config.startingRatings[teamId];
-
-    return season.teams.map((team, order) => ({
-        teamId: team.id,
-        team: team.name,
-        rating: history.ratings.get(team.id),
-        startingRating: startingRating(team.id),
-        movement: history.ratings.get(team.id) - startingRating(team.id),
-        played: history.played.get(team.id),
-        order
-    })).sort((a, b) => b.rating - a.rating || a.order - b.order);
+    return { ratings, preMatchRatings };
 }
 
 function getLeagueTeamsById(season) {
@@ -1068,43 +1045,11 @@ function renderLdcRsLeagueStandings(season) {
     `;
 }
 
-function formatLeagueRatingMovement(value) {
-    if (Math.abs(value) < 0.05) return '—';
-    return `${value > 0 ? '+' : '−'}${Math.abs(value).toFixed(1)}`;
-}
-
-let leagueTeamPowerMode = 'roster-informed';
-
-function renderLeagueTeamPowerRatings(season) {
-    const rows = calculateLeagueTeamPowerRatings(season, leagueTeamPowerMode);
-    const isResultsOnly = leagueTeamPowerMode === 'results-only';
-    return `
-        <section class="world-cup-card league-power-card" aria-labelledby="league-team-power-heading">
-            <div class="world-cup-header">
-                <h2 class="world-cup-title" id="league-team-power-heading">Team Power Ratings</h2>
-                <div class="world-cup-toggle league-power-toggle" role="group" aria-label="Team power model">
-                    <button type="button" data-league-power-model="roster-informed" class="${isResultsOnly ? '' : 'active'}">Roster-informed</button>
-                    <button type="button" data-league-power-model="results-only" class="${isResultsOnly ? 'active' : ''}">Results-only</button>
-                </div>
-            </div>
-            <p class="league-model-note">${isResultsOnly ? 'Every team starts at 1500; recorded results only.' : 'Starts from aggregate team-strength priors, then updates from recorded results.'} Standings remain official.</p>
-            <div class="world-cup-table-wrap league-compact-table-wrap">
-                <table class="world-cup-table league-compact-table league-team-power-table">
-                    <thead><tr><th>Team</th><th>Rating</th><th>Movement</th><th>P</th></tr></thead>
-                    <tbody>${rows.map((row) => `
-                        <tr><td>${escapeLeagueText(row.team)}</td><td>${isResultsOnly ? row.rating.toFixed(1) : Math.round(row.rating)}</td><td class="${row.movement > 0 ? 'positive' : row.movement < 0 ? 'negative' : ''}">${formatLeagueRatingMovement(row.movement)}</td><td>${row.played}</td></tr>
-                    `).join('')}</tbody>
-                </table>
-            </div>
-        </section>
-    `;
-}
-
 function renderLeaguePlayerPowerRankings(season) {
     const rows = calculateLeaguePlayerPowerRankings(season).slice(0, 10);
     const teamsById = getLeagueTeamsById(season);
     return `
-        <section class="world-cup-card league-power-card" aria-labelledby="league-player-power-heading">
+        <section class="world-cup-card league-player-power-card" aria-labelledby="league-player-power-heading">
             <div class="world-cup-header">
                 <h2 class="world-cup-title" id="league-player-power-heading">Top 10 Players</h2>
                 <span class="league-update-note" title="Ranking uses recorded tournament contributions and may favour roles represented by the available statistics.">Provisional · cumulative match score</span>
@@ -1516,7 +1461,15 @@ function formatLeaguePerMinute(value, estimated = false, incomplete = false) {
 
 function formatLeagueFrequency(value, estimated = false, incomplete = false) {
     if (!Number.isFinite(value)) return '—';
-    return `${incomplete ? '≥' : estimated ? '~' : ''}1 every ${value.toFixed(1)} min`;
+    const roundedSeconds = Math.round(value);
+    const minutes = Math.floor(roundedSeconds / 60);
+    const seconds = roundedSeconds % 60;
+    const elapsed = minutes === 0
+        ? `${seconds}s`
+        : seconds === 0
+            ? `${minutes}m`
+            : `${minutes}m ${String(seconds).padStart(2, '0')}s`;
+    return `${incomplete ? '≥' : estimated ? '~' : ''}1 every ${elapsed}`;
 }
 
 function calculateLeagueLeaderboardRowsFromTotals(totals, metric, requestedRateMode = 'totals') {
@@ -1535,7 +1488,7 @@ function calculateLeagueLeaderboardRowsFromTotals(totals, metric, requestedRateM
         .map((row) => {
             const actualMinutes = row.minutes / 60;
             const leaderboardValue = frequency
-                ? row[metric] > 0 ? actualMinutes / row[metric] : null
+                ? row[metric] > 0 ? row.minutes / row[metric] : null
                 : cleanSheetRate
                 ? row.goalkeeperHalvesPlayed > 0 ? row.cleanSheetHalves / row.goalkeeperHalvesPlayed : null
                 : perAppearance
@@ -1599,7 +1552,7 @@ function renderLeagueSeasonLeaderboard(season) {
             ? formatLeagueClock(row.minutes, row.minutesEstimated, row.minutesIncomplete)
             : row[leagueSeasonStatMode];
     const rateOptions = leaguePerMinuteMetrics.has(leagueSeasonStatMode)
-        ? [['totals', 'Totals'], ['per-minute', 'Per minute'], ['frequency', '1 every X min']]
+        ? [['totals', 'Totals'], ['per-minute', 'Per minute'], ['frequency', 'Frequency']]
         : leagueSeasonStatMode === 'mvps'
             ? [['totals', 'Totals'], ['per-appearance', 'Per appearance']]
             : leagueSeasonStatMode === 'cleanSheetHalves'
@@ -1607,8 +1560,8 @@ function renderLeagueSeasonLeaderboard(season) {
                 : [['totals', 'Totals']];
     const headerCells = rateMode === 'frequency'
         ? leagueSeasonStatMode === 'goalContributions'
-            ? '<th>Goals</th><th>Assists</th><th>G+A</th><th>Minutes</th><th>1 every</th>'
-            : `<th>${definition.label}</th><th>Minutes</th><th>1 every</th>`
+            ? '<th>Goals</th><th>Assists</th><th>G+A</th><th>Minutes</th><th>Frequency</th>'
+            : `<th>${definition.label}</th><th>Minutes</th><th>Frequency</th>`
         : leagueSeasonStatMode === 'goalContributions'
         ? rateMode === 'per-minute' ? '<th>Goals/min</th><th>Assists/min</th><th>G+A/min</th>' : '<th>Goals</th><th>Assists</th><th>G+A</th>'
         : rateMode === 'clean-sheet-rate'
@@ -1708,10 +1661,7 @@ function renderLdcRsLeagueSeason(focusSelector = null) {
 
             ${renderLdcRsLeagueStandings(season)}
 
-            <div class="league-power-grid">
-                ${renderLeagueTeamPowerRatings(season)}
-                ${renderLeaguePlayerPowerRankings(season)}
-            </div>
+            ${renderLeaguePlayerPowerRankings(season)}
 
             ${renderLdcRsLeagueResults(season)}
 
@@ -1742,13 +1692,6 @@ function renderLdcRsLeagueSeason(focusSelector = null) {
             if (button.disabled) return;
             leagueSeasonRateMode = button.getAttribute('data-league-rate');
             renderLdcRsLeagueSeason(`[data-league-rate="${leagueSeasonRateMode}"]`);
-        });
-    });
-
-    container.querySelectorAll('[data-league-power-model]').forEach((button) => {
-        button.addEventListener('click', () => {
-            leagueTeamPowerMode = button.getAttribute('data-league-power-model');
-            renderLdcRsLeagueSeason(`[data-league-power-model="${leagueTeamPowerMode}"]`);
         });
     });
 

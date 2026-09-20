@@ -13,7 +13,7 @@ const context = {
     document: { getElementById: () => null }
 };
 vm.createContext(context);
-vm.runInContext(`${leagueScript}\nthis.season = ldcRsLeagueSeason1; this.modelVersions = { team: LEAGUE_TEAM_POWER_MODEL_VERSION, player: LEAGUE_PLAYER_POWER_MODEL_VERSION }; this.calculate = calculateLdcRsLeagueStandings; this.teamHistory = calculateLeagueTeamPowerHistory; this.teamPower = calculateLeagueTeamPowerRatings; this.playerPower = calculateLeaguePlayerPowerRankings; this.playerMatchPower = calculateLeaguePlayerMatchPower; this.playerConfidence = calculateLeaguePlayerPowerConfidence; this.opponentMultiplier = calculateLeagueOpponentMultiplier; this.matchPlayerTotals = calculateLeagueMatchPlayerTotals; this.seasonPlayerTotals = calculateLeagueSeasonPlayerTotals; this.leaderboardRows = calculateLeagueSeasonLeaderboardRows; this.leaderboardRowsFromTotals = calculateLeagueLeaderboardRowsFromTotals; this.leaderboardMedals = calculateLeagueLeaderboardMedals; this.matchTeamTotals = calculateLeagueMatchTeamTotals; this.participation = deriveLeagueMatchParticipation; this.matchEvents = deriveLeagueMatchEvents; this.statisticsRows = getLeagueStatisticsRows; this.formatClock = formatLeagueClock; this.renderStandings = renderLdcRsLeagueStandings; this.renderTeamPower = renderLeagueTeamPowerRatings; this.renderResults = renderLdcRsLeagueResults; this.renderEvents = renderLeagueEventTimeline; this.renderLeaderboard = renderLeagueSeasonLeaderboard; this.renderTeam = renderLdcRsLeagueTeam; this.renderPlayerPower = renderLeaguePlayerPowerRankings; this.expandedMatches = leagueExpandedMatches; this.matchModes = leagueMatchDetailModes; this.statisticsPeriods = leagueStatisticsPeriods; this.setLeaderboardMode = (metric, rate) => { leagueSeasonStatMode = metric; leagueSeasonRateMode = rate; }; this.setTeamPowerMode = (mode) => { leagueTeamPowerMode = mode; };`, context);
+vm.runInContext(`${leagueScript}\nthis.season = ldcRsLeagueSeason1; this.modelVersions = { team: LEAGUE_TEAM_POWER_MODEL_VERSION, player: LEAGUE_PLAYER_POWER_MODEL_VERSION }; this.calculate = calculateLdcRsLeagueStandings; this.teamHistory = calculateLeagueTeamPowerHistory; this.playerPower = calculateLeaguePlayerPowerRankings; this.playerMatchPower = calculateLeaguePlayerMatchPower; this.playerConfidence = calculateLeaguePlayerPowerConfidence; this.opponentMultiplier = calculateLeagueOpponentMultiplier; this.matchPlayerTotals = calculateLeagueMatchPlayerTotals; this.seasonPlayerTotals = calculateLeagueSeasonPlayerTotals; this.leaderboardRows = calculateLeagueSeasonLeaderboardRows; this.leaderboardRowsFromTotals = calculateLeagueLeaderboardRowsFromTotals; this.leaderboardMedals = calculateLeagueLeaderboardMedals; this.matchTeamTotals = calculateLeagueMatchTeamTotals; this.participation = deriveLeagueMatchParticipation; this.matchEvents = deriveLeagueMatchEvents; this.statisticsRows = getLeagueStatisticsRows; this.formatClock = formatLeagueClock; this.formatFrequency = formatLeagueFrequency; this.renderStandings = renderLdcRsLeagueStandings; this.renderResults = renderLdcRsLeagueResults; this.renderEvents = renderLeagueEventTimeline; this.renderLeaderboard = renderLeagueSeasonLeaderboard; this.renderTeam = renderLdcRsLeagueTeam; this.renderPlayerPower = renderLeaguePlayerPowerRankings; this.expandedMatches = leagueExpandedMatches; this.matchModes = leagueMatchDetailModes; this.statisticsPeriods = leagueStatisticsPeriods; this.setLeaderboardMode = (metric, rate) => { leagueSeasonStatMode = metric; leagueSeasonRateMode = rate; };`, context);
 
 const fullSeason = context.season;
 const season = { ...fullSeason, matches: [fullSeason.matches[0]] };
@@ -68,7 +68,6 @@ assert.deepEqual(JSON.parse(JSON.stringify(season.powerRatingConfig)), {
         expectationDivisor: 400,
         marginStep: 0.2,
         marginCap: 4,
-        equalStartRating: 1500,
         startingRatings: {
             'x-to-win-2': 1581,
             'baguette-z-apex': 1545,
@@ -275,32 +274,19 @@ assert.deepEqual(JSON.parse(JSON.stringify({ clean: stat('Naeh').cleanSheetHalve
 assert.deepEqual(JSON.parse(JSON.stringify({ clean: stat('atrocity exhibition').cleanSheetHalves, gk: stat('atrocity exhibition').goalkeeperHalvesPlayed })), { clean: 1, gk: 1 });
 assert.deepEqual(JSON.parse(JSON.stringify({ clean: stat('KK').cleanSheetHalves, gk: stat('KK').goalkeeperHalvesPlayed })), { clean: 0, gk: 2 });
 
-const teamPower = context.teamPower(season);
-assert.deepEqual(JSON.parse(JSON.stringify(teamPower.map((row) => row.team))), ['X TO WIN 2', 'Baguette Z Apex', 'HUQQA', 'OG FC', 'HAX UNITED', 'ROONEY TUNES']);
-const teamPowerById = new Map(teamPower.map((row) => [row.teamId, row]));
 const startingRatings = season.powerRatingConfig.team.startingRatings;
 const expectedXtw = 1 / (1 + (10 ** ((startingRatings['rooney-tunes'] - startingRatings['x-to-win-2']) / season.powerRatingConfig.team.expectationDivisor)));
 const expectedChange = 32 * 1.8 * (1 - expectedXtw);
-assert.equal(Math.abs(teamPowerById.get('x-to-win-2').rating - (startingRatings['x-to-win-2'] + expectedChange)) < 1e-9, true);
-assert.equal(Math.abs(teamPowerById.get('rooney-tunes').rating - (startingRatings['rooney-tunes'] - expectedChange)) < 1e-9, true);
-assert.equal(teamPowerById.get('x-to-win-2').movement > 0, true);
-assert.equal(teamPowerById.get('rooney-tunes').movement < 0, true);
-['baguette-z-apex', 'huqqa', 'og-fc', 'hax-united'].forEach((teamId) => {
-    const row = teamPowerById.get(teamId);
-    assert.equal(row.rating, startingRatings[teamId]);
-    assert.equal(row.movement, 0);
-    assert.equal(row.played, 0);
-});
 
 const teamHistory = context.teamHistory(season);
+assert.equal(Math.abs(teamHistory.ratings.get('x-to-win-2') - (startingRatings['x-to-win-2'] + expectedChange)) < 1e-9, true);
+assert.equal(Math.abs(teamHistory.ratings.get('rooney-tunes') - (startingRatings['rooney-tunes'] - expectedChange)) < 1e-9, true);
 const firstSnapshot = teamHistory.preMatchRatings.get(match.id);
 assert.deepEqual(JSON.parse(JSON.stringify(firstSnapshot)), {
     matchId: match.id,
     chronologicalIndex: 0,
     homePreMatchRating: 1581,
-    awayPreMatchRating: 1446,
-    homeCompletedMatches: 0,
-    awayCompletedMatches: 0
+    awayPreMatchRating: 1446
 });
 const seasonWithLaterResult = {
     ...season,
@@ -323,7 +309,8 @@ assert.deepEqual(
 
 assert.doesNotMatch(leagueScript, /prediction|drawProbability|drawDecayScale|winProbability|lossProbability|drawPercentage|remainingMeetings|calculateLeagueMatchPrediction/i);
 assert.doesNotMatch(html, /league-prediction|league-predictions/i);
-assert.match(leagueScript, /Team Power Ratings/);
+assert.doesNotMatch(leagueScript, /Team Power Ratings|Results-only|Equal-start|renderLeagueTeamPowerRatings|data-league-power-model/i);
+assert.doesNotMatch(html, /league-team-power|league-power-toggle|league-model-note/i);
 assert.equal(context.seasonPlayerTotals(season).find((row) => row.player === 'Berbatov').goalContributions, 3);
 
 const playerPower = context.playerPower(season);
@@ -406,7 +393,7 @@ assert.match(html, /class="tab active" data-tab="ldc-rs-league-season-1"/);
 assert.match(html, /class="tab-content active" id="ldc-rs-league-season-1-tab"/);
 assert.doesNotMatch(html, /class="tab-content active" id="players-tab"/);
 assert.match(html, /src="ldc-rs-league-season-1\.js"/);
-assert.match(html, /\.league-power-grid/);
+assert.doesNotMatch(html, /\.league-power-grid/);
 assert.match(html, /\.league-teams-grid/);
 assert.match(html, /\.league-match-section/);
 assert.match(html, /\.league-season-stats/);
@@ -805,25 +792,14 @@ assert.match(standingsMarkup, /<th>FORM<\/th>/);
 assert.match(standingsMarkup, /league-form-w/);
 assert.match(standingsMarkup, /league-form-l/);
 
-const rosterPower = context.teamPower(fullSeason, 'roster-informed');
-const rosterPowerById = new Map(rosterPower.map((row) => [row.teamId, row]));
-assert.equal(Math.abs(rosterPowerById.get('og-fc').rating - 1495.5856273634283) < 1e-9, true);
-assert.equal(Math.abs(rosterPowerById.get('hax-united').rating - 1455.4143726365717) < 1e-9, true);
-const resultsOnlyPower = context.teamPower(fullSeason, 'results-only');
-const resultsOnlyById = new Map(resultsOnlyPower.map((row) => [row.teamId, row]));
-assert.equal(Math.abs(resultsOnlyById.get('x-to-win-2').rating - 1528.8) < 1e-9, true);
-assert.equal(Math.abs(resultsOnlyById.get('og-fc').rating - 1516) < 1e-9, true);
-assert.equal(resultsOnlyById.get('baguette-z-apex').rating, 1500);
-assert.equal(resultsOnlyById.get('huqqa').rating, 1500);
-assert.equal(Math.abs(resultsOnlyById.get('hax-united').rating - 1484) < 1e-9, true);
-assert.equal(Math.abs(resultsOnlyById.get('rooney-tunes').rating - 1471.2) < 1e-9, true);
-const match2PrePower = context.teamHistory(fullSeason, 'roster-informed').preMatchRatings.get(match2.id);
+const match2PrePower = context.teamHistory(fullSeason).preMatchRatings.get(match2.id);
 assert.equal(match2PrePower.homePreMatchRating, 1480);
 assert.equal(match2PrePower.awayPreMatchRating, 1471);
 const fullPlayerPower = context.playerPower(fullSeason);
 assert.deepEqual(JSON.parse(JSON.stringify(fullPlayerPower.slice(0, 10).map((row) => row.player))), ['Berbatov', 'Drkuu', 'Mbappe', 'Naeh', 'bananajoe', '𝐌𝐨𝐬𝐭𝐚𝐟𝐚 𝐙𝐢𝐤𝐨', 'atrocity exhibition', 'Arshavin', 'MaksLuburic', 'elex']);
 assert.equal(fullPlayerPower.find((row) => row.player === 'Mbappe').opponentPreMatchRating, undefined);
 assert.equal(context.playerMatchPower(fullSeason, match2, match2PrePower).find((row) => row.player === 'Mbappe').opponentPreMatchRating, 1471);
+assert.doesNotMatch(context.renderPlayerPower(fullSeason), /opponent|pre-match rating|multiplier|movement/i);
 assert.equal(JSON.stringify(context.playerPower(fullSeason)), JSON.stringify(context.playerPower(fullSeason)));
 
 const fullSeasonTotals = context.seasonPlayerTotals(fullSeason);
@@ -842,16 +818,28 @@ const frequencyFixtureRows = context.leaderboardRowsFromTotals([
     { player: 'zero', teamId: 'x', goals: 0, assists: 0, goalContributions: 0, minutes: 600, minutesEstimated: false, minutesIncomplete: false }
 ], 'goals', 'frequency');
 assert.deepEqual(JSON.parse(JSON.stringify(frequencyFixtureRows.map(({ player, leaderboardValue }) => ({ player, leaderboardValue })))), [
-    { player: 'fast', leaderboardValue: 5 }, { player: 'slow', leaderboardValue: 10 }, { player: 'zero', leaderboardValue: null }
+    { player: 'fast', leaderboardValue: 300 }, { player: 'slow', leaderboardValue: 600 }, { player: 'zero', leaderboardValue: null }
 ]);
 assert.deepEqual(JSON.parse(JSON.stringify([...context.leaderboardMedals(frequencyFixtureRows, 'goals').entries()])), [['fast', 'gold'], ['slow', 'silver']]);
+assert.equal(context.formatFrequency(23), '1 every 23s');
+assert.equal(context.formatFrequency(72), '1 every 1m 12s');
+assert.equal(context.formatFrequency(125), '1 every 2m 05s');
+assert.equal(context.formatFrequency(300), '1 every 5m');
+assert.equal(context.formatFrequency(366), '1 every 6m 06s');
+assert.equal(context.formatFrequency(72, true), '~1 every 1m 12s');
+assert.equal(context.formatFrequency(null), '—');
 context.setLeaderboardMode('goals', 'frequency');
 const frequencyMarkup = context.renderLeaderboard(fullSeason);
 assert.match(frequencyMarkup, /data-league-rate="frequency" class="active"/);
-assert.match(frequencyMarkup, /1 every \d+\.\d min/);
+assert.match(frequencyMarkup, />Frequency<\/button>/);
+assert.match(frequencyMarkup, /<th>Frequency<\/th>/);
+assert.match(frequencyMarkup, /1 every 4m 54s/);
+assert.match(frequencyMarkup, /~1 every 8m 28s/);
 assert.match(frequencyMarkup, /<td>0<\/td><td>[^<]+<\/td><td>—<\/td>/);
-context.setLeaderboardMode('appearances', 'frequency');
-assert.doesNotMatch(context.renderLeaderboard(fullSeason), /1 every X min/);
+['appearances', 'minutes', 'ownGoals', 'mvps', 'cleanSheetHalves'].forEach((metric) => {
+    context.setLeaderboardMode(metric, 'frequency');
+    assert.doesNotMatch(context.renderLeaderboard(fullSeason), /data-league-rate="frequency"|<th>Frequency<\/th>/);
+});
 context.setLeaderboardMode('cleanSheetHalves', 'clean-sheet-rate');
 const fullCleanRate = context.leaderboardRows(fullSeason, 'cleanSheetHalves', 'clean-sheet-rate');
 assert.deepEqual(JSON.parse(JSON.stringify(fullCleanRate.filter((row) => ['Nistel', 'GK'].includes(row.player)).map(({ player, goalkeeperHalvesPlayed, cleanSheetHalves, leaderboardValue }) => ({ player, goalkeeperHalvesPlayed, cleanSheetHalves, leaderboardValue })))), [
