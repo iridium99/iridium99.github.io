@@ -2136,6 +2136,35 @@
             box-shadow: inset 3px 0 #c48049;
         }
 
+        .league-leaderboard-table tr[hidden] {
+            display: none;
+        }
+
+        .league-leaderboard-toggle-row td {
+            padding: 8px 10px 4px;
+            border-bottom: 0;
+            text-align: center;
+        }
+
+        .league-leaderboard-toggle {
+            padding: 6px 16px;
+            border: 1px solid rgba(74, 144, 217, 0.55);
+            border-radius: 999px;
+            background: rgba(74, 144, 217, 0.1);
+            color: #b9d8ff;
+            font: inherit;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .league-leaderboard-toggle:hover,
+        .league-leaderboard-toggle:focus-visible {
+            border-color: var(--primary);
+            background: rgba(74, 144, 217, 0.2);
+            outline: none;
+        }
+
         @media (max-width: 900px) {
             .league-competition-grid,
             .league-teams-grid,

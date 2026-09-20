@@ -13,7 +13,7 @@ const context = {
     document: { getElementById: () => null }
 };
 vm.createContext(context);
-vm.runInContext(`${leagueScript}\nthis.season = ldcRsLeagueSeason1; this.modelVersions = { team: LEAGUE_TEAM_POWER_MODEL_VERSION, player: LEAGUE_PLAYER_POWER_MODEL_VERSION }; this.calculate = calculateLdcRsLeagueStandings; this.teamHistory = calculateLeagueTeamPowerHistory; this.playerPower = calculateLeaguePlayerPowerRankings; this.playerMatchPower = calculateLeaguePlayerMatchPower; this.playerConfidence = calculateLeaguePlayerPowerConfidence; this.opponentMultiplier = calculateLeagueOpponentMultiplier; this.matchPlayerTotals = calculateLeagueMatchPlayerTotals; this.seasonPlayerTotals = calculateLeagueSeasonPlayerTotals; this.leaderboardRows = calculateLeagueSeasonLeaderboardRows; this.leaderboardRowsFromTotals = calculateLeagueLeaderboardRowsFromTotals; this.leaderboardMedals = calculateLeagueLeaderboardMedals; this.matchTeamTotals = calculateLeagueMatchTeamTotals; this.participation = deriveLeagueMatchParticipation; this.matchEvents = deriveLeagueMatchEvents; this.statisticsRows = getLeagueStatisticsRows; this.formatClock = formatLeagueClock; this.formatFrequency = formatLeagueFrequency; this.renderStandings = renderLdcRsLeagueStandings; this.renderResults = renderLdcRsLeagueResults; this.renderEvents = renderLeagueEventTimeline; this.renderLeaderboard = renderLeagueSeasonLeaderboard; this.renderTeam = renderLdcRsLeagueTeam; this.renderPlayerPower = renderLeaguePlayerPowerRankings; this.expandedMatches = leagueExpandedMatches; this.matchModes = leagueMatchDetailModes; this.statisticsPeriods = leagueStatisticsPeriods; this.setLeaderboardMode = (metric, rate) => { leagueSeasonStatMode = metric; leagueSeasonRateMode = rate; };`, context);
+vm.runInContext(`${leagueScript}\nthis.season = ldcRsLeagueSeason1; this.modelVersions = { team: LEAGUE_TEAM_POWER_MODEL_VERSION, player: LEAGUE_PLAYER_POWER_MODEL_VERSION }; this.calculate = calculateLdcRsLeagueStandings; this.teamHistory = calculateLeagueTeamPowerHistory; this.playerPower = calculateLeaguePlayerPowerRankings; this.playerMatchPower = calculateLeaguePlayerMatchPower; this.playerConfidence = calculateLeaguePlayerPowerConfidence; this.opponentMultiplier = calculateLeagueOpponentMultiplier; this.matchPlayerTotals = calculateLeagueMatchPlayerTotals; this.seasonPlayerTotals = calculateLeagueSeasonPlayerTotals; this.leaderboardRows = calculateLeagueSeasonLeaderboardRows; this.leaderboardRowsFromTotals = calculateLeagueLeaderboardRowsFromTotals; this.leaderboardMedals = calculateLeagueLeaderboardMedals; this.matchTeamTotals = calculateLeagueMatchTeamTotals; this.participation = deriveLeagueMatchParticipation; this.matchEvents = deriveLeagueMatchEvents; this.statisticsRows = getLeagueStatisticsRows; this.formatClock = formatLeagueClock; this.formatFrequency = formatLeagueFrequency; this.renderStandings = renderLdcRsLeagueStandings; this.renderResults = renderLdcRsLeagueResults; this.renderEvents = renderLeagueEventTimeline; this.renderLeaderboard = renderLeagueSeasonLeaderboard; this.renderTeam = renderLdcRsLeagueTeam; this.renderPlayerPower = renderLeaguePlayerPowerRankings; this.expandedMatches = leagueExpandedMatches; this.matchModes = leagueMatchDetailModes; this.statisticsPeriods = leagueStatisticsPeriods; this.setLeaderboardMode = (metric, rate) => { leagueSeasonStatMode = metric; leagueSeasonRateMode = rate; }; this.setLeaderboardExpanded = (metric, rate, expanded) => { const key = metric + ':' + rate; if (expanded) leagueExpandedLeaderboards.add(key); else leagueExpandedLeaderboards.delete(key); };`, context);
 
 const fullSeason = context.season;
 const season = { ...fullSeason, matches: [fullSeason.matches[0]] };
@@ -575,41 +575,64 @@ const tiedMedals = context.leaderboardMedals([
     { player: 'four', leaderboardValue: 1 }
 ], 'goals');
 assert.equal(tiedMedals.get('one'), 'gold');
-assert.equal(tiedMedals.size, 1);
+['two', 'three', 'four'].forEach((player) => assert.equal(tiedMedals.get(player), 'silver'));
+assert.equal(tiedMedals.size, 4);
 const tiedFirst = context.leaderboardMedals([
     { player: 'one', leaderboardValue: 3 },
     { player: 'two', leaderboardValue: 3 },
     { player: 'three', leaderboardValue: 2 }
 ], 'goals');
-assert.equal(tiedFirst.has('one') || tiedFirst.has('two'), false);
+assert.equal(tiedFirst.get('one'), 'gold');
+assert.equal(tiedFirst.get('two'), 'gold');
+assert.equal(tiedFirst.get('three'), 'silver');
 const tiedThird = context.leaderboardMedals([
     { player: 'one', leaderboardValue: 40 },
     { player: 'two', leaderboardValue: 39 },
     { player: 'three', leaderboardValue: 38 },
     { player: 'four', leaderboardValue: 38 }
 ], 'kicks');
-assert.deepEqual(JSON.parse(JSON.stringify([...tiedThird.entries()])), [['one', 'gold'], ['two', 'silver']]);
+assert.deepEqual(JSON.parse(JSON.stringify([...tiedThird.entries()])), [['one', 'gold'], ['two', 'silver'], ['three', 'bronze'], ['four', 'bronze']]);
 const tiedSecond = context.leaderboardMedals([
     { player: 'one', leaderboardValue: 40 },
     { player: 'two', leaderboardValue: 39 },
     { player: 'three', leaderboardValue: 39 }
 ], 'passes');
-assert.deepEqual(JSON.parse(JSON.stringify([...tiedSecond.entries()])), [['one', 'gold']]);
+assert.deepEqual(JSON.parse(JSON.stringify([...tiedSecond.entries()])), [['one', 'gold'], ['two', 'silver'], ['three', 'silver']]);
 const tiedFirstNoPodium = context.leaderboardMedals([
     { player: 'one', leaderboardValue: 39 },
     { player: 'two', leaderboardValue: 39 },
     { player: 'three', leaderboardValue: 37 },
     { player: 'four', leaderboardValue: 26 }
 ], 'kicks');
-assert.equal(tiedFirstNoPodium.size, 0);
+assert.deepEqual(JSON.parse(JSON.stringify([...tiedFirstNoPodium.entries()])), [['one', 'gold'], ['two', 'gold'], ['three', 'silver'], ['four', 'bronze']]);
 const passesTiedFirstNoPodium = context.leaderboardMedals([
     { player: 'one', leaderboardValue: 22 },
     { player: 'two', leaderboardValue: 22 },
     { player: 'three', leaderboardValue: 17 },
     { player: 'four', leaderboardValue: 16 }
 ], 'passes');
-assert.equal(passesTiedFirstNoPodium.size, 0);
+assert.deepEqual(JSON.parse(JSON.stringify([...passesTiedFirstNoPodium.entries()])), [['one', 'gold'], ['two', 'gold'], ['three', 'silver'], ['four', 'bronze']]);
 assert.equal(context.leaderboardMedals([{ player: 'one', leaderboardValue: 1 }], 'ownGoals').size, 0);
+assert.deepEqual(JSON.parse(JSON.stringify([...context.leaderboardMedals([
+    { player: 'gold-a', leaderboardValue: 2 },
+    { player: 'gold-b', leaderboardValue: 2 }
+], 'minutes').entries()])), [['gold-a', 'gold'], ['gold-b', 'gold']]);
+
+context.setLeaderboardMode('goalContributions', 'totals');
+const tiedGoalContributionRows = context.leaderboardRows(fullSeason, 'goalContributions', 'totals');
+const tiedGoalContributionMedals = context.leaderboardMedals(tiedGoalContributionRows, 'goalContributions');
+['bananajoe', 'Grmii', 'Mbappe', '𝐌𝐨𝐬𝐭𝐚𝐟𝐚 𝐙𝐢𝐤𝐨', 'Naeh'].forEach((player) => assert.equal(tiedGoalContributionMedals.get(player), 'bronze'));
+
+context.setLeaderboardMode('kicks', 'totals');
+context.setLeaderboardExpanded('kicks', 'totals', false);
+const collapsedLeaderboardMarkup = context.renderLeaderboard(fullSeason);
+assert.match(collapsedLeaderboardMarkup, /data-league-leaderboard-toggle="kicks:totals" aria-expanded="false">Show more<\/button>/);
+assert.match(collapsedLeaderboardMarkup, /league-medal-bronze[\s\S]*?league-leaderboard-toggle-row[\s\S]*?league-leaderboard-extra-row" hidden/);
+context.setLeaderboardExpanded('kicks', 'totals', true);
+const expandedLeaderboardMarkup = context.renderLeaderboard(fullSeason);
+assert.match(expandedLeaderboardMarkup, /data-league-leaderboard-toggle="kicks:totals" aria-expanded="true">Show less<\/button>/);
+assert.doesNotMatch(expandedLeaderboardMarkup, /league-leaderboard-extra-row" hidden/);
+context.setLeaderboardExpanded('kicks', 'totals', false);
 
 context.setLeaderboardMode('goalContributions', 'totals');
 let leaderboardMarkup = context.renderLeaderboard(season);
@@ -655,7 +678,7 @@ assert.deepEqual(JSON.parse(JSON.stringify(cleanRateRows.map(({ player, cleanShe
     { player: 'Naeh', cleanSheetHalves: 1, goalkeeperHalvesPlayed: 1, leaderboardValue: 1 },
     { player: 'KK', cleanSheetHalves: 0, goalkeeperHalvesPlayed: 2, leaderboardValue: 0 }
 ]);
-assert.equal(context.leaderboardMedals(cleanRateRows, 'cleanSheetHalves').size, 0);
+assert.deepEqual(JSON.parse(JSON.stringify([...context.leaderboardMedals(cleanRateRows, 'cleanSheetHalves').entries()])), [['atrocity exhibition', 'gold'], ['Naeh', 'gold']]);
 context.setLeaderboardMode('cleanSheetHalves', 'clean-sheet-rate');
 leaderboardMarkup = context.renderLeaderboard(season);
 assert.match(leaderboardMarkup, /Clean-sheet rate/);

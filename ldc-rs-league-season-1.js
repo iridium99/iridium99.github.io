@@ -1655,7 +1655,7 @@ function calculateLeagueLeaderboardMedals(rows, metric) {
     const medals = new Map();
 
     const frequency = rows.some((row) => row.rateMode === 'frequency');
-    const valueTiers = rows.filter((row) => Number.isFinite(row.leaderboardValue)).sort((a, b) => frequency ? a.leaderboardValue - b.leaderboardValue : b.leaderboardValue - a.leaderboardValue).reduce((tiers, row) => {
+    const valueTiers = rows.filter((row) => Number.isFinite(row.leaderboardValue) && row.leaderboardValue > 0).sort((a, b) => frequency ? a.leaderboardValue - b.leaderboardValue : b.leaderboardValue - a.leaderboardValue).reduce((tiers, row) => {
         const tier = tiers.find((candidate) => equals(candidate.value, row.leaderboardValue));
         if (tier) tier.rows.push(row);
         else tiers.push({ value: row.leaderboardValue, rows: [row] });
@@ -1664,13 +1664,13 @@ function calculateLeagueLeaderboardMedals(rows, metric) {
 
     for (let tierIndex = 0; tierIndex < medalByTier.length; tierIndex += 1) {
         const tier = valueTiers[tierIndex];
-        // A tied tier blocks it and every lower podium tier. This prevents an
-        // isolated bronze after competition ranks such as 1, 1, 3.
-        if (!tier || tier.rows.length !== 1) break;
-        medals.set(tier.rows[0].player, medalByTier[tierIndex]);
+        if (!tier) break;
+        tier.rows.forEach((row) => medals.set(row.player, medalByTier[tierIndex]));
     }
     return medals;
 }
+
+const leagueExpandedLeaderboards = new Set();
 
 function renderLeagueSeasonLeaderboard(season) {
     const definition = leagueSeasonMetricDefinitions[leagueSeasonStatMode];
@@ -1678,6 +1678,9 @@ function renderLeagueSeasonLeaderboard(season) {
     const rateMode = getLeagueLeaderboardRateMode(leagueSeasonStatMode, leagueSeasonRateMode);
     const rows = calculateLeagueSeasonLeaderboardRows(season, leagueSeasonStatMode, rateMode);
     const medals = calculateLeagueLeaderboardMedals(rows, leagueSeasonStatMode);
+    const leaderboardKey = `${leagueSeasonStatMode}:${rateMode}`;
+    const expanded = leagueExpandedLeaderboards.has(leaderboardKey);
+    const hasExtraRows = medals.size > 0 && rows.some((row) => !medals.has(row.player));
     const displayMetric = (row) => rateMode === 'per-minute'
         ? formatLeaguePerMinute(row.leaderboardValue, row.minutesEstimated, row.minutesIncomplete)
         : leagueSeasonStatMode === 'minutes'
@@ -1701,6 +1704,25 @@ function renderLeagueSeasonLeaderboard(season) {
             : rateMode === 'per-appearance'
                 ? '<th>MVP/App</th><th>Apps</th>'
                 : `<th>${rateMode === 'per-minute' ? `${definition.label}/min` : definition.label}</th>`;
+    const renderRow = (row, className, hidden = false) => {
+        const ratePrefix = row.minutesIncomplete ? '≤' : row.minutesEstimated ? '~' : '';
+        const goalContributionCells = rateMode === 'per-minute'
+            ? `<td class="${row.goals ? 'league-positive' : ''}">${ratePrefix}${row.goals ? formatLeaguePerMinute(row.goalsPerMinute) : '0.000'}</td><td class="${row.assists ? 'league-assist' : ''}">${ratePrefix}${row.assists ? formatLeaguePerMinute(row.assistsPerMinute) : '0.000'}</td><td class="league-mvp">${formatLeaguePerMinute(row.goalContributionsPerMinute, row.minutesEstimated, row.minutesIncomplete)}</td>`
+            : `<td class="${row.goals ? 'league-positive' : ''}">${row.goals}</td><td class="${row.assists ? 'league-assist' : ''}">${row.assists}</td><td class="league-mvp">${row.goalContributions}</td>`;
+        const frequencyCells = leagueSeasonStatMode === 'goalContributions'
+            ? `<td class="${row.goals ? 'league-positive' : ''}">${row.goals}</td><td class="${row.assists ? 'league-assist' : ''}">${row.assists}</td><td class="${row.goalContributions ? 'league-mvp' : ''}">${row.goalContributions}</td><td>${formatLeagueClock(row.minutes, row.minutesEstimated, row.minutesIncomplete)}</td><td>${formatLeagueFrequency(row.leaderboardValue, row.minutesEstimated, row.minutesIncomplete)}</td>`
+            : `<td>${row[leagueSeasonStatMode]}</td><td>${formatLeagueClock(row.minutes, row.minutesEstimated, row.minutesIncomplete)}</td><td>${formatLeagueFrequency(row.leaderboardValue, row.minutesEstimated, row.minutesIncomplete)}</td>`;
+        const metricCells = rateMode === 'frequency'
+            ? frequencyCells
+            : leagueSeasonStatMode === 'goalContributions'
+                ? goalContributionCells
+                : rateMode === 'clean-sheet-rate'
+                    ? `<td>${row.cleanSheetHalves}</td><td>${row.goalkeeperHalvesPlayed || '—'}</td><td>${row.cleanSheetRate === null ? '—' : `${Math.round(row.cleanSheetRate * 100)}%`}</td>`
+                    : rateMode === 'per-appearance'
+                        ? `<td>${row.mvpsPerAppearance.toFixed(2)}</td><td>${row.appearances}</td>`
+                        : `<td>${displayMetric(row)}</td>`;
+        return `<tr class="${className}"${hidden ? ' hidden' : ''}><td>${escapeLeagueText(row.player)}</td><td>${escapeLeagueText(teamsById.get(row.teamId).shortName)}</td>${metricCells}</tr>`;
+    };
 
     return `
         <section class="world-cup-card league-season-stats" aria-labelledby="league-season-stats-heading">
@@ -1719,26 +1741,9 @@ function renderLeagueSeasonLeaderboard(season) {
                 <table class="world-cup-table league-compact-table league-leaderboard-table">
                     <thead><tr><th>Player</th><th>Team</th>${headerCells}</tr></thead>
                     <tbody>
-                        ${rows.map((row) => {
-                            const medal = medals.get(row.player);
-                            const ratePrefix = row.minutesIncomplete ? '≤' : row.minutesEstimated ? '~' : '';
-                            const goalContributionCells = rateMode === 'per-minute'
-                                ? `<td class="${row.goals ? 'league-positive' : ''}">${ratePrefix}${row.goals ? formatLeaguePerMinute(row.goalsPerMinute) : '0.000'}</td><td class="${row.assists ? 'league-assist' : ''}">${ratePrefix}${row.assists ? formatLeaguePerMinute(row.assistsPerMinute) : '0.000'}</td><td class="league-mvp">${formatLeaguePerMinute(row.goalContributionsPerMinute, row.minutesEstimated, row.minutesIncomplete)}</td>`
-                                : `<td class="${row.goals ? 'league-positive' : ''}">${row.goals}</td><td class="${row.assists ? 'league-assist' : ''}">${row.assists}</td><td class="league-mvp">${row.goalContributions}</td>`;
-                            const frequencyCells = leagueSeasonStatMode === 'goalContributions'
-                                ? `<td class="${row.goals ? 'league-positive' : ''}">${row.goals}</td><td class="${row.assists ? 'league-assist' : ''}">${row.assists}</td><td class="${row.goalContributions ? 'league-mvp' : ''}">${row.goalContributions}</td><td>${formatLeagueClock(row.minutes, row.minutesEstimated, row.minutesIncomplete)}</td><td>${formatLeagueFrequency(row.leaderboardValue, row.minutesEstimated, row.minutesIncomplete)}</td>`
-                                : `<td>${row[leagueSeasonStatMode]}</td><td>${formatLeagueClock(row.minutes, row.minutesEstimated, row.minutesIncomplete)}</td><td>${formatLeagueFrequency(row.leaderboardValue, row.minutesEstimated, row.minutesIncomplete)}</td>`;
-                            const metricCells = rateMode === 'frequency'
-                                ? frequencyCells
-                                : leagueSeasonStatMode === 'goalContributions'
-                                ? goalContributionCells
-                                : rateMode === 'clean-sheet-rate'
-                                    ? `<td>${row.cleanSheetHalves}</td><td>${row.goalkeeperHalvesPlayed || '—'}</td><td>${row.cleanSheetRate === null ? '—' : `${Math.round(row.cleanSheetRate * 100)}%`}</td>`
-                                    : rateMode === 'per-appearance'
-                                        ? `<td>${row.mvpsPerAppearance.toFixed(2)}</td><td>${row.appearances}</td>`
-                                        : `<td>${displayMetric(row)}</td>`;
-                            return `<tr class="${medal ? `league-medal-${medal}` : ''}"><td>${escapeLeagueText(row.player)}</td><td>${escapeLeagueText(teamsById.get(row.teamId).shortName)}</td>${metricCells}</tr>`;
-                        }).join('')}
+                        ${rows.filter((row) => medals.has(row.player)).map((row) => renderRow(row, `league-medal-${medals.get(row.player)}`)).join('')}
+                        ${hasExtraRows ? `<tr class="league-leaderboard-toggle-row"><td colspan="${2 + (headerCells.match(/<th>/g) || []).length}"><button type="button" class="league-leaderboard-toggle" data-league-leaderboard-toggle="${escapeLeagueText(leaderboardKey)}" aria-expanded="${expanded}">${expanded ? 'Show less' : 'Show more'}</button></td></tr>` : ''}
+                        ${rows.filter((row) => !medals.has(row.player)).map((row) => renderRow(row, 'league-leaderboard-extra-row', hasExtraRows && !expanded)).join('')}
                     </tbody>
                 </table>
             </div>
@@ -1824,6 +1829,15 @@ function renderLdcRsLeagueSeason(focusSelector = null) {
             if (button.disabled) return;
             leagueSeasonRateMode = button.getAttribute('data-league-rate');
             renderLdcRsLeagueSeason(`[data-league-rate="${leagueSeasonRateMode}"]`);
+        });
+    });
+
+    container.querySelectorAll('[data-league-leaderboard-toggle]').forEach((button) => {
+        button.addEventListener('click', () => {
+            const leaderboardKey = button.getAttribute('data-league-leaderboard-toggle');
+            if (leagueExpandedLeaderboards.has(leaderboardKey)) leagueExpandedLeaderboards.delete(leaderboardKey);
+            else leagueExpandedLeaderboards.add(leaderboardKey);
+            renderLdcRsLeagueSeason('[data-league-leaderboard-toggle]');
         });
     });
 
