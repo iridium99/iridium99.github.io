@@ -345,9 +345,9 @@ const drkuuHigherMvp = higherMvpPower.find((row) => row.player === 'Drkuu').scor
 assert.equal(Math.abs(drkuuHigherMvp - drkuuBase - (6 * rooneyMultiplier)) < 1e-9, true);
 assert.equal(JSON.stringify(context.playerPower(season)), JSON.stringify(context.playerPower(season)));
 const playerPowerMarkup = context.renderPlayerPower(season);
-assert.match(playerPowerMarkup, /cumulative match score/);
-assert.match(playerPowerMarkup, /Confidence/);
-assert.match(playerPowerMarkup, /Provisional/);
+assert.match(playerPowerMarkup, /Cumulative match score/);
+assert.match(playerPowerMarkup, /<th>#<\/th><th>Player<\/th><th>Team<\/th><th>Pos<\/th><th>Score<\/th><th>G<\/th><th>A<\/th><th>MVP<\/th>/);
+assert.doesNotMatch(playerPowerMarkup, /Confidence|Provisional|Low confidence|Medium confidence|High confidence|Higher confidence/);
 assert.doesNotMatch(playerPowerMarkup, /per.minute/i);
 
 const participation = context.participation(match);

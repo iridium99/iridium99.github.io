@@ -1426,13 +1426,13 @@ function renderLeaguePlayerPowerRankings(season) {
         <section class="world-cup-card league-player-power-card" aria-labelledby="league-player-power-heading">
             <div class="world-cup-header">
                 <h2 class="world-cup-title" id="league-player-power-heading">Top 10 Players</h2>
-                <span class="league-update-note" title="Ranking uses recorded tournament contributions and may favour roles represented by the available statistics.">Provisional · cumulative match score</span>
+                <span class="league-update-note" title="Ranking uses recorded tournament contributions and may favour roles represented by the available statistics.">Cumulative match score</span>
             </div>
             <div class="world-cup-table-wrap league-compact-table-wrap">
                 <table class="world-cup-table league-compact-table league-player-power-table">
-                    <thead><tr><th>#</th><th>Player</th><th>Team</th><th>Pos</th><th>Score</th><th>Confidence</th><th>G</th><th>A</th><th>MVP</th></tr></thead>
+                    <thead><tr><th>#</th><th>Player</th><th>Team</th><th>Pos</th><th>Score</th><th>G</th><th>A</th><th>MVP</th></tr></thead>
                     <tbody>${rows.map((row, index) => `
-                        <tr><td>${index + 1}</td><td>${escapeLeagueText(row.player)}</td><td>${escapeLeagueText(teamsById.get(row.teamId).shortName)}</td><td>${escapeLeagueText(formatLeagueSeasonPosition(positions, row.player))}</td><td>${row.score.toFixed(2)}</td><td title="${escapeLeagueText(row.confidence.level)}">${escapeLeagueText(row.confidence.label)}</td><td class="${row.goals ? 'league-positive' : ''}">${row.goals}</td><td class="${row.assists ? 'league-assist' : ''}">${row.assists}</td><td class="${row.mvps ? 'league-mvp' : ''}">${row.mvps}</td></tr>
+                        <tr><td>${index + 1}</td><td>${escapeLeagueText(row.player)}</td><td>${escapeLeagueText(teamsById.get(row.teamId).shortName)}</td><td>${escapeLeagueText(formatLeagueSeasonPosition(positions, row.player))}</td><td>${row.score.toFixed(2)}</td><td class="${row.goals ? 'league-positive' : ''}">${row.goals}</td><td class="${row.assists ? 'league-assist' : ''}">${row.assists}</td><td class="${row.mvps ? 'league-mvp' : ''}">${row.mvps}</td></tr>
                     `).join('')}</tbody>
                 </table>
             </div>
