@@ -397,7 +397,7 @@ assert.match(html, /data-tab="ldc-rs-league-season-1">LDC RS League Season 1</);
 assert.match(html, /class="tab active" data-tab="ldc-rs-league-season-1"/);
 assert.match(html, /class="tab-content active" id="ldc-rs-league-season-1-tab"/);
 assert.doesNotMatch(html, /class="tab-content active" id="players-tab"/);
-assert.match(html, /src="ldc-rs-league-season-1\.js"/);
+assert.match(html, /src="ldc-rs-league-season-1\.js\?v=20260921-match4"/);
 assert.doesNotMatch(html, /\.league-power-grid/);
 assert.match(html, /\.league-teams-grid/);
 assert.match(html, /\.league-match-section/);
