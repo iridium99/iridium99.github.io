@@ -70,7 +70,7 @@ const ldcRsLeagueSeason1 = {
             owner: 'GK',
             captain: 'GK',
             coCaptain: 'Misimaro',
-            roster: ['GK', 'Braga.', 'Misimaro', 'Pedri.', 'GGG', 'A7mdBibo', 'Arshavin', 'Blimpus', 'dierfetje', 'bananajoe', 'ShadiOzz', 'Szcesny', '$limani']
+            roster: ['GK', 'Braga', 'Misimaro', 'Pedri', 'GGG', 'A7mdBibo', 'Arshavin', 'Blimpus', 'dierfetje', 'bananajoe', 'ShadiOzz', 'Szcesny', '$limani']
         },
         {
             id: 'og-fc',
@@ -647,6 +647,149 @@ const ldcRsLeagueSeason1 = {
                 { player: 'luur', teamId: 'baguette-z-apex', half: 1, status: 'goalkeeper', cleanSheetEligible: true },
                 { player: 'luur', teamId: 'baguette-z-apex', half: 2, status: 'goalkeeper', cleanSheetEligible: true }
             ]
+        },
+        {
+            id: 'match-4-baguette-z-apex-v-hax-united',
+            homeTeamId: 'baguette-z-apex',
+            awayTeamId: 'hax-united',
+            homeGoals: 6,
+            awayGoals: 2,
+            duration: {
+                totalSeconds: 980,
+                endTimeKnown: true,
+                halves: [
+                    { half: 1, seconds: 466, display: '7:46', endTimeKnown: true },
+                    { half: 2, seconds: 514, display: '8:34', endTimeKnown: true }
+                ]
+            },
+            conclusion: { type: 'full-time', score: '6–2' },
+            mvp: 'Shield',
+            cleanSheetHalves: [],
+            // Supplied display clocks are authoritative; they are not half-local clocks.
+            scoringEvents: [
+                { score: '1–0', type: 'goal', player: 'zenix', assist: 'Shield', timing: { type: 'supplied-clock', display: '1:29', seconds: 89 } },
+                { score: '2–0', type: 'goal', player: 'zenix', assist: null, timing: { type: 'supplied-clock', display: '2:14', seconds: 134 } },
+                { score: '3–0', type: 'goal', player: 'Spero', assist: null, timing: { type: 'supplied-clock', display: '6:52', seconds: 412 } },
+                { score: '3–1', type: 'goal', player: 'Pedri', assist: 'GGG', timing: { type: 'supplied-clock', display: '7:16', seconds: 436 } },
+                { score: '4–1', type: 'goal', player: 'zenix', assist: 'Spero', timing: { type: 'supplied-clock', display: '7:26', seconds: 446 } },
+                { score: '4–2', type: 'goal', player: 'A7mdBibo', assist: 'Pedri', timing: { type: 'supplied-clock', display: '7:32', seconds: 452 } },
+                { score: '5–2', type: 'goal', player: 'Shield', assist: 'x', timing: { type: 'supplied-clock', display: '14:05', seconds: 845 } },
+                { score: '6–2', type: 'goal', player: 'Shield', assist: 'x', timing: { type: 'supplied-clock', display: '14:58', seconds: 898 } }
+            ],
+            halves: [
+                {
+                    label: 'First half', sourceGameTime: '7:46', homeGoals: 4, awayGoals: 1,
+                    teamStats: {
+                        'baguette-z-apex': { possession: 46.3, kicks: 109, passes: 50, shotsOnGoal: 6 },
+                        'hax-united': { possession: 53.7, kicks: 113, passes: 51, shotsOnGoal: 1 }
+                    },
+                    playerStats: { 'baguette-z-apex': [], 'hax-united': [] }
+                },
+                {
+                    label: 'Second half', sourceGameTime: '8:34', homeGoals: 2, awayGoals: 1,
+                    teamStats: {
+                        'baguette-z-apex': { possession: 44.3, kicks: 133, passes: 56, shotsOnGoal: 10 },
+                        'hax-united': { possession: 55.7, kicks: 142, passes: 59, shotsOnGoal: 2 }
+                    },
+                    playerStats: { 'baguette-z-apex': [], 'hax-united': [] }
+                }
+            ],
+            fullMatchPlayerStats: {
+                'baguette-z-apex': [
+                    { player: 'Shield', kicks: 31, passes: 15, shotsOnGoal: 2 },
+                    { player: 'luur', kicks: 19, passes: 8, shotsOnGoal: 0 },
+                    { player: 'zenix', kicks: 16, passes: 7, shotsOnGoal: 2 },
+                    { player: 'V4KS', kicks: 42, passes: 25, shotsOnGoal: 1 },
+                    { player: 'Nympex', kicks: 44, passes: 23, shotsOnGoal: 2 },
+                    { player: 'Spero', kicks: 47, passes: 11, shotsOnGoal: 8 },
+                    { player: 'evilpedri', kicks: 21, passes: 8, shotsOnGoal: 0 },
+                    { player: 'x', kicks: 22, passes: 9, shotsOnGoal: 1 }
+                ],
+                'hax-united': [
+                    { player: 'Pedri', kicks: 51, passes: 19, shotsOnGoal: 1 },
+                    { player: 'A7mdBibo', kicks: 38, passes: 15, shotsOnGoal: 1 },
+                    { player: 'Braga', kicks: 44, passes: 19, shotsOnGoal: 0 },
+                    { player: 'GK', kicks: 49, passes: 26, shotsOnGoal: 0 },
+                    { player: 'GGG', kicks: 8, passes: 3, shotsOnGoal: 0 },
+                    { player: 'ShadiOzz', kicks: 18, passes: 10, shotsOnGoal: 0 },
+                    { player: 'bananajoe', kicks: 26, passes: 14, shotsOnGoal: 0 },
+                    { player: 'Arshavin', kicks: 16, passes: 4, shotsOnGoal: 1 },
+                    { player: '$limani', kicks: 4, passes: 0, shotsOnGoal: 0 },
+                    { player: 'Szcesny', kicks: 1, passes: 0, shotsOnGoal: 0 }
+                ]
+            },
+            lineups: {
+                firstHalf: {
+                    'baguette-z-apex': ['luur', 'V4KS', 'Nympex', 'Shield', 'zenix', 'Spero'],
+                    'hax-united': ['GK', 'Braga', 'Pedri', 'GGG', 'ShadiOzz', 'A7mdBibo']
+                },
+                secondHalf: {
+                    'baguette-z-apex': ['Shield', 'V4KS', 'Nympex', 'evilpedri', 'x', 'Spero'],
+                    'hax-united': ['GK', 'Braga', 'Pedri', 'Arshavin', 'A7mdBibo', 'bananajoe']
+                }
+            },
+            startingLineups: {
+                'baguette-z-apex': [
+                    { player: 'luur', position: 'GK' }, { player: 'V4KS', position: 'CDM' },
+                    { player: 'Nympex', position: 'CM' }, { player: 'Shield', position: 'CAM' },
+                    { player: 'zenix', position: 'RW' }, { player: 'Spero', position: 'ST' }
+                ],
+                'hax-united': [
+                    { player: 'GK', position: 'GK' }, { player: 'Braga', position: 'CDM' },
+                    { player: 'Pedri', position: 'CM' }, { player: 'GGG', position: 'CAM' },
+                    { player: 'ShadiOzz', position: 'LW' }, { player: 'A7mdBibo', position: 'ST' }
+                ]
+            },
+            positionStints: {
+                'baguette-z-apex': [
+                    { player: 'luur', stints: [{ half: 1, position: 'GK' }] },
+                    { player: 'V4KS', stints: [{ half: 1, position: 'CDM' }, { half: 2, position: 'CDM' }] },
+                    { player: 'Nympex', stints: [{ half: 1, position: 'CM' }, { half: 2, position: 'CM' }] },
+                    { player: 'Shield', stints: [{ half: 1, position: 'CAM' }, { half: 2, position: 'GK', approximateShare: 0.5 }, { half: 2, position: 'ST', approximateShare: 0.5 }], note: 'GK responsibility changed to evilpedri roughly midway through 2H; both stayed on', highlight: true },
+                    { player: 'zenix', stints: [{ half: 1, position: 'RW' }] },
+                    { player: 'Spero', stints: [{ half: 1, position: 'ST' }, { half: 2, position: 'ST' }] },
+                    { player: 'evilpedri', stints: [{ half: 2, position: 'CAM', approximateShare: 0.5 }, { half: 2, position: 'GK', approximateShare: 0.5 }], note: 'on at HT; took over GK roughly midway through 2H', highlight: true },
+                    { player: 'x', stints: [{ half: 2, position: 'LW' }], note: 'on at HT for zenix', highlight: true }
+                ],
+                'hax-united': [
+                    { player: 'GK', stints: [{ half: 1, position: 'GK' }, { half: 2, position: 'GK', until: 'substituted' }], note: 'off late in 2H for Szcesny', highlight: true },
+                    { player: 'Braga', stints: [{ half: 1, position: 'CDM' }, { half: 2, position: 'CDM', until: 'substituted' }] },
+                    { player: 'Pedri', stints: [{ half: 1, position: 'CM' }, { half: 2, position: 'CM' }] },
+                    { player: 'GGG', stints: [{ half: 1, position: 'CAM' }] },
+                    { player: 'ShadiOzz', stints: [{ half: 1, position: 'LW' }] },
+                    { player: 'A7mdBibo', stints: [{ half: 1, position: 'ST' }, { half: 2, position: 'RW' }] },
+                    { player: 'Arshavin', stints: [{ half: 2, position: 'LW' }] },
+                    { player: 'bananajoe', stints: [{ half: 2, position: 'ST' }] },
+                    { player: '$limani', stints: [{ half: 2, position: 'CDM' }], note: 'on late in 2H for Braga', highlight: true },
+                    { player: 'Szcesny', stints: [{ half: 2, position: 'GK' }], note: 'on late in 2H for GK', highlight: true }
+                ]
+            },
+            halftimeChanges: [
+                { teamId: 'baguette-z-apex', playersOut: ['luur', 'zenix'], playersIn: ['evilpedri', 'x'] },
+                { teamId: 'hax-united', playersOut: ['GGG', 'ShadiOzz'], playersIn: ['Arshavin', 'bananajoe'] }
+            ],
+            substitutions: [
+                {
+                    teamId: 'hax-united', half: 2, playerIn: '$limani', playerOut: 'Braga',
+                    timing: { type: 'observed-interval', observedStart: 383, observedEnd: 425, display: 'after 6:23–by ~7:05 (2H)', timelineDisplay: '6:23–~7:05 2H', approximateDisplay: '~6:44 2H', estimated: true }
+                },
+                {
+                    teamId: 'hax-united', half: 2, playerIn: 'Szcesny', playerOut: 'GK',
+                    timing: { type: 'observed-interval', observedStart: 425.167, observedEnd: 450.033, display: 'after 7:05.167–by 7:30.033 (2H)', timelineDisplay: '7:05–7:30 2H', approximateDisplay: '~7:18 2H', estimated: true }
+                }
+            ],
+            goalkeepers: {
+                firstHalf: { 'baguette-z-apex': 'luur', 'hax-united': 'GK' },
+                secondHalf: { 'baguette-z-apex': 'Shield → evilpedri', 'hax-united': 'GK → Szcesny' }
+            },
+            goalkeeperAssignments: [
+                { player: 'luur', teamId: 'baguette-z-apex', half: 1, status: 'goalkeeper', cleanSheetEligible: true, goalsConceded: 1 },
+                { player: 'GK', teamId: 'hax-united', half: 1, status: 'goalkeeper', cleanSheetEligible: true, goalsConceded: 4 },
+                { player: 'Shield', teamId: 'baguette-z-apex', half: 2, status: 'goalkeeper', cleanSheetEligible: false, goalsConceded: 1 },
+                { player: 'evilpedri', teamId: 'baguette-z-apex', half: 2, status: 'goalkeeper', cleanSheetEligible: false, goalsConceded: 0 },
+                { player: 'GK', teamId: 'hax-united', half: 2, status: 'goalkeeper', cleanSheetEligible: false },
+                { player: 'Szcesny', teamId: 'hax-united', half: 2, status: 'goalkeeper', cleanSheetEligible: false }
+            ]
         }
     ]
 };
@@ -756,7 +899,7 @@ function getLeagueMatchPlayerTeams(season, match) {
     return playerTeams;
 }
 
-function deriveLeagueMatchParticipation(match) {
+function deriveLeagueMatchParticipation(match, includeIntervals = false) {
     const participation = new Map();
     const active = new Map();
     const firstHalfSeconds = match.duration.halves[0].seconds;
@@ -764,7 +907,8 @@ function deriveLeagueMatchParticipation(match) {
     const durationIncomplete = !match.duration.endTimeKnown;
     const ensure = (player) => {
         if (!participation.has(player)) {
-            participation.set(player, { player, appearances: 1, seconds: 0, estimated: false, incomplete: false });
+            participation.set(player, { player, appearances: 1, seconds: 0, estimated: false, incomplete: false,
+                ...(includeIntervals ? { intervals: [] } : {}) });
         }
         return participation.get(player);
     };
@@ -777,6 +921,7 @@ function deriveLeagueMatchParticipation(match) {
         if (startedAt === undefined) return;
         const row = ensure(player);
         row.seconds += second - startedAt;
+        if (includeIntervals) row.intervals.push({ start: startedAt, end: second });
         row.estimated = row.estimated || estimated;
         row.incomplete = row.incomplete || incomplete;
         active.delete(player);
@@ -812,6 +957,69 @@ function deriveLeagueMatchParticipation(match) {
 
     [...active.keys()].forEach((player) => leave(player, participationBoundary, durationIncomplete, durationIncomplete));
     return [...participation.values()];
+}
+
+const leaguePositionLabels = new Set(['GK', 'CB', 'CDM', 'CM', 'CAM', 'LW', 'RW', 'ST']);
+
+function calculateLeagueSeasonPositions(season) {
+    const positionTime = new Map();
+    season.matches.forEach((match) => {
+        const firstHalfEnd = match.duration.halves[0].seconds;
+        const matchEnd = match.duration.totalSeconds ?? match.duration.observedThroughSeconds;
+        const participation = new Map(deriveLeagueMatchParticipation(match, true).map((row) => [row.player, row]));
+        Object.values(match.positionStints || {}).flat().forEach((record) => {
+            const played = participation.get(record.player);
+            if (!played) return;
+            [1, 2].forEach((half) => {
+                const stints = record.stints.filter((stint) => stint.half === half && leaguePositionLabels.has(stint.position));
+                const halfStart = half === 1 ? 0 : firstHalfEnd;
+                const halfEnd = half === 1 ? firstHalfEnd : matchEnd;
+                stints.forEach((stint) => {
+                    // A single recorded role covers the player's observed time in that half.
+                    // Approximate shares describe broad role splits without inventing
+                    // a precise switch time or changing the player's minutes played.
+                    if (stints.length > 1 && !Number.isFinite(stint.stintStart) && !Number.isFinite(stint.stintEnd)
+                        && !Number.isFinite(stint.approximateShare)) return;
+                    const start = halfStart + (Number.isFinite(stint.stintStart) ? stint.stintStart : 0);
+                    const end = halfStart + (Number.isFinite(stint.stintEnd) ? stint.stintEnd : halfEnd - halfStart);
+                    const seconds = played.intervals.reduce((total, interval) => total + Math.max(0,
+                        Math.min(interval.end, halfEnd, end) - Math.max(interval.start, halfStart, start)), 0)
+                        * (stint.approximateShare ?? 1);
+                    if (seconds <= 0) return;
+                    if (!positionTime.has(record.player)) positionTime.set(record.player, new Map());
+                    const totals = positionTime.get(record.player);
+                    totals.set(stint.position, (totals.get(stint.position) || 0) + seconds);
+                });
+            });
+        });
+    });
+    return new Map([...positionTime].map(([player, totals]) => {
+        const ranked = [...totals].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+        const observed = ranked.reduce((sum, [, seconds]) => sum + seconds, 0);
+        const primaryPosition = ranked[0]?.[0] || null;
+        const secondaryPosition = ranked[1]?.[1] >= 60 && ranked[1][1] / observed >= 0.18 ? ranked[1][0] : null;
+        return [player, { primaryPosition, secondaryPosition }];
+    }));
+}
+
+function formatLeagueSeasonPosition(positions, player) {
+    const role = positions.get(player);
+    return role?.primaryPosition ? [role.primaryPosition, role.secondaryPosition].filter(Boolean).join('/') : '—';
+}
+
+function isLeagueFullGoalkeeperHalf(match, assignment, participation) {
+    if (assignment.status !== 'goalkeeper' || !assignment.cleanSheetEligible) return false;
+    const firstHalfEnd = match.duration.halves[0].seconds;
+    const halfStart = assignment.half === 1 ? 0 : firstHalfEnd;
+    const halfEnd = assignment.half === 1 ? firstHalfEnd : (match.duration.totalSeconds ?? match.duration.observedThroughSeconds);
+    if ((assignment.stintStart ?? 0) > 0 || (assignment.stintEnd ?? halfEnd - halfStart) < halfEnd - halfStart) return false;
+    const record = getLeaguePlayerPositionRecord(match, assignment.teamId, assignment.player);
+    const gkStints = (record?.stints || []).filter((stint) => stint.half === assignment.half && stint.position === 'GK');
+    if (gkStints.length !== 1 || (record?.stints || []).some((stint) => stint.half === assignment.half && stint.position !== 'GK')) return false;
+    const stint = gkStints[0];
+    if ((stint.stintStart ?? 0) > 0 || (stint.stintEnd ?? halfEnd - halfStart) < halfEnd - halfStart) return false;
+    const intervals = participation.get(assignment.player)?.intervals || [];
+    return intervals.some((interval) => interval.start <= halfStart && interval.end >= halfEnd);
 }
 
 function calculateLeagueMatchPlayerTotals(season, match) {
@@ -864,11 +1072,19 @@ function calculateLeagueMatchPlayerTotals(season, match) {
     });
 
     if (participantNames.has(match.mvp)) ensurePlayer(match.mvp).mvps += 1;
+    const timedParticipation = new Map(deriveLeagueMatchParticipation(match, true).map((row) => [row.player, row]));
+    const fullGoalkeeperAssignments = match.goalkeeperAssignments.filter((assignment) =>
+        participantNames.has(assignment.player) && isLeagueFullGoalkeeperHalf(match, assignment, timedParticipation));
     match.cleanSheetHalves.forEach((credit) => {
-        if (participantNames.has(credit.player)) ensurePlayer(credit.player).cleanSheetHalves += credit.value;
+        const qualifyingHalves = fullGoalkeeperAssignments.filter((assignment) => {
+            if (assignment.player !== credit.player || assignment.goalsConceded > 0) return false;
+            const half = match.halves[assignment.half - 1];
+            return assignment.teamId === match.homeTeamId ? half.awayGoals === 0 : half.homeGoals === 0;
+        });
+        if (qualifyingHalves.length) ensurePlayer(credit.player).cleanSheetHalves += Math.min(credit.value, qualifyingHalves.length);
     });
     match.goalkeeperAssignments.forEach((assignment) => {
-        if (assignment.status === 'goalkeeper' && assignment.cleanSheetEligible && participantNames.has(assignment.player)) {
+        if (fullGoalkeeperAssignments.includes(assignment)) {
             ensurePlayer(assignment.player).goalkeeperHalvesPlayed += 1;
         }
     });
@@ -993,6 +1209,21 @@ function deriveLeagueMatchEvents(match) {
     const goalEvents = match.scoringEvents.map((event, index) => {
         const half = index < firstHalfGoalCount ? 1 : 2;
         goalHalfSequence[half] += 1;
+        if (event.timing?.type === 'supplied-clock') {
+            return {
+                ...event,
+                half,
+                eventType: event.type === 'own-goal' ? 'own-goal' : 'goal',
+                displayTime: event.timing.display,
+                detailTime: event.timing.display,
+                sortValue: event.timing.seconds,
+                sortBasis: 'authoritative-supplied-display-clock',
+                timingUncertain: false,
+                groupKey: `supplied:${index}`,
+                sourceOrder: index,
+                stableOrder: index
+            };
+        }
         if (event.timing?.type === 'exact') {
             const halfOffset = half === 2 ? firstHalfSeconds : 0;
             return {
@@ -1100,7 +1331,17 @@ function deriveLeagueMatchEvents(match) {
         };
     });
 
-    return [...goalEvents, ...substitutionEvents]
+    const halftimeChangeEvents = (match.halftimeChanges || []).map((change, index) => ({
+        ...change,
+        eventType: 'halftime-change',
+        displayTime: 'HT',
+        detailTime: 'Halftime lineup changes',
+        sortValue: firstHalfSeconds,
+        sortBasis: 'halftime',
+        groupKey: 'halftime-lineup-changes',
+        stableOrder: match.scoringEvents.length + match.substitutions.length + index
+    }));
+    return [...goalEvents, ...substitutionEvents, ...halftimeChangeEvents]
         .sort((a, b) => b.sortValue - a.sortValue || a.stableOrder - b.stableOrder || a.eventType.localeCompare(b.eventType));
 }
 
@@ -1180,6 +1421,7 @@ function renderLdcRsLeagueStandings(season) {
 function renderLeaguePlayerPowerRankings(season) {
     const rows = calculateLeaguePlayerPowerRankings(season).slice(0, 10);
     const teamsById = getLeagueTeamsById(season);
+    const positions = calculateLeagueSeasonPositions(season);
     return `
         <section class="world-cup-card league-player-power-card" aria-labelledby="league-player-power-heading">
             <div class="world-cup-header">
@@ -1188,9 +1430,9 @@ function renderLeaguePlayerPowerRankings(season) {
             </div>
             <div class="world-cup-table-wrap league-compact-table-wrap">
                 <table class="world-cup-table league-compact-table league-player-power-table">
-                    <thead><tr><th>#</th><th>Player</th><th>Team</th><th>Score</th><th>Confidence</th><th>G</th><th>A</th><th>MVP</th></tr></thead>
+                    <thead><tr><th>#</th><th>Player</th><th>Team</th><th>Pos</th><th>Score</th><th>Confidence</th><th>G</th><th>A</th><th>MVP</th></tr></thead>
                     <tbody>${rows.map((row, index) => `
-                        <tr><td>${index + 1}</td><td>${escapeLeagueText(row.player)}</td><td>${escapeLeagueText(teamsById.get(row.teamId).shortName)}</td><td>${row.score.toFixed(2)}</td><td title="${escapeLeagueText(row.confidence.level)}">${escapeLeagueText(row.confidence.label)}</td><td class="${row.goals ? 'league-positive' : ''}">${row.goals}</td><td class="${row.assists ? 'league-assist' : ''}">${row.assists}</td><td class="${row.mvps ? 'league-mvp' : ''}">${row.mvps}</td></tr>
+                        <tr><td>${index + 1}</td><td>${escapeLeagueText(row.player)}</td><td>${escapeLeagueText(teamsById.get(row.teamId).shortName)}</td><td>${escapeLeagueText(formatLeagueSeasonPosition(positions, row.player))}</td><td>${row.score.toFixed(2)}</td><td title="${escapeLeagueText(row.confidence.level)}">${escapeLeagueText(row.confidence.label)}</td><td class="${row.goals ? 'league-positive' : ''}">${row.goals}</td><td class="${row.assists ? 'league-assist' : ''}">${row.assists}</td><td class="${row.mvps ? 'league-mvp' : ''}">${row.mvps}</td></tr>
                     `).join('')}</tbody>
                 </table>
             </div>
@@ -1265,7 +1507,11 @@ function renderLdcRsLeagueResults(season) {
                         counts.set(event.player, (counts.get(event.player) || 0) + 1);
                         return counts;
                     }, new Map());
-                    const goalScorers = [...scorerCounts].map(([player, goals]) => `${player}${goals > 1 ? ` ×${goals}` : ''}`);
+                    const playerTeams = getLeagueMatchPlayerTeams(season, match);
+                    const orderedScorers = isMostRecent
+                        ? [...scorerCounts].sort(([a], [b]) => (playerTeams.get(a) === match.homeTeamId ? 0 : 1) - (playerTeams.get(b) === match.homeTeamId ? 0 : 1))
+                        : [...scorerCounts];
+                    const goalScorers = orderedScorers.map(([player, goals]) => `${player}${goals > 1 ? ` ×${goals}` : ''}`);
                     const ownGoalScorers = match.scoringEvents
                         .filter((event) => event.type === 'own-goal')
                         .map((event) => `${event.player} OG`);
@@ -1396,6 +1642,13 @@ function renderLeagueSubstitutions(season, match) {
         <div class="world-cup-card league-substitutions-card">
             <div class="world-cup-header"><h2 class="world-cup-title">Substitutions</h2><span class="league-update-note">Intervals are observations, not exact event times</span></div>
             <div class="league-substitution-list">
+                ${(match.halftimeChanges || []).map((change) => `
+                    <div class="league-substitution">
+                        <span class="league-sub-time">HT</span>
+                        <span><strong>${escapeLeagueText(change.playersIn.join(', '))} in</strong> · ${escapeLeagueText(change.playersOut.join(', '))} out</span>
+                        <small>${escapeLeagueText(teamsById.get(change.teamId).name)} · halftime lineup change</small>
+                    </div>
+                `).join('')}
                 ${match.substitutions.map((substitution) => `
                     <div class="league-substitution">
                         <span class="league-sub-time">${escapeLeagueText(substitution.timing.display)}</span>
@@ -1473,11 +1726,14 @@ function renderLeagueEventTimeline(season, match) {
     const renderEvent = (event, team) => {
         const isGoal = event.eventType === 'goal';
         const isOwnGoal = event.eventType === 'own-goal';
-        const type = isGoal ? 'Goal' : isOwnGoal ? 'Own goal' : 'Substitution';
+        const isHalftimeChange = event.eventType === 'halftime-change';
+        const type = isGoal ? 'Goal' : isOwnGoal ? 'Own goal' : isHalftimeChange ? 'Halftime change' : 'Substitution';
         const headline = isGoal
             ? `${event.player} scores!`
             : isOwnGoal
                 ? `${event.player} own goal`
+                : isHalftimeChange
+                    ? `${event.playersIn.join(', ')} in; ${event.playersOut.join(', ')} out`
                 : `${event.playerIn} in, ${event.playerOut} out`;
         const detail = isGoal || isOwnGoal
             ? `${event.assist ? `Assist by ${event.assist} · ` : ''}${isOwnGoal && event.benefitsTeamId ? `Benefits ${teamsById.get(event.benefitsTeamId).name} · ` : ''}${event.score}${event.mercyRuleMatchEnd ? ' · Mercy-rule match end' : ''}`
@@ -1568,12 +1824,11 @@ const leagueSeasonMetricDefinitions = {
 
 let leagueSeasonStatMode = 'goalContributions';
 let leagueSeasonRateMode = 'totals';
-const leaguePerMinuteMetrics = new Set(['goals', 'assists', 'goalContributions', 'kicks', 'passes', 'shotsOnGoal']);
+const leagueFrequencyMetrics = new Set(['goals', 'assists', 'goalContributions', 'kicks', 'passes', 'shotsOnGoal']);
 const leagueMedalMetrics = new Set(['appearances', 'minutes', 'goals', 'assists', 'goalContributions', 'mvps', 'kicks', 'passes', 'shotsOnGoal', 'cleanSheetHalves']);
 
 function getLeagueLeaderboardRateMode(metric, requestedRateMode) {
-    if (requestedRateMode === 'per-minute' && leaguePerMinuteMetrics.has(metric)) return requestedRateMode;
-    if (requestedRateMode === 'frequency' && leaguePerMinuteMetrics.has(metric)) return requestedRateMode;
+    if (requestedRateMode === 'frequency' && leagueFrequencyMetrics.has(metric)) return requestedRateMode;
     if (requestedRateMode === 'per-appearance' && metric === 'mvps') return requestedRateMode;
     if (requestedRateMode === 'clean-sheet-rate' && metric === 'cleanSheetHalves') return requestedRateMode;
     return 'totals';
@@ -1584,11 +1839,6 @@ function formatLeagueClock(totalSeconds, estimated = false, incomplete = false) 
     const minutes = Math.floor(roundedSeconds / 60);
     const seconds = String(roundedSeconds % 60).padStart(2, '0');
     return `${incomplete ? '≥' : estimated ? '~' : ''}${minutes}:${seconds}`;
-}
-
-function formatLeaguePerMinute(value, estimated = false, incomplete = false) {
-    const formatted = value >= 1 ? value.toFixed(2) : value.toFixed(3);
-    return `${incomplete ? '≤' : estimated ? '~' : ''}${formatted}`;
 }
 
 function formatLeagueFrequency(value, estimated = false, incomplete = false) {
@@ -1606,7 +1856,6 @@ function formatLeagueFrequency(value, estimated = false, incomplete = false) {
 
 function calculateLeagueLeaderboardRowsFromTotals(totals, metric, requestedRateMode = 'totals') {
     const rateMode = getLeagueLeaderboardRateMode(metric, requestedRateMode);
-    const perMinute = rateMode === 'per-minute';
     const frequency = rateMode === 'frequency';
     const perAppearance = rateMode === 'per-appearance';
     const cleanSheetRate = rateMode === 'clean-sheet-rate';
@@ -1615,26 +1864,22 @@ function calculateLeagueLeaderboardRowsFromTotals(totals, metric, requestedRateM
             if (cleanSheetRate) return row.cleanSheetHalves > 0 || row.goalkeeperHalvesPlayed > 0;
             if (frequency) return row.minutes > 0;
             if (perAppearance) return row[metric] > 0 && row.appearances > 0;
-            return row[metric] > 0 && (!perMinute || row.minutes > 0);
+            return row[metric] > 0;
         })
         .map((row) => {
-            const actualMinutes = row.minutes / 60;
             const leaderboardValue = frequency
                 ? row[metric] > 0 ? row.minutes / row[metric] : null
                 : cleanSheetRate
                 ? row.goalkeeperHalvesPlayed > 0 ? row.cleanSheetHalves / row.goalkeeperHalvesPlayed : null
                 : perAppearance
                     ? row[metric] / row.appearances
-                    : perMinute ? row[metric] / actualMinutes : row[metric];
+                    : row[metric];
             return {
                 ...row,
                 leaderboardValue,
                 rateMode,
                 cleanSheetRate: row.goalkeeperHalvesPlayed > 0 ? row.cleanSheetHalves / row.goalkeeperHalvesPlayed : null,
-                mvpsPerAppearance: row.appearances > 0 ? row.mvps / row.appearances : null,
-                goalsPerMinute: actualMinutes > 0 ? row.goals / actualMinutes : null,
-                assistsPerMinute: actualMinutes > 0 ? row.assists / actualMinutes : null,
-                goalContributionsPerMinute: actualMinutes > 0 ? row.goalContributions / actualMinutes : null
+                mvpsPerAppearance: row.appearances > 0 ? row.mvps / row.appearances : null
             };
         })
         .sort((a, b) => Number.isFinite(b.leaderboardValue) - Number.isFinite(a.leaderboardValue)
@@ -1675,19 +1920,18 @@ const leagueExpandedLeaderboards = new Set();
 function renderLeagueSeasonLeaderboard(season) {
     const definition = leagueSeasonMetricDefinitions[leagueSeasonStatMode];
     const teamsById = getLeagueTeamsById(season);
+    const positions = calculateLeagueSeasonPositions(season);
     const rateMode = getLeagueLeaderboardRateMode(leagueSeasonStatMode, leagueSeasonRateMode);
     const rows = calculateLeagueSeasonLeaderboardRows(season, leagueSeasonStatMode, rateMode);
     const medals = calculateLeagueLeaderboardMedals(rows, leagueSeasonStatMode);
     const leaderboardKey = `${leagueSeasonStatMode}:${rateMode}`;
     const expanded = leagueExpandedLeaderboards.has(leaderboardKey);
     const hasExtraRows = medals.size > 0 && rows.some((row) => !medals.has(row.player));
-    const displayMetric = (row) => rateMode === 'per-minute'
-        ? formatLeaguePerMinute(row.leaderboardValue, row.minutesEstimated, row.minutesIncomplete)
-        : leagueSeasonStatMode === 'minutes'
+    const displayMetric = (row) => leagueSeasonStatMode === 'minutes'
             ? formatLeagueClock(row.minutes, row.minutesEstimated, row.minutesIncomplete)
             : row[leagueSeasonStatMode];
-    const rateOptions = leaguePerMinuteMetrics.has(leagueSeasonStatMode)
-        ? [['totals', 'Totals'], ['per-minute', 'Per minute'], ['frequency', 'Frequency']]
+    const rateOptions = leagueFrequencyMetrics.has(leagueSeasonStatMode)
+        ? [['totals', 'Totals'], ['frequency', 'Frequency']]
         : leagueSeasonStatMode === 'mvps'
             ? [['totals', 'Totals'], ['per-appearance', 'Per appearance']]
             : leagueSeasonStatMode === 'cleanSheetHalves'
@@ -1698,17 +1942,14 @@ function renderLeagueSeasonLeaderboard(season) {
             ? '<th>Goals</th><th>Assists</th><th>G+A</th><th>Minutes</th><th>Frequency</th>'
             : `<th>${definition.label}</th><th>Minutes</th><th>Frequency</th>`
         : leagueSeasonStatMode === 'goalContributions'
-        ? rateMode === 'per-minute' ? '<th>Goals/min</th><th>Assists/min</th><th>G+A/min</th>' : '<th>Goals</th><th>Assists</th><th>G+A</th>'
+        ? '<th>Goals</th><th>Assists</th><th>G+A</th>'
         : rateMode === 'clean-sheet-rate'
             ? '<th>CS halves</th><th>GK halves</th><th>CS rate</th>'
             : rateMode === 'per-appearance'
                 ? '<th>MVP/App</th><th>Apps</th>'
-                : `<th>${rateMode === 'per-minute' ? `${definition.label}/min` : definition.label}</th>`;
+                : `<th>${definition.label}</th>`;
     const renderRow = (row, className, hidden = false) => {
-        const ratePrefix = row.minutesIncomplete ? '≤' : row.minutesEstimated ? '~' : '';
-        const goalContributionCells = rateMode === 'per-minute'
-            ? `<td class="${row.goals ? 'league-positive' : ''}">${ratePrefix}${row.goals ? formatLeaguePerMinute(row.goalsPerMinute) : '0.000'}</td><td class="${row.assists ? 'league-assist' : ''}">${ratePrefix}${row.assists ? formatLeaguePerMinute(row.assistsPerMinute) : '0.000'}</td><td class="league-mvp">${formatLeaguePerMinute(row.goalContributionsPerMinute, row.minutesEstimated, row.minutesIncomplete)}</td>`
-            : `<td class="${row.goals ? 'league-positive' : ''}">${row.goals}</td><td class="${row.assists ? 'league-assist' : ''}">${row.assists}</td><td class="league-mvp">${row.goalContributions}</td>`;
+        const goalContributionCells = `<td class="${row.goals ? 'league-positive' : ''}">${row.goals}</td><td class="${row.assists ? 'league-assist' : ''}">${row.assists}</td><td class="league-mvp">${row.goalContributions}</td>`;
         const frequencyCells = leagueSeasonStatMode === 'goalContributions'
             ? `<td class="${row.goals ? 'league-positive' : ''}">${row.goals}</td><td class="${row.assists ? 'league-assist' : ''}">${row.assists}</td><td class="${row.goalContributions ? 'league-mvp' : ''}">${row.goalContributions}</td><td>${formatLeagueClock(row.minutes, row.minutesEstimated, row.minutesIncomplete)}</td><td>${formatLeagueFrequency(row.leaderboardValue, row.minutesEstimated, row.minutesIncomplete)}</td>`
             : `<td>${row[leagueSeasonStatMode]}</td><td>${formatLeagueClock(row.minutes, row.minutesEstimated, row.minutesIncomplete)}</td><td>${formatLeagueFrequency(row.leaderboardValue, row.minutesEstimated, row.minutesIncomplete)}</td>`;
@@ -1721,7 +1962,7 @@ function renderLeagueSeasonLeaderboard(season) {
                     : rateMode === 'per-appearance'
                         ? `<td>${row.mvpsPerAppearance.toFixed(2)}</td><td>${row.appearances}</td>`
                         : `<td>${displayMetric(row)}</td>`;
-        return `<tr class="${className}"${hidden ? ' hidden' : ''}><td>${escapeLeagueText(row.player)}</td><td>${escapeLeagueText(teamsById.get(row.teamId).shortName)}</td>${metricCells}</tr>`;
+        return `<tr class="${className}"${hidden ? ' hidden' : ''}><td>${escapeLeagueText(row.player)}</td><td>${escapeLeagueText(teamsById.get(row.teamId).shortName)}</td><td>${escapeLeagueText(formatLeagueSeasonPosition(positions, row.player))}</td>${metricCells}</tr>`;
     };
 
     return `
@@ -1739,10 +1980,10 @@ function renderLeagueSeasonLeaderboard(season) {
             </div>
             <div class="world-cup-table-wrap league-compact-table-wrap">
                 <table class="world-cup-table league-compact-table league-leaderboard-table">
-                    <thead><tr><th>Player</th><th>Team</th>${headerCells}</tr></thead>
+                    <thead><tr><th>Player</th><th>Team</th><th>Pos</th>${headerCells}</tr></thead>
                     <tbody>
                         ${rows.filter((row) => medals.has(row.player)).map((row) => renderRow(row, `league-medal-${medals.get(row.player)}`)).join('')}
-                        ${hasExtraRows ? `<tr class="league-leaderboard-toggle-row"><td colspan="${2 + (headerCells.match(/<th>/g) || []).length}"><button type="button" class="league-leaderboard-toggle" data-league-leaderboard-toggle="${escapeLeagueText(leaderboardKey)}" aria-expanded="${expanded}">${expanded ? 'Show less' : 'Show more'}</button></td></tr>` : ''}
+                        ${hasExtraRows ? `<tr class="league-leaderboard-toggle-row"><td colspan="${3 + (headerCells.match(/<th>/g) || []).length}"><button type="button" class="league-leaderboard-toggle" data-league-leaderboard-toggle="${escapeLeagueText(leaderboardKey)}" aria-expanded="${expanded}">${expanded ? 'Show less' : 'Show more'}</button></td></tr>` : ''}
                         ${rows.filter((row) => !medals.has(row.player)).map((row) => renderRow(row, 'league-leaderboard-extra-row', hasExtraRows && !expanded)).join('')}
                     </tbody>
                 </table>
@@ -1751,7 +1992,7 @@ function renderLeagueSeasonLeaderboard(season) {
     `;
 }
 
-function renderLdcRsLeagueTeam(team) {
+function renderLdcRsLeagueTeam(team, season = ldcRsLeagueSeason1, positions = calculateLeagueSeasonPositions(season)) {
     const visual = team.image
         ? `<img src="${escapeLeagueText(team.image)}" alt="${escapeLeagueText(team.name)} team image" class="league-team-image">`
         : `<div class="league-team-image league-team-monogram" role="img" aria-label="${escapeLeagueText(team.name)} team identifier">${escapeLeagueText(team.shortName)}</div>`;
@@ -1775,7 +2016,10 @@ function renderLdcRsLeagueTeam(team) {
                 <div>
                     <h3 class="league-roster-title">Roster</h3>
                     <ul class="league-roster-list">
-                        ${team.roster.map((player) => `<li>${escapeLeagueText(player)}</li>`).join('')}
+                        ${team.roster.map((player) => {
+                            const position = formatLeagueSeasonPosition(positions, player);
+                            return `<li>${escapeLeagueText(player)} <span class="league-roster-position">${position === '—' ? '—' : `— ${escapeLeagueText(position)}`}</span></li>`;
+                        }).join('')}
                     </ul>
                 </div>
             </div>
@@ -1790,6 +2034,7 @@ function renderLdcRsLeagueSeason(focusSelector = null) {
     }
 
     const season = ldcRsLeagueSeason1;
+    const seasonPositions = calculateLeagueSeasonPositions(season);
     container.innerHTML = `
         <div class="world-cup-layout league-season-layout">
             <header class="league-season-hero">
@@ -1810,7 +2055,7 @@ function renderLdcRsLeagueSeason(focusSelector = null) {
                     <span class="league-update-note">Select a team to view its leadership and squad</span>
                 </div>
                 <div class="league-teams-grid">
-                    ${season.teams.map(renderLdcRsLeagueTeam).join('')}
+                    ${season.teams.map((team) => renderLdcRsLeagueTeam(team, season, seasonPositions)).join('')}
                 </div>
             </section>
         </div>

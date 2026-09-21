@@ -13,9 +13,10 @@ const context = {
     document: { getElementById: () => null }
 };
 vm.createContext(context);
-vm.runInContext(`${leagueScript}\nthis.season = ldcRsLeagueSeason1; this.modelVersions = { team: LEAGUE_TEAM_POWER_MODEL_VERSION, player: LEAGUE_PLAYER_POWER_MODEL_VERSION }; this.calculate = calculateLdcRsLeagueStandings; this.teamHistory = calculateLeagueTeamPowerHistory; this.playerPower = calculateLeaguePlayerPowerRankings; this.playerMatchPower = calculateLeaguePlayerMatchPower; this.playerConfidence = calculateLeaguePlayerPowerConfidence; this.opponentMultiplier = calculateLeagueOpponentMultiplier; this.matchPlayerTotals = calculateLeagueMatchPlayerTotals; this.seasonPlayerTotals = calculateLeagueSeasonPlayerTotals; this.leaderboardRows = calculateLeagueSeasonLeaderboardRows; this.leaderboardRowsFromTotals = calculateLeagueLeaderboardRowsFromTotals; this.leaderboardMedals = calculateLeagueLeaderboardMedals; this.matchTeamTotals = calculateLeagueMatchTeamTotals; this.participation = deriveLeagueMatchParticipation; this.matchEvents = deriveLeagueMatchEvents; this.statisticsRows = getLeagueStatisticsRows; this.formatClock = formatLeagueClock; this.formatFrequency = formatLeagueFrequency; this.renderStandings = renderLdcRsLeagueStandings; this.renderResults = renderLdcRsLeagueResults; this.renderEvents = renderLeagueEventTimeline; this.renderLeaderboard = renderLeagueSeasonLeaderboard; this.renderTeam = renderLdcRsLeagueTeam; this.renderPlayerPower = renderLeaguePlayerPowerRankings; this.expandedMatches = leagueExpandedMatches; this.matchModes = leagueMatchDetailModes; this.statisticsPeriods = leagueStatisticsPeriods; this.setLeaderboardMode = (metric, rate) => { leagueSeasonStatMode = metric; leagueSeasonRateMode = rate; }; this.setLeaderboardExpanded = (metric, rate, expanded) => { const key = metric + ':' + rate; if (expanded) leagueExpandedLeaderboards.add(key); else leagueExpandedLeaderboards.delete(key); };`, context);
+vm.runInContext(`${leagueScript}\nthis.season = ldcRsLeagueSeason1; this.modelVersions = { team: LEAGUE_TEAM_POWER_MODEL_VERSION, player: LEAGUE_PLAYER_POWER_MODEL_VERSION }; this.calculate = calculateLdcRsLeagueStandings; this.teamHistory = calculateLeagueTeamPowerHistory; this.playerPower = calculateLeaguePlayerPowerRankings; this.playerMatchPower = calculateLeaguePlayerMatchPower; this.playerConfidence = calculateLeaguePlayerPowerConfidence; this.opponentMultiplier = calculateLeagueOpponentMultiplier; this.matchPlayerTotals = calculateLeagueMatchPlayerTotals; this.seasonPlayerTotals = calculateLeagueSeasonPlayerTotals; this.seasonPositions = calculateLeagueSeasonPositions; this.formatSeasonPosition = formatLeagueSeasonPosition; this.positionSequence = formatLeaguePositionSequence; this.leaderboardRows = calculateLeagueSeasonLeaderboardRows; this.leaderboardRowsFromTotals = calculateLeagueLeaderboardRowsFromTotals; this.leaderboardMedals = calculateLeagueLeaderboardMedals; this.matchTeamTotals = calculateLeagueMatchTeamTotals; this.participation = deriveLeagueMatchParticipation; this.matchEvents = deriveLeagueMatchEvents; this.statisticsRows = getLeagueStatisticsRows; this.formatClock = formatLeagueClock; this.formatFrequency = formatLeagueFrequency; this.renderStandings = renderLdcRsLeagueStandings; this.renderResults = renderLdcRsLeagueResults; this.renderEvents = renderLeagueEventTimeline; this.renderLeaderboard = renderLeagueSeasonLeaderboard; this.renderTeam = renderLdcRsLeagueTeam; this.renderPlayerPower = renderLeaguePlayerPowerRankings; this.expandedMatches = leagueExpandedMatches; this.matchModes = leagueMatchDetailModes; this.statisticsPeriods = leagueStatisticsPeriods; this.setLeaderboardMode = (metric, rate) => { leagueSeasonStatMode = metric; leagueSeasonRateMode = rate; }; this.setLeaderboardExpanded = (metric, rate, expanded) => { const key = metric + ':' + rate; if (expanded) leagueExpandedLeaderboards.add(key); else leagueExpandedLeaderboards.delete(key); };`, context);
 
-const fullSeason = context.season;
+const fourMatchSeason = context.season;
+const fullSeason = { ...fourMatchSeason, matches: fourMatchSeason.matches.slice(0, 3) };
 const season = { ...fullSeason, matches: [fullSeason.matches[0]] };
 assert.equal(season.title, 'LDC RS League Season 1');
 assert.deepEqual(JSON.parse(JSON.stringify(season.format)), {
@@ -30,7 +31,7 @@ assert.equal(fullSeason.matches.length, 3);
 
 const expectedRosters = {
     'Baguette Z Apex': ['Spero', 'V4KS', 'luur', 'zenix', 'oskar', 'Nympex', 'amaanofc', 'evilpedri', 'x', 'myrulez', 'Faya', 'Shield', 'Kaka'],
-    'HAX UNITED': ['GK', 'Braga.', 'Misimaro', 'Pedri.', 'GGG', 'A7mdBibo', 'Arshavin', 'Blimpus', 'dierfetje', 'bananajoe', 'ShadiOzz', 'Szcesny', '$limani'],
+    'HAX UNITED': ['GK', 'Braga', 'Misimaro', 'Pedri', 'GGG', 'A7mdBibo', 'Arshavin', 'Blimpus', 'dierfetje', 'bananajoe', 'ShadiOzz', 'Szcesny', '$limani'],
     'OG FC': ['𝐌𝐨𝐬𝐭𝐚𝐟𝐚 𝐙𝐢𝐤𝐨', 'Mbappe', 'Nistel', 'Nijad', 'MeeRo', 'Dynaxz', 'Lookman', 'Brutus', 'MaksLuburic', 'Olise', 'saygex', 'Wizop', 'ToughBaby'],
     'X TO WIN 2': ['Drkuu', 'Ibrahim', 'SamueleRicci', 'Berbatov', 'Naeh', 'SVimes', 'maccy', 'atrocity exhibition', 'elex', 'mitrita KING', 'Wakanda', 'tsukuyomi.', 'wee', 'Johnny Sins'],
     HUQQA: ['Menéur', 'Lena', 'Ollhurse', 'Perkz', 'Saviolo', 'unknown-user', 'barn', 'Razor', 'Grmii', 'Himothy', 'Kimmich', 'whân'],
@@ -60,7 +61,7 @@ assert.equal(new Set(huqqa.roster).size, huqqa.roster.length);
 const rooneyRosterMarkup = context.renderTeam(rooneyTunes);
 assert.match(rooneyRosterMarkup, /14 players/);
 assert.doesNotMatch(rooneyRosterMarkup, /sergicanos/);
-['FITOCHI', 'Luqman', 'JV'].forEach((player) => assert.match(rooneyRosterMarkup, new RegExp(`<li>${player}<\\/li>`)));
+['FITOCHI', 'Luqman', 'JV'].forEach((player) => assert.match(rooneyRosterMarkup, new RegExp(`<li>${player} <span class="league-roster-position">—<\\/span><\\/li>`)));
 assert.equal(leagueScript.includes("'Boat'"), false);
 assert.deepEqual(JSON.parse(JSON.stringify(season.teams.find((team) => team.id === 'x-to-win-2').kit)), {
     primary: '#080808', secondary: '#d4af37', accent: '#d4af37', pattern: 'pinstripes', source: 'configured-team-kit'
@@ -640,23 +641,20 @@ assert.match(leaderboardMarkup, /<th>Goals<\/th><th>Assists<\/th><th>G\+A<\/th>/
 assert.match(leaderboardMarkup, /data-league-rate="totals" class="active"/);
 assert.match(leaderboardMarkup, /league-positive/);
 assert.match(leaderboardMarkup, /league-assist/);
-context.setLeaderboardMode('goalContributions', 'per-minute');
+['goals', 'assists', 'goalContributions', 'kicks', 'passes', 'shotsOnGoal'].forEach((metric) => {
+    context.setLeaderboardMode(metric, 'totals');
+    leaderboardMarkup = context.renderLeaderboard(season);
+    assert.match(leaderboardMarkup, /data-league-rate="totals"[^>]*>Totals<\/button><button type="button" data-league-rate="frequency"[^>]*>Frequency<\/button>/, `${metric} has Totals and Frequency controls`);
+    assert.doesNotMatch(leaderboardMarkup, /Per minute/, `${metric} has no per-minute control`);
+});
+['appearances', 'minutes', 'ownGoals'].forEach((metric) => {
+    context.setLeaderboardMode(metric, 'frequency');
+    leaderboardMarkup = context.renderLeaderboard(season);
+    assert.match(leaderboardMarkup, /data-league-rate="totals" class="active">Totals<\/button>/, `${metric} remains totals-only`);
+    assert.doesNotMatch(leaderboardMarkup, /data-league-rate="frequency"|Per minute/, `${metric} exposes no rate-only view`);
+});
+context.setLeaderboardMode('ownGoals', 'totals');
 leaderboardMarkup = context.renderLeaderboard(season);
-assert.match(leaderboardMarkup, /<th>Goals\/min<\/th><th>Assists\/min<\/th><th>G\+A\/min<\/th>/);
-assert.match(leaderboardMarkup, /data-league-rate="per-minute" class="active"/);
-const perMinuteRows = context.leaderboardRows(season, 'goals', 'per-minute');
-assert.equal(perMinuteRows.length > 0, true);
-assert.equal(perMinuteRows.every((row) => row.minutes > 0 && Number.isFinite(row.leaderboardValue)), true);
-const missingMinuteRows = context.leaderboardRowsFromTotals([
-    { player: 'known', teamId: 'x', goals: 1, assists: 0, goalContributions: 1, mvps: 0, minutes: 60, minutesEstimated: false },
-    { player: 'unknown', teamId: 'x', goals: 2, assists: 0, goalContributions: 2, mvps: 0, minutes: 0, minutesEstimated: false }
-], 'goals', 'per-minute');
-assert.deepEqual(JSON.parse(JSON.stringify(missingMinuteRows.map((row) => row.player))), ['known']);
-const normalAppearances = context.leaderboardRows(season, 'appearances', 'per-minute');
-assert.equal(normalAppearances.every((row) => row.leaderboardValue === row.appearances), true);
-context.setLeaderboardMode('ownGoals', 'per-minute');
-leaderboardMarkup = context.renderLeaderboard(season);
-assert.doesNotMatch(leaderboardMarkup, /Per minute/);
 assert.doesNotMatch(leaderboardMarkup, /league-medal-(gold|silver|bronze)/);
 
 const cleanRateFixtures = [
@@ -690,7 +688,7 @@ assert.doesNotMatch(leaderboardMarkup, /Per minute|Per appearance/);
 const zeroGkSeason = JSON.parse(JSON.stringify(season));
 zeroGkSeason.matches[0].goalkeeperAssignments = zeroGkSeason.matches[0].goalkeeperAssignments.filter((assignment) => assignment.player !== 'Naeh');
 leaderboardMarkup = context.renderLeaderboard(zeroGkSeason);
-assert.match(leaderboardMarkup, /Naeh[\s\S]*?<td>1<\/td><td>—<\/td><td>—<\/td>/);
+assert.doesNotMatch(leaderboardMarkup, /<td>Naeh<\/td>/);
 assert.doesNotMatch(leaderboardMarkup, /league-medal-(gold|silver|bronze)[^>]*><td>Naeh/);
 
 const mvpRateRows = context.leaderboardRows(season, 'mvps', 'per-appearance');
@@ -977,5 +975,141 @@ assert.equal(fullResultsMarkup.indexOf('match-2-og-fc-v-hax-united') < fullResul
 assert.doesNotMatch(leagueScript, /(player|ability|roster)Tier\s*[:=]/i);
 assert.match(html, /\.league-form-result/);
 assert.doesNotMatch(html, /\.league-prediction|\.league-probability-highest/);
+
+// Season roles use accumulated observed time, while match roles retain arrows.
+const positions = context.seasonPositions(fullSeason);
+const role = (player, from = positions) => context.formatSeasonPosition(from, player);
+assert.equal(role('Drkuu'), 'CM/CAM');
+assert.equal(role('atrocity exhibition'), 'CDM/GK');
+assert.equal(role('Berbatov'), 'ST');
+assert.equal(role('Naeh'), 'GK');
+assert.equal(role('Ibrahim'), '—');
+assert.equal(context.positionSequence(match.positionStints['x-to-win-2'].find((entry) => entry.player === 'Drkuu')), 'CM → CAM');
+assert.equal(context.positionSequence(match.positionStints['x-to-win-2'].find((entry) => entry.player === 'atrocity exhibition')), 'CDM → GK');
+for (const player of fullSeason.teams.flatMap((team) => team.roster)) {
+    const displayed = role(player);
+    assert.equal(displayed === '—' || displayed.split('/').every((position) => supportedPositions.has(position)), true, player);
+    assert.equal(displayed.split('/').length <= 2, true, player);
+}
+const xToWinRoster = context.renderTeam(fullSeason.teams.find((team) => team.id === 'x-to-win-2'));
+assert.match(xToWinRoster, /<li>Drkuu <span class="league-roster-position">— CM\/CAM<\/span>/);
+assert.match(xToWinRoster, /<li>Berbatov <span class="league-roster-position">— ST<\/span>/);
+assert.match(xToWinRoster, /<li>atrocity exhibition <span class="league-roster-position">— CDM\/GK<\/span>/);
+assert.match(xToWinRoster, /<li>Ibrahim <span class="league-roster-position">—<\/span>/);
+const positionPowerMarkup = context.renderPlayerPower(fullSeason);
+assert.match(positionPowerMarkup, /<th>Team<\/th><th>Pos<\/th><th>Score<\/th>/);
+assert.match(positionPowerMarkup, /<td>Drkuu<\/td><td>XTW<\/td><td>CM\/CAM<\/td>/);
+for (const metric of ['appearances', 'minutes', 'goals', 'assists', 'goalContributions', 'ownGoals', 'mvps', 'kicks', 'passes', 'shotsOnGoal', 'cleanSheetHalves']) {
+    context.setLeaderboardMode(metric, 'totals');
+    assert.match(context.renderLeaderboard(fullSeason), /<th>Player<\/th><th>Team<\/th><th>Pos<\/th>/, metric);
+}
+context.setLeaderboardMode('goalContributions', 'totals');
+assert.match(context.renderLeaderboard(fullSeason), /<th>Pos<\/th><th>Goals<\/th><th>Assists<\/th><th>G\+A<\/th>/);
+
+const partialGoalkeeperSeason = JSON.parse(JSON.stringify(season));
+const partialMatch = partialGoalkeeperSeason.matches[0];
+partialMatch.positionStints['x-to-win-2'].find((entry) => entry.player === 'atrocity exhibition').stints[1].stintEnd = 110;
+const partialPositions = context.seasonPositions(partialGoalkeeperSeason);
+assert.equal(role('atrocity exhibition', partialPositions), 'CDM/GK');
+const partialGoalkeeper = context.matchPlayerTotals(partialGoalkeeperSeason, partialMatch).find((row) => row.player === 'atrocity exhibition');
+assert.equal(partialGoalkeeper.goalkeeperHalvesPlayed, 0);
+assert.equal(partialGoalkeeper.cleanSheetHalves, 0);
+
+const threeRoleSeason = JSON.parse(JSON.stringify(season));
+const camMatch = JSON.parse(JSON.stringify(match));
+const gkMatch = JSON.parse(JSON.stringify(match));
+camMatch.positionStints['x-to-win-2'].find((entry) => entry.player === 'Berbatov').stints.forEach((stint) => { stint.position = 'CAM'; });
+gkMatch.positionStints['x-to-win-2'].find((entry) => entry.player === 'Berbatov').stints.forEach((stint) => { stint.position = 'GK'; });
+threeRoleSeason.matches.push(camMatch, gkMatch);
+assert.equal(role('Berbatov', context.seasonPositions(threeRoleSeason)).split('/').length, 2);
+
+// The fourth completed result is derived without changing the first three records.
+assert.equal(fourMatchSeason.matches.length, 4);
+const match4 = fourMatchSeason.matches[3];
+assert.equal(match4.id, 'match-4-baguette-z-apex-v-hax-united');
+assert.deepEqual(JSON.parse(JSON.stringify([match4.homeGoals, match4.awayGoals, match4.duration.totalSeconds])), [6, 2, 980]);
+assert.deepEqual(JSON.parse(JSON.stringify(match4.halves.map((half) => [half.homeGoals, half.awayGoals, half.sourceGameTime]))), [[4, 1, '7:46'], [2, 1, '8:34']]);
+assert.deepEqual(JSON.parse(JSON.stringify(match4.scoringEvents.map((event) => [event.timing.display, event.score, event.player, event.assist]))), [
+    ['1:29', '1–0', 'zenix', 'Shield'], ['2:14', '2–0', 'zenix', null],
+    ['6:52', '3–0', 'Spero', null], ['7:16', '3–1', 'Pedri', 'GGG'],
+    ['7:26', '4–1', 'zenix', 'Spero'], ['7:32', '4–2', 'A7mdBibo', 'Pedri'],
+    ['14:05', '5–2', 'Shield', 'x'], ['14:58', '6–2', 'Shield', 'x']
+]);
+assert.equal(match4.mvp, 'Shield');
+assert.equal(match4.recording, undefined);
+for (const [teamId, expected] of [['baguette-z-apex', [242, 106, 16]], ['hax-united', [255, 110, 3]]]) {
+    const teamStats = context.matchTeamTotals(match4, teamId);
+    const playerStats = match4.fullMatchPlayerStats[teamId];
+    assert.deepEqual(JSON.parse(JSON.stringify([teamStats.kicks, teamStats.passes, teamStats.shotsOnGoal])), expected);
+    assert.deepEqual(['kicks', 'passes', 'shotsOnGoal'].map((key) => playerStats.reduce((sum, row) => sum + row[key], 0)), expected);
+}
+const match4Totals = context.matchPlayerTotals(fourMatchSeason, match4);
+const player4 = (name) => match4Totals.find((row) => row.player === name);
+for (const [name, goals, assists, mvps] of [
+    ['zenix', 3, 0, 0], ['Shield', 2, 1, 1], ['Spero', 1, 1, 0],
+    ['x', 0, 2, 0], ['Pedri', 1, 1, 0], ['GGG', 0, 1, 0], ['A7mdBibo', 1, 0, 0]
+]) assert.deepEqual([player4(name).goals, player4(name).assists, player4(name).mvps], [goals, assists, mvps]);
+assert.equal(match4Totals.length, 18);
+assert.equal(match4Totals.every((row) => row.appearances === 1), true);
+assert.equal(match4Totals.every((row) => row.cleanSheetHalves === 0), true);
+assert.equal(player4('luur').goalkeeperHalvesPlayed, 1);
+assert.equal(player4('Shield').goalkeeperHalvesPlayed, 0);
+assert.equal(player4('evilpedri').goalkeeperHalvesPlayed, 0);
+assert.equal(player4('GK').goalkeeperHalvesPlayed, 1);
+assert.equal(player4('Szcesny').goalkeeperHalvesPlayed, 0);
+assert.equal(player4('Shield').minutes, 980);
+assert.equal(player4('evilpedri').minutes, 514);
+assert.equal(player4('Szcesny').minutesEstimated, true);
+assert.equal(player4('$limani').minutesEstimated, true);
+assert.equal(context.positionSequence(match4.positionStints['baguette-z-apex'].find((row) => row.player === 'Shield')), 'CAM → GK → ST');
+assert.equal(context.positionSequence(match4.positionStints['baguette-z-apex'].find((row) => row.player === 'evilpedri')), 'CAM → GK');
+const match4Events = context.matchEvents(match4);
+assert.deepEqual(JSON.parse(JSON.stringify(match4Events.filter((event) => event.eventType === 'goal').map((event) => event.displayTime))), ['14:58', '14:05', '7:32', '7:26', '7:16', '6:52', '2:14', '1:29']);
+assert.equal(match4Events.filter((event) => event.eventType === 'halftime-change').length, 2);
+assert.equal(match4Events.filter((event) => event.eventType === 'substitution').length, 2);
+const fourStandings = context.calculate(fourMatchSeason);
+assert.deepEqual(JSON.parse(JSON.stringify(fourStandings.map((row) => [row.teamId, row.P, row.W, row.L, row.GF, row.GA, row.GD, row.Pts, row.form.map((result) => result.result).join('')]))), [
+    ['x-to-win-2', 1, 1, 0, 5, 0, 5, 3, 'W'],
+    ['baguette-z-apex', 2, 1, 1, 6, 3, 3, 3, 'LW'],
+    ['og-fc', 1, 1, 0, 3, 2, 1, 3, 'W'],
+    ['huqqa', 1, 1, 0, 1, 0, 1, 3, 'W'],
+    ['hax-united', 2, 0, 2, 4, 9, -5, 0, 'LL'],
+    ['rooney-tunes', 1, 0, 1, 0, 5, -5, 0, 'L']
+]);
+assert.match(context.renderStandings(fourMatchSeason), /4 of 30 results recorded/);
+const fourResults = context.renderResults(fourMatchSeason);
+assert.match(fourResults, /league-match-latest" data-match-id="match-4-baguette-z-apex-v-hax-united"/);
+assert.match(fourResults, /zenix ×3 · Spero · Shield ×2 · Pedri · A7mdBibo/);
+assert.doesNotMatch(fourResults, /match-4-baguette-z-apex-v-hax-united[\s\S]*?Watch full match/);
+assert.deepEqual(JSON.parse(JSON.stringify(context.playerPower(fourMatchSeason).slice(0, 10).map((row) => row.player))),
+    ['Shield', 'zenix', 'Berbatov', 'Drkuu', 'Grmii', 'Spero', 'Mbappe', 'Pedri', 'Naeh', 'bananajoe']);
+assert.match(context.renderPlayerPower(fourMatchSeason), /<td>Shield<\/td><td>BZA<\/td><td>ST\/CAM<\/td>/);
+const fourPositions = context.seasonPositions(fourMatchSeason);
+assert.equal(role('Shield', fourPositions), 'ST/CAM');
+assert.equal(role('Pedri', fourPositions), 'CDM/CM');
+assert.equal(role('Szcesny', fourPositions), 'GK');
+for (const metric of ['appearances', 'minutes', 'goals', 'assists', 'goalContributions', 'ownGoals', 'mvps', 'kicks', 'passes', 'shotsOnGoal', 'cleanSheetHalves']) {
+    context.setLeaderboardMode(metric, 'totals');
+    const markup = context.renderLeaderboard(fourMatchSeason);
+    assert.match(markup, /<th>Player<\/th><th>Team<\/th><th>Pos<\/th>/);
+    assert.doesNotMatch(markup, /Per minute/);
+}
+const splitGkFixture = JSON.parse(JSON.stringify(fourMatchSeason));
+const splitMatch = splitGkFixture.matches[3];
+splitMatch.halves[1].homeGoals = 0;
+splitMatch.halves[1].awayGoals = 0;
+splitMatch.cleanSheetHalves = ['Shield', 'evilpedri', 'GK', 'Szcesny'].map((player) => ({ player, value: 1 }));
+splitMatch.goalkeeperAssignments.filter((assignment) => assignment.half === 2).forEach((assignment) => { assignment.cleanSheetEligible = true; });
+const splitTotals = context.matchPlayerTotals(splitGkFixture, splitMatch);
+for (const name of ['Shield', 'evilpedri', 'Szcesny']) {
+    const row = splitTotals.find((entry) => entry.player === name);
+    assert.equal(row.cleanSheetHalves, 0);
+    assert.equal(row.goalkeeperHalvesPlayed, 0);
+}
+assert.equal(splitTotals.find((row) => row.player === 'GK').goalkeeperHalvesPlayed, 1);
+assert.equal(splitTotals.find((row) => row.player === 'GK').cleanSheetHalves, 0);
+assert.equal(match4.cleanSheetHalves.length, 0);
+assert.doesNotMatch(fourResults, /league-match-recording-card/);
+assert.doesNotMatch(context.renderStandings(fourMatchSeason), /Predictions|Team Power|Elo/);
 
 console.log('LDC RS League Season 1 validation passed.');
