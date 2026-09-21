@@ -13,7 +13,7 @@ const context = {
     document: { getElementById: () => null }
 };
 vm.createContext(context);
-vm.runInContext(`${leagueScript}\nthis.season = ldcRsLeagueSeason1; this.modelVersions = { team: LEAGUE_TEAM_POWER_MODEL_VERSION, player: LEAGUE_PLAYER_POWER_MODEL_VERSION }; this.calculate = calculateLdcRsLeagueStandings; this.teamHistory = calculateLeagueTeamPowerHistory; this.playerPower = calculateLeaguePlayerPowerRankings; this.playerMatchPower = calculateLeaguePlayerMatchPower; this.playerConfidence = calculateLeaguePlayerPowerConfidence; this.opponentMultiplier = calculateLeagueOpponentMultiplier; this.matchPlayerTotals = calculateLeagueMatchPlayerTotals; this.seasonPlayerTotals = calculateLeagueSeasonPlayerTotals; this.seasonPositions = calculateLeagueSeasonPositions; this.formatSeasonPosition = formatLeagueSeasonPosition; this.positionSequence = formatLeaguePositionSequence; this.leaderboardRows = calculateLeagueSeasonLeaderboardRows; this.leaderboardRowsFromTotals = calculateLeagueLeaderboardRowsFromTotals; this.leaderboardMedals = calculateLeagueLeaderboardMedals; this.matchTeamTotals = calculateLeagueMatchTeamTotals; this.participation = deriveLeagueMatchParticipation; this.matchEvents = deriveLeagueMatchEvents; this.statisticsRows = getLeagueStatisticsRows; this.formatClock = formatLeagueClock; this.formatFrequency = formatLeagueFrequency; this.renderStandings = renderLdcRsLeagueStandings; this.renderResults = renderLdcRsLeagueResults; this.renderEvents = renderLeagueEventTimeline; this.renderLeaderboard = renderLeagueSeasonLeaderboard; this.renderTeam = renderLdcRsLeagueTeam; this.renderPlayerPower = renderLeaguePlayerPowerRankings; this.expandedMatches = leagueExpandedMatches; this.matchModes = leagueMatchDetailModes; this.statisticsPeriods = leagueStatisticsPeriods; this.setLeaderboardMode = (metric, rate) => { leagueSeasonStatMode = metric; leagueSeasonRateMode = rate; }; this.setLeaderboardExpanded = (metric, rate, expanded) => { const key = metric + ':' + rate; if (expanded) leagueExpandedLeaderboards.add(key); else leagueExpandedLeaderboards.delete(key); };`, context);
+vm.runInContext(`${leagueScript}\nthis.season = ldcRsLeagueSeason1; this.modelVersions = { team: LEAGUE_TEAM_POWER_MODEL_VERSION, player: LEAGUE_PLAYER_POWER_MODEL_VERSION }; this.calculate = calculateLdcRsLeagueStandings; this.teamHistory = calculateLeagueTeamPowerHistory; this.playerPower = calculateLeaguePlayerPowerRankings; this.playerMatchPower = calculateLeaguePlayerMatchPower; this.playerConfidence = calculateLeaguePlayerPowerConfidence; this.opponentMultiplier = calculateLeagueOpponentMultiplier; this.matchPlayerTotals = calculateLeagueMatchPlayerTotals; this.seasonPlayerTotals = calculateLeagueSeasonPlayerTotals; this.seasonPositions = calculateLeagueSeasonPositions; this.formatSeasonPosition = formatLeagueSeasonPosition; this.rosterGroups = getLeagueRosterGroups; this.positionSequence = formatLeaguePositionSequence; this.leaderboardRows = calculateLeagueSeasonLeaderboardRows; this.leaderboardRowsFromTotals = calculateLeagueLeaderboardRowsFromTotals; this.leaderboardMedals = calculateLeagueLeaderboardMedals; this.matchTeamTotals = calculateLeagueMatchTeamTotals; this.participation = deriveLeagueMatchParticipation; this.matchEvents = deriveLeagueMatchEvents; this.statisticsRows = getLeagueStatisticsRows; this.formatClock = formatLeagueClock; this.formatFrequency = formatLeagueFrequency; this.renderStandings = renderLdcRsLeagueStandings; this.renderResults = renderLdcRsLeagueResults; this.renderEvents = renderLeagueEventTimeline; this.renderLeaderboard = renderLeagueSeasonLeaderboard; this.renderTeam = renderLdcRsLeagueTeam; this.renderPlayerPower = renderLeaguePlayerPowerRankings; this.expandedMatches = leagueExpandedMatches; this.matchModes = leagueMatchDetailModes; this.statisticsPeriods = leagueStatisticsPeriods; this.setLeaderboardMode = (metric, rate) => { leagueSeasonStatMode = metric; leagueSeasonRateMode = rate; }; this.setLeaderboardExpanded = (metric, rate, expanded) => { const key = metric + ':' + rate; if (expanded) leagueExpandedLeaderboards.add(key); else leagueExpandedLeaderboards.delete(key); };`, context);
 
 const fourMatchSeason = context.season;
 const fullSeason = { ...fourMatchSeason, matches: fourMatchSeason.matches.slice(0, 3) };
@@ -62,6 +62,35 @@ const rooneyRosterMarkup = context.renderTeam(rooneyTunes);
 assert.match(rooneyRosterMarkup, /14 players/);
 assert.doesNotMatch(rooneyRosterMarkup, /sergicanos/);
 ['FITOCHI', 'Luqman', 'JV'].forEach((player) => assert.match(rooneyRosterMarkup, new RegExp(`<li>${player} <span class="league-roster-position">—<\\/span><\\/li>`)));
+assert.match(rooneyRosterMarkup, /data-roster-group="goalkeepers"/);
+assert.match(rooneyRosterMarkup, /data-roster-group="defenders"/);
+assert.match(rooneyRosterMarkup, /data-roster-group="midfielders"/);
+assert.match(rooneyRosterMarkup, /data-roster-group="attackers"/);
+assert.match(rooneyRosterMarkup, /data-roster-group="unassigned"/);
+
+const rosterGroupingFixture = {
+    roster: ['unknown', 'attacker', 'mid-cam', 'defender', 'goalkeeper', 'mid-cm', 'mid-cdm', 'multi-midfielder', 'multi-goalkeeper']
+};
+const fixturePositions = new Map([
+    ['goalkeeper', { primaryPosition: 'GK', secondaryPosition: null }],
+    ['multi-goalkeeper', { primaryPosition: 'GK', secondaryPosition: 'ST' }],
+    ['defender', { primaryPosition: 'CB', secondaryPosition: null }],
+    ['mid-cdm', { primaryPosition: 'CDM', secondaryPosition: null }],
+    ['multi-midfielder', { primaryPosition: 'CDM', secondaryPosition: 'GK' }],
+    ['mid-cm', { primaryPosition: 'CM', secondaryPosition: null }],
+    ['mid-cam', { primaryPosition: 'CAM', secondaryPosition: null }],
+    ['attacker', { primaryPosition: 'ST', secondaryPosition: 'CAM' }]
+]);
+const groupedFixture = context.rosterGroups(rosterGroupingFixture, fixturePositions);
+assert.deepEqual(JSON.parse(JSON.stringify(groupedFixture.map(({ key, players }) => [key, players.map(({ player, position }) => [player, position])]))), [
+    ['goalkeepers', [['goalkeeper', 'GK'], ['multi-goalkeeper', 'GK/ST']]],
+    ['defenders', [['defender', 'CB']]],
+    ['midfielders', [['mid-cdm', 'CDM'], ['multi-midfielder', 'CDM/GK'], ['mid-cm', 'CM'], ['mid-cam', 'CAM']]],
+    ['attackers', [['attacker', 'ST/CAM']]],
+    ['unassigned', [['unknown', '—']]]
+]);
+assert.equal(new Set(groupedFixture.flatMap(({ players }) => players.map(({ player }) => player))).size, rosterGroupingFixture.roster.length);
+assert.equal(groupedFixture.flatMap(({ players }) => players.map(({ player }) => player)).length, rosterGroupingFixture.roster.length);
 assert.equal(leagueScript.includes("'Boat'"), false);
 assert.deepEqual(JSON.parse(JSON.stringify(season.teams.find((team) => team.id === 'x-to-win-2').kit)), {
     primary: '#080808', secondary: '#d4af37', accent: '#d4af37', pattern: 'pinstripes', source: 'configured-team-kit'

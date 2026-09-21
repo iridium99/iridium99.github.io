@@ -1997,6 +1997,7 @@ function renderLdcRsLeagueTeam(team, season = ldcRsLeagueSeason1, positions = ca
         ? `<img src="${escapeLeagueText(team.image)}" alt="${escapeLeagueText(team.name)} team image" class="league-team-image">`
         : `<div class="league-team-image league-team-monogram" role="img" aria-label="${escapeLeagueText(team.name)} team identifier">${escapeLeagueText(team.shortName)}</div>`;
 
+    const rosterGroups = getLeagueRosterGroups(team, positions);
     return `
         <details class="world-cup-card league-team-card">
             <summary class="league-team-summary">
@@ -2015,12 +2016,16 @@ function renderLdcRsLeagueTeam(team, season = ldcRsLeagueSeason1, positions = ca
                 </dl>
                 <div>
                     <h3 class="league-roster-title">Roster</h3>
-                    <ul class="league-roster-list">
-                        ${team.roster.map((player) => {
-                            const position = formatLeagueSeasonPosition(positions, player);
-                            return `<li>${escapeLeagueText(player)} <span class="league-roster-position">${position === '—' ? '—' : `— ${escapeLeagueText(position)}`}</span></li>`;
-                        }).join('')}
-                    </ul>
+                    <div class="league-roster-groups">
+                        ${rosterGroups.map(({ key, label, players }) => `
+                            <section class="league-roster-group" data-roster-group="${key}">
+                                <h4>${label}</h4>
+                                <ul class="league-roster-list">
+                                    ${players.map(({ player, position }) => `<li>${escapeLeagueText(player)} <span class="league-roster-position">${position === '—' ? '—' : `— ${escapeLeagueText(position)}`}</span></li>`).join('')}
+                                </ul>
+                            </section>
+                        `).join('')}
+                    </div>
                 </div>
             </div>
         </details>
@@ -2117,6 +2122,33 @@ function renderLdcRsLeagueSeason(focusSelector = null) {
     if (focusSelector) {
         container.querySelector(focusSelector)?.focus({ preventScroll: true });
     }
+}
+
+const leagueRosterPositionGroups = [
+    { key: 'goalkeepers', label: 'Goalkeepers', positions: ['GK'] },
+    { key: 'defenders', label: 'Defenders', positions: ['CB'] },
+    { key: 'midfielders', label: 'Midfielders', positions: ['CDM', 'CM', 'CAM'] },
+    { key: 'attackers', label: 'Attackers', positions: ['LW', 'RW', 'ST'] },
+    { key: 'unassigned', label: 'Unassigned', positions: [] }
+];
+
+function getLeagueRosterGroups(team, positions) {
+    const groupByPosition = new Map(leagueRosterPositionGroups.flatMap((group) => group.positions.map((position) => [position, group])));
+    const rosterIndex = new Map(team.roster.map((player, index) => [player, index]));
+    const grouped = new Map(leagueRosterPositionGroups.map((group) => [group.key, { ...group, players: [] }]));
+
+    team.roster.forEach((player) => {
+        const position = formatLeagueSeasonPosition(positions, player);
+        const primaryPosition = positions.get(player)?.primaryPosition;
+        const group = groupByPosition.get(primaryPosition) || grouped.get('unassigned');
+        grouped.get(group.key).players.push({ player, position, primaryPosition });
+    });
+
+    return leagueRosterPositionGroups.map((group) => ({
+        ...grouped.get(group.key),
+        players: grouped.get(group.key).players.sort((a, b) => group.positions.indexOf(a.primaryPosition) - group.positions.indexOf(b.primaryPosition)
+            || rosterIndex.get(a.player) - rosterIndex.get(b.player))
+    })).filter((group) => group.players.length > 0);
 }
 
 renderLdcRsLeagueSeason();
