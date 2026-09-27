@@ -108,6 +108,7 @@ const ldcRsLeagueSeason1 = {
         {
             id: 'rooney-tunes',
             name: 'ROONEY TUNES',
+            status: 'disbanded',
             shortName: 'RT',
             image: 'league-assets/rooney-tunes.webp',
             kit: { primary: '#e53923', secondary: '#ffe94a', source: 'team-image' },
@@ -3351,8 +3352,8 @@ function renderLdcRsLeagueStandings(season) {
                     <thead><tr>${headers.map((header) => `<th>${header}</th>`).join('')}</tr></thead>
                     <tbody>
                         ${standings.map((row, index) => `
-                            <tr class="${index === 0 ? 'league-table-leader' : ''}">
-                                <td><span class="league-rank">${index + 1}</span>${escapeLeagueText(row.team)}</td>
+                            <tr class="${[index === 0 ? 'league-table-leader' : '', teamsById.get(row.teamId)?.status === 'disbanded' ? 'league-team-disbanded-row' : ''].filter(Boolean).join(' ')}">
+                                <td><span class="league-rank">${index + 1}</span>${escapeLeagueText(row.team)}${teamsById.get(row.teamId)?.status === 'disbanded' ? '<span class="league-team-status-badge">Disbanded</span>' : ''}</td>
                                 <td>${row.P}</td><td class="${row.W ? 'league-positive' : ''}">${row.W}</td><td>${row.D}</td><td class="${row.L ? 'league-negative' : ''}">${row.L}</td>
                                 <td>${row.GF}</td><td>${row.GA}</td><td class="${row.GD > 0 ? 'league-positive' : row.GD < 0 ? 'league-negative' : 'league-neutral'}">${row.GD > 0 ? '+' : ''}${row.GD}</td>
                                 <td><span class="league-form" aria-label="Last ${Math.min(row.form.length, 5)} league results">${row.form.slice(-5).map((entry) => `<span class="league-form-result league-form-${entry.result.toLowerCase()}" title="vs ${escapeLeagueText(teamsById.get(entry.opponentTeamId).name)}, ${entry.goalsFor}�${entry.goalsAgainst}">${entry.result}</span>`).join('') || '<span class="league-form-empty">�</span>'}</span></td>
@@ -3967,12 +3968,12 @@ function renderLdcRsLeagueTeam(team, season = ldcRsLeagueSeason1, positions = ca
 
     const rosterGroups = getLeagueRosterGroups(team, positions);
     return `
-        <details class="world-cup-card league-team-card">
+        <details class="world-cup-card league-team-card${team.status === 'disbanded' ? ' league-team-card-disbanded' : ''}">
             <summary class="league-team-summary">
                 ${visual}
                 <span class="league-team-heading">
                     <strong>${escapeLeagueText(team.name)}</strong>
-                    <small>${team.roster.length} players</small>
+                    <small>${team.roster.length} players${team.status === 'disbanded' ? ' · Disbanded' : ''}</small>
                 </span>
                 <span class="league-team-expand" aria-hidden="true">+</span>
             </summary>

@@ -1444,6 +1444,39 @@
             overflow: hidden;
         }
 
+        .league-team-card-disbanded {
+            filter: grayscale(1);
+            opacity: 0.52;
+        }
+
+        .league-team-card-disbanded:hover,
+        .league-team-card-disbanded[open] {
+            opacity: 0.68;
+        }
+
+        .league-team-disbanded-row {
+            opacity: 0.5;
+            filter: grayscale(1);
+        }
+
+        .league-team-disbanded-row:hover {
+            opacity: 0.65;
+        }
+
+        .league-team-status-badge {
+            display: inline-block;
+            margin-left: 8px;
+            padding: 2px 6px;
+            border: 1px solid rgba(148, 163, 184, 0.28);
+            border-radius: 999px;
+            color: #96a3b4;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            vertical-align: middle;
+        }
+
         .league-team-card[open] {
             border-color: rgba(74, 144, 217, 0.45);
         }
@@ -4993,6 +5026,6 @@
         });
     </script>
     <script src="tournament-ratings.js"></script>
-    <script src="ldc-rs-league-season-1.js?v=20260927-match-5-7-repair"></script>
+    <script src="ldc-rs-league-season-1.js?v=20260927-rooney-disbanded"></script>
 </body>
 </html>
