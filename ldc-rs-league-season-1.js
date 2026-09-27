@@ -103,7 +103,7 @@ const ldcRsLeagueSeason1 = {
             owner: 'Ollhurse',
             captain: 'Lena',
             coCaptain: 'Ollhurse',
-            roster: ['Men�ur', 'Lena', 'Ollhurse', 'Perkz', 'Saviolo', 'unknown-user', 'barn', 'Razor', 'Grmii', 'Himothy', 'Kimmich', 'wh�n']
+            roster: ['Men�ur', 'Lena', 'Ollhurse', 'Perkz', 'Saviolo', 'unknown-user', 'barn', 'Razor', 'Grmii', 'Himothy', 'Kimmich', 'wh�n', 'Mesut Ozil']
         },
         {
             id: 'rooney-tunes',
@@ -817,9 +817,9 @@ const ldcRsLeagueSeason1 = {
             },
             "conclusion": {
                 "type": "full-time",
-                "score": "0?2"
+                "score": "0-2"
             },
-            "mvp": "ollhurse",
+            "mvp": "Ollhurse",
             "cleanSheetHalves": [
                 {
                     "player": "Lena",
@@ -832,10 +832,10 @@ const ldcRsLeagueSeason1 = {
             ],
             "scoringEvents": [
                 {
-                    "score": "1?0",
+                    "score": "0-1",
                     "type": "goal",
-                    "player": "ollhurse",
-                    "assist": "Kimmich.",
+                    "player": "Ollhurse",
+                    "assist": "Kimmich",
                     "timing": {
                         "type": "supplied-clock",
                         "display": "11:30",
@@ -843,10 +843,10 @@ const ldcRsLeagueSeason1 = {
                     }
                 },
                 {
-                    "score": "0?2",
+                    "score": "0-2",
                     "type": "goal",
-                    "player": "grmii",
-                    "assist": "ollhurse",
+                    "player": "Grmii",
+                    "assist": "Ollhurse",
                     "timing": {
                         "type": "supplied-clock",
                         "display": "13:51",
@@ -854,17 +854,7 @@ const ldcRsLeagueSeason1 = {
                     }
                 }
             ],
-            "disciplinaryEvents": [
-                {
-                    "type": "red-card",
-                    "player": "tsukuyomi.",
-                    "timing": {
-                        "type": "supplied-clock",
-                        "display": "13:52",
-                        "seconds": 832
-                    }
-                }
-            ],
+            "disciplinaryEvents": [],
             "halves": [
                 {
                     "label": "First half",
@@ -888,13 +878,13 @@ const ldcRsLeagueSeason1 = {
                     "playerStats": {
                         "og-fc": [
                             {
-                                "player": "Dyna",
+                                "player": "Dynaxz",
                                 "kicks": 13,
                                 "passes": 5,
                                 "shotsOnGoal": 0
                             },
                             {
-                                "player": "d?ner",
+                                "player": "saygex",
                                 "kicks": 13,
                                 "passes": 4,
                                 "shotsOnGoal": 0
@@ -906,7 +896,7 @@ const ldcRsLeagueSeason1 = {
                                 "shotsOnGoal": 0
                             },
                             {
-                                "player": "Maks Redondo",
+                                "player": "MaksLuburic",
                                 "kicks": 13,
                                 "passes": 6,
                                 "shotsOnGoal": 0
@@ -921,8 +911,7 @@ const ldcRsLeagueSeason1 = {
                                 "player": "Mbappe",
                                 "kicks": 16,
                                 "passes": 6,
-                                "shotsOnGoal": 0,
-                                "goals": 2
+                                "shotsOnGoal": 0
                             }
                         ],
                         "huqqa": [
@@ -933,13 +922,13 @@ const ldcRsLeagueSeason1 = {
                                 "shotsOnGoal": 0
                             },
                             {
-                                "player": "Perkz shitty pc",
+                                "player": "Perkz",
                                 "kicks": 29,
                                 "passes": 11,
                                 "shotsOnGoal": 1
                             },
                             {
-                                "player": "grmii",
+                                "player": "Grmii",
                                 "kicks": 23,
                                 "passes": 11,
                                 "shotsOnGoal": 1
@@ -951,7 +940,7 @@ const ldcRsLeagueSeason1 = {
                                 "shotsOnGoal": 0
                             },
                             {
-                                "player": "ollhurse",
+                                "player": "Ollhurse",
                                 "kicks": 15,
                                 "passes": 7,
                                 "shotsOnGoal": 3
@@ -968,8 +957,8 @@ const ldcRsLeagueSeason1 = {
                 {
                     "label": "Second half",
                     "sourceGameTime": "7:55",
-                    "homeGoals": 2,
-                    "awayGoals": 0,
+                    "homeGoals": 0,
+                    "awayGoals": 2,
                     "teamStats": {
                         "og-fc": {
                             "possession": 45.2,
@@ -999,7 +988,7 @@ const ldcRsLeagueSeason1 = {
                                 "shotsOnGoal": 0
                             },
                             {
-                                "player": "Maks Redondo",
+                                "player": "MaksLuburic",
                                 "kicks": 13,
                                 "passes": 4,
                                 "shotsOnGoal": 0
@@ -1011,13 +1000,13 @@ const ldcRsLeagueSeason1 = {
                                 "shotsOnGoal": 0
                             },
                             {
-                                "player": "d?ner",
+                                "player": "saygex",
                                 "kicks": 21,
                                 "passes": 6,
                                 "shotsOnGoal": 0
                             },
                             {
-                                "player": "Dyna",
+                                "player": "Dynaxz",
                                 "kicks": 19,
                                 "passes": 7,
                                 "shotsOnGoal": 0
@@ -1025,25 +1014,22 @@ const ldcRsLeagueSeason1 = {
                         ],
                         "huqqa": [
                             {
-                                "player": "Perkz shitty pc",
+                                "player": "Perkz",
                                 "kicks": 26,
                                 "passes": 14,
                                 "shotsOnGoal": 0
                             },
                             {
-                                "player": "grmii",
+                                "player": "Grmii",
                                 "kicks": 25,
                                 "passes": 9,
-                                "shotsOnGoal": 1,
-                                "goals": 1
+                                "shotsOnGoal": 1
                             },
                             {
-                                "player": "ollhurse",
+                                "player": "Ollhurse",
                                 "kicks": 14,
                                 "passes": 5,
-                                "shotsOnGoal": 2,
-                                "goals": 1,
-                                "assists": 1
+                                "shotsOnGoal": 2
                             },
                             {
                                 "player": "Mesut Ozil",
@@ -1052,11 +1038,10 @@ const ldcRsLeagueSeason1 = {
                                 "shotsOnGoal": 0
                             },
                             {
-                                "player": "Kimmich.",
+                                "player": "Kimmich",
                                 "kicks": 21,
                                 "passes": 13,
-                                "shotsOnGoal": 1,
-                                "assists": 1
+                                "shotsOnGoal": 1
                             },
                             {
                                 "player": "Lena",
@@ -1084,76 +1069,317 @@ const ldcRsLeagueSeason1 = {
                 "firstHalf": {
                     "og-fc": [
                         "Lookman",
-                        "Dyna",
-                        "d?ner",
-                        "Maks Redondo",
                         "ToughBaby",
-                        "Mbappe"
+                        "Dynaxz",
+                        "MaksLuburic",
+                        "Mbappe",
+                        "saygex"
                     ],
                     "huqqa": [
                         "Lena",
+                        "Grmii",
+                        "Perkz",
                         "Razor",
-                        "Perkz shitty pc",
-                        "grmii",
-                        "ollhurse",
-                        "Mesut Ozil"
+                        "Mesut Ozil",
+                        "Ollhurse"
                     ]
                 },
                 "secondHalf": {
                     "og-fc": [
                         "Lookman",
-                        "Dyna",
-                        "d?ner",
-                        "Maks Redondo",
                         "ToughBaby",
-                        "Mbappe"
+                        "Dynaxz",
+                        "MaksLuburic",
+                        "Mbappe",
+                        "saygex"
                     ],
                     "huqqa": [
                         "Lena",
-                        "Kimmich.",
-                        "Perkz shitty pc",
-                        "grmii",
-                        "ollhurse",
-                        "Mesut Ozil"
+                        "Grmii",
+                        "Perkz",
+                        "Kimmich",
+                        "Mesut Ozil",
+                        "Ollhurse"
                     ]
                 }
+            },
+            "startingLineups": {
+                "og-fc": [
+                    {
+                        "player": "Lookman",
+                        "position": "GK"
+                    },
+                    {
+                        "player": "ToughBaby",
+                        "position": "CDM"
+                    },
+                    {
+                        "player": "Dynaxz",
+                        "position": "CM"
+                    },
+                    {
+                        "player": "MaksLuburic",
+                        "position": "CAM"
+                    },
+                    {
+                        "player": "Mbappe",
+                        "position": "RW"
+                    },
+                    {
+                        "player": "saygex",
+                        "position": "ST"
+                    }
+                ],
+                "huqqa": [
+                    {
+                        "player": "Lena",
+                        "position": "GK"
+                    },
+                    {
+                        "player": "Grmii",
+                        "position": "CDM"
+                    },
+                    {
+                        "player": "Perkz",
+                        "position": "CM"
+                    },
+                    {
+                        "player": "Razor",
+                        "position": "CAM"
+                    },
+                    {
+                        "player": "Mesut Ozil",
+                        "position": "LW"
+                    },
+                    {
+                        "player": "Ollhurse",
+                        "position": "ST"
+                    }
+                ]
+            },
+            "positionStints": {
+                "og-fc": [
+                    {
+                        "player": "Lookman",
+                        "stints": [
+                            {
+                                "half": 1,
+                                "position": "GK"
+                            },
+                            {
+                                "half": 2,
+                                "position": "GK"
+                            }
+                        ]
+                    },
+                    {
+                        "player": "ToughBaby",
+                        "stints": [
+                            {
+                                "half": 1,
+                                "position": "CDM"
+                            },
+                            {
+                                "half": 2,
+                                "position": "CDM"
+                            }
+                        ]
+                    },
+                    {
+                        "player": "Dynaxz",
+                        "stints": [
+                            {
+                                "half": 1,
+                                "position": "CM"
+                            },
+                            {
+                                "half": 2,
+                                "position": "CM"
+                            }
+                        ]
+                    },
+                    {
+                        "player": "MaksLuburic",
+                        "stints": [
+                            {
+                                "half": 1,
+                                "position": "CAM"
+                            },
+                            {
+                                "half": 2,
+                                "position": "CAM"
+                            }
+                        ]
+                    },
+                    {
+                        "player": "Mbappe",
+                        "stints": [
+                            {
+                                "half": 1,
+                                "position": "RW"
+                            },
+                            {
+                                "half": 2,
+                                "position": "RW"
+                            }
+                        ]
+                    },
+                    {
+                        "player": "saygex",
+                        "stints": [
+                            {
+                                "half": 1,
+                                "position": "ST"
+                            },
+                            {
+                                "half": 2,
+                                "position": "ST"
+                            }
+                        ]
+                    }
+                ],
+                "huqqa": [
+                    {
+                        "player": "Lena",
+                        "stints": [
+                            {
+                                "half": 1,
+                                "position": "GK"
+                            },
+                            {
+                                "half": 2,
+                                "position": "GK"
+                            }
+                        ]
+                    },
+                    {
+                        "player": "Grmii",
+                        "stints": [
+                            {
+                                "half": 1,
+                                "position": "CDM"
+                            },
+                            {
+                                "half": 2,
+                                "position": "CDM"
+                            }
+                        ]
+                    },
+                    {
+                        "player": "Perkz",
+                        "stints": [
+                            {
+                                "half": 1,
+                                "position": "CM"
+                            },
+                            {
+                                "half": 2,
+                                "position": "CM"
+                            }
+                        ]
+                    },
+                    {
+                        "player": "Razor",
+                        "stints": [
+                            {
+                                "half": 1,
+                                "position": "CAM"
+                            },
+                            {
+                                "half": 2,
+                                "position": "RW"
+                            }
+                        ],
+                        "note": "off at HT; returned late in 2H",
+                        "highlight": true
+                    },
+                    {
+                        "player": "Kimmich",
+                        "stints": [
+                            {
+                                "half": 2,
+                                "position": "CAM"
+                            }
+                        ],
+                        "note": "on for Razor at HT",
+                        "highlight": true
+                    },
+                    {
+                        "player": "Mesut Ozil",
+                        "stints": [
+                            {
+                                "half": 1,
+                                "position": "LW"
+                            },
+                            {
+                                "half": 2,
+                                "position": "LW",
+                                "until": "substituted"
+                            }
+                        ],
+                        "note": "off in late 2H two-player change",
+                        "highlight": true
+                    },
+                    {
+                        "player": "Ollhurse",
+                        "stints": [
+                            {
+                                "half": 1,
+                                "position": "ST"
+                            },
+                            {
+                                "half": 2,
+                                "position": "ST",
+                                "until": "substituted"
+                            }
+                        ],
+                        "note": "off in late 2H two-player change",
+                        "highlight": true
+                    },
+                    {
+                        "player": "Bellinghimothy",
+                        "stints": [
+                            {
+                                "half": 2,
+                                "position": "LW"
+                            }
+                        ],
+                        "note": "on in late 2H two-player change",
+                        "highlight": true
+                    }
+                ]
             },
             "substitutions": [
                 {
                     "teamId": "huqqa",
                     "half": "halftime",
-                    "playerIn": "Kimmich.",
+                    "playerIn": "Kimmich",
                     "playerOut": "Razor",
                     "timing": {
                         "type": "halftime",
                         "display": "Halftime"
                     }
-                },
+                }
+            ],
+            "groupSubstitutions": [
                 {
                     "teamId": "huqqa",
                     "half": 2,
-                    "playerIn": "Razor",
-                    "playerOut": "ollhurse",
+                    "playersIn": [
+                        "Razor",
+                        "Bellinghimothy"
+                    ],
+                    "playersOut": [
+                        "Ollhurse",
+                        "Mesut Ozil"
+                    ],
                     "timing": {
                         "type": "observed-interval",
                         "observedStart": 408.1,
                         "observedEnd": 416.833,
-                        "display": "06:48.100?06:56.833 (2H)",
-                        "timelineDisplay": "6:48?6:57 2H",
-                        "estimated": true
-                    }
-                },
-                {
-                    "teamId": "huqqa",
-                    "half": 2,
-                    "playerIn": "Bellinghimothy",
-                    "playerOut": "Mesut Ozil",
-                    "timing": {
-                        "type": "observed-interval",
-                        "observedStart": 408.1,
-                        "observedEnd": 416.833,
-                        "display": "06:48.100?06:56.833 (2H)",
-                        "timelineDisplay": "6:48?6:57 2H",
+                        "display": "06:48.100-06:56.833 (2H)",
+                        "timelineDisplay": "6:48-6:57 2H",
+                        "approximateDisplay": "~6:52 2H",
                         "estimated": true
                     }
                 }
@@ -1199,9 +1425,695 @@ const ldcRsLeagueSeason1 = {
                     "cleanSheetEligible": true
                 }
             ]
-        },,
+        },
         {
-            "id": "match-6-huqqa-v-hax-united",
+            "id": "match-6-og-fc-v-x-to-win-2",
+            "homeTeamId": "og-fc",
+            "awayTeamId": "x-to-win-2",
+            "homeGoals": 2,
+            "awayGoals": 1,
+            "duration": {
+                "totalSeconds": 998,
+                "endTimeKnown": true,
+                "halves": [
+                    {
+                        "half": 1,
+                        "seconds": 485,
+                        "display": "8:05",
+                        "endTimeKnown": true
+                    },
+                    {
+                        "half": 2,
+                        "seconds": 513,
+                        "display": "8:33",
+                        "endTimeKnown": true
+                    }
+                ]
+            },
+            "conclusion": {
+                "type": "full-time",
+                "score": "2-1"
+            },
+            "mvp": "Mbappe",
+            "cleanSheetHalves": [
+                {
+                    "player": "Lookman",
+                    "value": 1
+                }
+            ],
+            "scoringEvents": [
+                {
+                    "score": "1-0",
+                    "type": "goal",
+                    "player": "Mbappe",
+                    "assist": "MaksLuburic",
+                    "timing": {
+                        "type": "supplied-clock",
+                        "display": "4:31",
+                        "seconds": 271
+                    }
+                },
+                {
+                    "score": "2-0",
+                    "type": "goal",
+                    "player": "Mbappe",
+                    "assist": "Dynaxz",
+                    "timing": {
+                        "type": "supplied-clock",
+                        "display": "5:19",
+                        "seconds": 319
+                    }
+                },
+                {
+                    "score": "2-1",
+                    "type": "goal",
+                    "player": "tsukuyomi.",
+                    "assist": "mitrita KING",
+                    "timing": {
+                        "type": "supplied-clock",
+                        "display": "9:14",
+                        "seconds": 554
+                    }
+                }
+            ],
+            "disciplinaryEvents": [
+                {
+                    "type": "red-card",
+                    "player": "tsukuyomi.",
+                    "timing": {
+                        "type": "supplied-clock",
+                        "display": "13:52",
+                        "seconds": 832
+                    }
+                }
+            ],
+            "halves": [
+                {
+                    "label": "First half",
+                    "sourceGameTime": "8:05",
+                    "homeGoals": 2,
+                    "awayGoals": 0,
+                    "teamStats": {
+                        "og-fc": {
+                            "possession": 56.8,
+                            "kicks": 147,
+                            "passes": 63,
+                            "shotsOnGoal": 3
+                        },
+                        "x-to-win-2": {
+                            "possession": 43.2,
+                            "kicks": 113,
+                            "passes": 35,
+                            "shotsOnGoal": 9
+                        }
+                    },
+                    "playerStats": {
+                        "og-fc": [
+                            {
+                                "player": "Dynaxz",
+                                "kicks": 25,
+                                "passes": 12,
+                                "shotsOnGoal": 0
+                            },
+                            {
+                                "player": "saygex",
+                                "kicks": 14,
+                                "passes": 5,
+                                "shotsOnGoal": 0
+                            },
+                            {
+                                "player": "Lookman",
+                                "kicks": 19,
+                                "passes": 10,
+                                "shotsOnGoal": 0
+                            },
+                            {
+                                "player": "MaksLuburic",
+                                "kicks": 17,
+                                "passes": 6,
+                                "shotsOnGoal": 0
+                            },
+                            {
+                                "player": "ToughBaby",
+                                "kicks": 45,
+                                "passes": 21,
+                                "shotsOnGoal": 1
+                            },
+                            {
+                                "player": "Mbappe",
+                                "kicks": 27,
+                                "passes": 9,
+                                "shotsOnGoal": 2
+                            }
+                        ],
+                        "x-to-win-2": [
+                            {
+                                "player": "Berbatov",
+                                "kicks": 9,
+                                "passes": 1,
+                                "shotsOnGoal": 1
+                            },
+                            {
+                                "player": "maccy",
+                                "kicks": 15,
+                                "passes": 7,
+                                "shotsOnGoal": 0
+                            },
+                            {
+                                "player": "Johnny Sins",
+                                "kicks": 16,
+                                "passes": 4,
+                                "shotsOnGoal": 0
+                            },
+                            {
+                                "player": "tsukuyomi.",
+                                "kicks": 21,
+                                "passes": 5,
+                                "shotsOnGoal": 4
+                            },
+                            {
+                                "player": "elex",
+                                "kicks": 27,
+                                "passes": 8,
+                                "shotsOnGoal": 1
+                            },
+                            {
+                                "player": "Ibrahim",
+                                "kicks": 24,
+                                "passes": 10,
+                                "shotsOnGoal": 3
+                            },
+                            {
+                                "player": "mitrita KING",
+                                "kicks": 1,
+                                "passes": 0,
+                                "shotsOnGoal": 0
+                            }
+                        ]
+                    }
+                },
+                {
+                    "label": "Second half",
+                    "sourceGameTime": "8:33",
+                    "homeGoals": 0,
+                    "awayGoals": 1,
+                    "teamStats": {
+                        "og-fc": {
+                            "possession": 52.9,
+                            "kicks": 144,
+                            "passes": 62,
+                            "shotsOnGoal": 8
+                        },
+                        "x-to-win-2": {
+                            "possession": 47.1,
+                            "kicks": 124,
+                            "passes": 44,
+                            "shotsOnGoal": 5
+                        }
+                    },
+                    "playerStats": {
+                        "og-fc": [
+                            {
+                                "player": "Mbappe",
+                                "kicks": 31,
+                                "passes": 12,
+                                "shotsOnGoal": 5
+                            },
+                            {
+                                "player": "ToughBaby",
+                                "kicks": 36,
+                                "passes": 14,
+                                "shotsOnGoal": 1
+                            },
+                            {
+                                "player": "MaksLuburic",
+                                "kicks": 14,
+                                "passes": 6,
+                                "shotsOnGoal": 1
+                            },
+                            {
+                                "player": "Lookman",
+                                "kicks": 32,
+                                "passes": 17,
+                                "shotsOnGoal": 0
+                            },
+                            {
+                                "player": "saygex",
+                                "kicks": 15,
+                                "passes": 7,
+                                "shotsOnGoal": 0
+                            },
+                            {
+                                "player": "Dynaxz",
+                                "kicks": 16,
+                                "passes": 6,
+                                "shotsOnGoal": 1
+                            }
+                        ],
+                        "x-to-win-2": [
+                            {
+                                "player": "Ibrahim",
+                                "kicks": 6,
+                                "passes": 2,
+                                "shotsOnGoal": 1
+                            },
+                            {
+                                "player": "Johnny Sins",
+                                "kicks": 22,
+                                "passes": 7,
+                                "shotsOnGoal": 0
+                            },
+                            {
+                                "player": "Berbatov",
+                                "kicks": 5,
+                                "passes": 1,
+                                "shotsOnGoal": 1
+                            },
+                            {
+                                "player": "mitrita KING",
+                                "kicks": 26,
+                                "passes": 7,
+                                "shotsOnGoal": 1
+                            },
+                            {
+                                "player": "elex",
+                                "kicks": 18,
+                                "passes": 4,
+                                "shotsOnGoal": 0
+                            },
+                            {
+                                "player": "maccy",
+                                "kicks": 31,
+                                "passes": 17,
+                                "shotsOnGoal": 1
+                            },
+                            {
+                                "player": "tsukuyomi.",
+                                "kicks": 16,
+                                "passes": 6,
+                                "shotsOnGoal": 1
+                            }
+                        ]
+                    }
+                }
+            ],
+            "lineups": {
+                "firstHalf": {
+                    "og-fc": [
+                        "Lookman",
+                        "ToughBaby",
+                        "Dynaxz",
+                        "MaksLuburic",
+                        "Mbappe",
+                        "saygex"
+                    ],
+                    "x-to-win-2": [
+                        "elex",
+                        "Johnny Sins",
+                        "Ibrahim",
+                        "maccy",
+                        "tsukuyomi.",
+                        "Berbatov"
+                    ]
+                },
+                "secondHalf": {
+                    "og-fc": [
+                        "Lookman",
+                        "ToughBaby",
+                        "Dynaxz",
+                        "MaksLuburic",
+                        "Mbappe",
+                        "saygex"
+                    ],
+                    "x-to-win-2": [
+                        "Johnny Sins",
+                        "Ibrahim",
+                        "maccy",
+                        "tsukuyomi.",
+                        "elex",
+                        "mitrita KING"
+                    ]
+                }
+            },
+            "startingLineups": {
+                "og-fc": [
+                    {
+                        "player": "Lookman",
+                        "position": "GK"
+                    },
+                    {
+                        "player": "ToughBaby",
+                        "position": "CDM"
+                    },
+                    {
+                        "player": "Dynaxz",
+                        "position": "CM"
+                    },
+                    {
+                        "player": "MaksLuburic",
+                        "position": "CAM"
+                    },
+                    {
+                        "player": "Mbappe",
+                        "position": "RW"
+                    },
+                    {
+                        "player": "saygex",
+                        "position": "ST"
+                    }
+                ],
+                "x-to-win-2": [
+                    {
+                        "player": "elex",
+                        "position": "GK"
+                    },
+                    {
+                        "player": "Johnny Sins",
+                        "position": "CDM"
+                    },
+                    {
+                        "player": "Ibrahim",
+                        "position": "CM"
+                    },
+                    {
+                        "player": "maccy",
+                        "position": "CAM"
+                    },
+                    {
+                        "player": "tsukuyomi.",
+                        "position": "RW"
+                    },
+                    {
+                        "player": "Berbatov",
+                        "position": "ST"
+                    }
+                ]
+            },
+            "positionStints": {
+                "og-fc": [
+                    {
+                        "player": "Lookman",
+                        "stints": [
+                            {
+                                "half": 1,
+                                "position": "GK"
+                            },
+                            {
+                                "half": 2,
+                                "position": "GK"
+                            }
+                        ]
+                    },
+                    {
+                        "player": "ToughBaby",
+                        "stints": [
+                            {
+                                "half": 1,
+                                "position": "CDM"
+                            },
+                            {
+                                "half": 2,
+                                "position": "CDM"
+                            }
+                        ]
+                    },
+                    {
+                        "player": "Dynaxz",
+                        "stints": [
+                            {
+                                "half": 1,
+                                "position": "CM"
+                            },
+                            {
+                                "half": 2,
+                                "position": "CM"
+                            }
+                        ]
+                    },
+                    {
+                        "player": "MaksLuburic",
+                        "stints": [
+                            {
+                                "half": 1,
+                                "position": "CAM"
+                            },
+                            {
+                                "half": 2,
+                                "position": "CAM"
+                            }
+                        ]
+                    },
+                    {
+                        "player": "Mbappe",
+                        "stints": [
+                            {
+                                "half": 1,
+                                "position": "RW"
+                            },
+                            {
+                                "half": 2,
+                                "position": "RW"
+                            }
+                        ]
+                    },
+                    {
+                        "player": "saygex",
+                        "stints": [
+                            {
+                                "half": 1,
+                                "position": "ST"
+                            },
+                            {
+                                "half": 2,
+                                "position": "ST"
+                            }
+                        ]
+                    }
+                ],
+                "x-to-win-2": [
+                    {
+                        "player": "elex",
+                        "stints": [
+                            {
+                                "half": 1,
+                                "position": "GK",
+                                "approximateShare": 0.5
+                            },
+                            {
+                                "half": 1,
+                                "position": "RW",
+                                "approximateShare": 0.5
+                            },
+                            {
+                                "half": 2,
+                                "position": "GK",
+                                "approximateShare": 0.5
+                            },
+                            {
+                                "half": 2,
+                                "position": "RW",
+                                "approximateShare": 0.5
+                            }
+                        ],
+                        "note": "shared goalkeeper duty with Johnny Sins; no clean-sheet-half credit",
+                        "highlight": true
+                    },
+                    {
+                        "player": "Johnny Sins",
+                        "stints": [
+                            {
+                                "half": 1,
+                                "position": "CDM",
+                                "approximateShare": 0.5
+                            },
+                            {
+                                "half": 1,
+                                "position": "GK",
+                                "approximateShare": 0.5
+                            },
+                            {
+                                "half": 2,
+                                "position": "CDM",
+                                "approximateShare": 0.5
+                            },
+                            {
+                                "half": 2,
+                                "position": "GK",
+                                "approximateShare": 0.5
+                            }
+                        ],
+                        "note": "shared goalkeeper duty with elex; no clean-sheet-half credit",
+                        "highlight": true
+                    },
+                    {
+                        "player": "Ibrahim",
+                        "stints": [
+                            {
+                                "half": 1,
+                                "position": "CM"
+                            },
+                            {
+                                "half": 2,
+                                "position": "CM",
+                                "until": "substituted"
+                            }
+                        ],
+                        "note": "off in 2H for Berbatov",
+                        "highlight": true
+                    },
+                    {
+                        "player": "maccy",
+                        "stints": [
+                            {
+                                "half": 1,
+                                "position": "CAM"
+                            },
+                            {
+                                "half": 2,
+                                "position": "CAM"
+                            }
+                        ]
+                    },
+                    {
+                        "player": "tsukuyomi.",
+                        "stints": [
+                            {
+                                "half": 1,
+                                "position": "RW"
+                            },
+                            {
+                                "half": 2,
+                                "position": "RW",
+                                "until": "red-card"
+                            }
+                        ],
+                        "note": "sent off at 13:52",
+                        "highlight": true
+                    },
+                    {
+                        "player": "Berbatov",
+                        "stints": [
+                            {
+                                "half": 1,
+                                "position": "ST",
+                                "until": "substituted"
+                            },
+                            {
+                                "half": 2,
+                                "position": "ST"
+                            }
+                        ],
+                        "note": "off in 1H; returned in 2H for Ibrahim",
+                        "highlight": true
+                    },
+                    {
+                        "player": "mitrita KING",
+                        "stints": [
+                            {
+                                "half": 1,
+                                "position": "ST"
+                            },
+                            {
+                                "half": 2,
+                                "position": "ST"
+                            }
+                        ],
+                        "note": "on in 1H for Berbatov",
+                        "highlight": true
+                    }
+                ]
+            },
+            "substitutions": [
+                {
+                    "teamId": "x-to-win-2",
+                    "half": 1,
+                    "playerIn": "mitrita KING",
+                    "playerOut": "Berbatov",
+                    "timing": {
+                        "type": "observed-interval",
+                        "observedStart": 303.667,
+                        "observedEnd": 319.217,
+                        "display": "05:03.667-05:19.217 (1H)",
+                        "timelineDisplay": "5:04-5:19 1H",
+                        "approximateDisplay": "~5:11 1H",
+                        "estimated": true
+                    }
+                },
+                {
+                    "teamId": "x-to-win-2",
+                    "half": 2,
+                    "playerIn": "Berbatov",
+                    "playerOut": "Ibrahim",
+                    "timing": {
+                        "type": "observed-interval",
+                        "observedStart": 220.933,
+                        "observedEnd": 323.983,
+                        "display": "03:40.933-05:23.983 (2H)",
+                        "timelineDisplay": "3:41-5:24 2H",
+                        "approximateDisplay": "~4:32 2H",
+                        "estimated": true
+                    }
+                }
+            ],
+            "groupSubstitutions": [],
+            "goalkeepers": {
+                "firstHalf": {
+                    "og-fc": "Lookman",
+                    "x-to-win-2": "elex / Johnny Sins"
+                },
+                "secondHalf": {
+                    "og-fc": "Lookman",
+                    "x-to-win-2": "elex / Johnny Sins"
+                }
+            },
+            "goalkeeperAssignments": [
+                {
+                    "player": "Lookman",
+                    "teamId": "og-fc",
+                    "half": 1,
+                    "status": "goalkeeper",
+                    "cleanSheetEligible": true
+                },
+                {
+                    "player": "Lookman",
+                    "teamId": "og-fc",
+                    "half": 2,
+                    "status": "goalkeeper",
+                    "cleanSheetEligible": false,
+                    "goalsConceded": 1
+                },
+                {
+                    "player": "elex",
+                    "teamId": "x-to-win-2",
+                    "half": 1,
+                    "status": "goalkeeper",
+                    "cleanSheetEligible": false
+                },
+                {
+                    "player": "Johnny Sins",
+                    "teamId": "x-to-win-2",
+                    "half": 1,
+                    "status": "goalkeeper",
+                    "cleanSheetEligible": false
+                },
+                {
+                    "player": "elex",
+                    "teamId": "x-to-win-2",
+                    "half": 2,
+                    "status": "goalkeeper",
+                    "cleanSheetEligible": false
+                },
+                {
+                    "player": "Johnny Sins",
+                    "teamId": "x-to-win-2",
+                    "half": 2,
+                    "status": "goalkeeper",
+                    "cleanSheetEligible": false
+                }
+            ]
+        },
+        {
+            "id": "match-7-huqqa-v-hax-united",
             "homeTeamId": "huqqa",
             "awayTeamId": "hax-united",
             "homeGoals": 1,
@@ -1226,7 +2138,7 @@ const ldcRsLeagueSeason1 = {
             },
             "conclusion": {
                 "type": "full-time",
-                "score": "1?0"
+                "score": "1-0"
             },
             "mvp": "Lena",
             "cleanSheetHalves": [
@@ -1241,10 +2153,11 @@ const ldcRsLeagueSeason1 = {
             ],
             "scoringEvents": [
                 {
-                    "score": "1?0",
+                    "score": "1-0",
                     "type": "own-goal",
                     "player": "A7mdBibo",
                     "assist": null,
+                    "benefitsTeamId": "huqqa",
                     "timing": {
                         "type": "supplied-clock",
                         "display": "1:29",
@@ -1252,12 +2165,13 @@ const ldcRsLeagueSeason1 = {
                     }
                 }
             ],
+            "disciplinaryEvents": [],
             "halves": [
                 {
                     "label": "First half",
                     "sourceGameTime": "8:11",
-                    "homeGoals": 0,
-                    "awayGoals": 1,
+                    "homeGoals": 1,
+                    "awayGoals": 0,
                     "teamStats": {
                         "huqqa": {
                             "possession": 52.9,
@@ -1454,39 +2368,264 @@ const ldcRsLeagueSeason1 = {
                 "firstHalf": {
                     "huqqa": [
                         "Lena",
-                        "Kimmich",
-                        "Perkz",
                         "Grmii",
-                        "Ollhurse",
-                        "Mesut Ozil"
+                        "Perkz",
+                        "Kimmich",
+                        "Mesut Ozil",
+                        "Ollhurse"
                     ],
                     "hax-united": [
                         "GK",
-                        "A7mdBibo",
                         "Braga",
                         "Pedri",
+                        "Misimaro",
                         "ShadiOzz",
-                        "Misimaro"
+                        "A7mdBibo"
                     ]
                 },
                 "secondHalf": {
                     "huqqa": [
                         "Lena",
-                        "Kimmich",
-                        "Perkz",
                         "Grmii",
-                        "Ollhurse",
-                        "Mesut Ozil"
+                        "Perkz",
+                        "Kimmich",
+                        "Mesut Ozil",
+                        "Ollhurse"
                     ],
                     "hax-united": [
                         "GK",
-                        "A7mdBibo",
                         "Braga",
                         "Pedri",
+                        "Arshavin",
                         "ShadiOzz",
-                        "Arshavin"
+                        "A7mdBibo"
                     ]
                 }
+            },
+            "startingLineups": {
+                "huqqa": [
+                    {
+                        "player": "Lena",
+                        "position": "GK"
+                    },
+                    {
+                        "player": "Grmii",
+                        "position": "CDM"
+                    },
+                    {
+                        "player": "Perkz",
+                        "position": "CM"
+                    },
+                    {
+                        "player": "Kimmich",
+                        "position": "CAM"
+                    },
+                    {
+                        "player": "Mesut Ozil",
+                        "position": "LW"
+                    },
+                    {
+                        "player": "Ollhurse",
+                        "position": "ST"
+                    }
+                ],
+                "hax-united": [
+                    {
+                        "player": "GK",
+                        "position": "GK"
+                    },
+                    {
+                        "player": "Braga",
+                        "position": "CDM"
+                    },
+                    {
+                        "player": "Pedri",
+                        "position": "CM"
+                    },
+                    {
+                        "player": "Misimaro",
+                        "position": "CAM"
+                    },
+                    {
+                        "player": "ShadiOzz",
+                        "position": "LW"
+                    },
+                    {
+                        "player": "A7mdBibo",
+                        "position": "ST"
+                    }
+                ]
+            },
+            "positionStints": {
+                "huqqa": [
+                    {
+                        "player": "Lena",
+                        "stints": [
+                            {
+                                "half": 1,
+                                "position": "GK"
+                            },
+                            {
+                                "half": 2,
+                                "position": "GK"
+                            }
+                        ]
+                    },
+                    {
+                        "player": "Grmii",
+                        "stints": [
+                            {
+                                "half": 1,
+                                "position": "CDM"
+                            },
+                            {
+                                "half": 2,
+                                "position": "CDM"
+                            }
+                        ]
+                    },
+                    {
+                        "player": "Perkz",
+                        "stints": [
+                            {
+                                "half": 1,
+                                "position": "CM"
+                            },
+                            {
+                                "half": 2,
+                                "position": "CM"
+                            }
+                        ]
+                    },
+                    {
+                        "player": "Kimmich",
+                        "stints": [
+                            {
+                                "half": 1,
+                                "position": "CAM"
+                            },
+                            {
+                                "half": 2,
+                                "position": "CAM"
+                            }
+                        ]
+                    },
+                    {
+                        "player": "Mesut Ozil",
+                        "stints": [
+                            {
+                                "half": 1,
+                                "position": "LW"
+                            },
+                            {
+                                "half": 2,
+                                "position": "LW"
+                            }
+                        ]
+                    },
+                    {
+                        "player": "Ollhurse",
+                        "stints": [
+                            {
+                                "half": 1,
+                                "position": "ST"
+                            },
+                            {
+                                "half": 2,
+                                "position": "ST"
+                            }
+                        ]
+                    }
+                ],
+                "hax-united": [
+                    {
+                        "player": "GK",
+                        "stints": [
+                            {
+                                "half": 1,
+                                "position": "GK"
+                            },
+                            {
+                                "half": 2,
+                                "position": "GK"
+                            }
+                        ]
+                    },
+                    {
+                        "player": "Braga",
+                        "stints": [
+                            {
+                                "half": 1,
+                                "position": "CDM"
+                            },
+                            {
+                                "half": 2,
+                                "position": "CDM"
+                            }
+                        ]
+                    },
+                    {
+                        "player": "Pedri",
+                        "stints": [
+                            {
+                                "half": 1,
+                                "position": "CM"
+                            },
+                            {
+                                "half": 2,
+                                "position": "CM"
+                            }
+                        ]
+                    },
+                    {
+                        "player": "Misimaro",
+                        "stints": [
+                            {
+                                "half": 1,
+                                "position": "CAM"
+                            }
+                        ],
+                        "note": "off at HT for Arshavin",
+                        "highlight": true
+                    },
+                    {
+                        "player": "Arshavin",
+                        "stints": [
+                            {
+                                "half": 2,
+                                "position": "CAM"
+                            }
+                        ],
+                        "note": "on at HT for Misimaro",
+                        "highlight": true
+                    },
+                    {
+                        "player": "ShadiOzz",
+                        "stints": [
+                            {
+                                "half": 1,
+                                "position": "LW"
+                            },
+                            {
+                                "half": 2,
+                                "position": "LW"
+                            }
+                        ]
+                    },
+                    {
+                        "player": "A7mdBibo",
+                        "stints": [
+                            {
+                                "half": 1,
+                                "position": "ST"
+                            },
+                            {
+                                "half": 2,
+                                "position": "ST"
+                            }
+                        ]
+                    }
+                ]
             },
             "substitutions": [
                 {
@@ -1500,6 +2639,7 @@ const ldcRsLeagueSeason1 = {
                     }
                 }
             ],
+            "groupSubstitutions": [],
             "goalkeepers": {
                 "firstHalf": {
                     "huqqa": "Lena",
@@ -1663,32 +2803,69 @@ function deriveLeagueMatchParticipation(match, includeIntervals = false) {
         }
         return participation.get(player);
     };
-    const enter = (player, second) => {
+    const enter = (player, second, estimated = false) => {
         ensure(player);
         active.set(player, second);
+        if (estimated) ensure(player).estimated = true;
     };
     const leave = (player, second, estimated, incomplete = false) => {
         const startedAt = active.get(player);
         if (startedAt === undefined) return;
         const row = ensure(player);
-        row.seconds += second - startedAt;
+        row.seconds += Math.max(0, second - startedAt);
         if (includeIntervals) row.intervals.push({ start: startedAt, end: second });
         row.estimated = row.estimated || estimated;
         row.incomplete = row.incomplete || incomplete;
         active.delete(player);
     };
+    const midpoint = (timing) => (timing.observedStart + timing.observedEnd) / 2;
+    const processHalfChanges = (half) => {
+        const halfOffset = half === 2 ? firstHalfSeconds : 0;
+        const halfStart = halfOffset;
+        const halfEnd = half === 1 ? firstHalfSeconds : participationBoundary;
+        const changes = [];
+
+        (match.substitutions || [])
+            .filter((substitution) => substitution.half === half && substitution.timing?.type !== 'halftime')
+            .forEach((substitution) => {
+                changes.push({
+                    at: halfOffset + midpoint(substitution.timing),
+                    run: () => {
+                        const at = halfOffset + midpoint(substitution.timing);
+                        leave(substitution.playerOut, at, true);
+                        enter(substitution.playerIn, at, true);
+                    }
+                });
+            });
+
+        (match.groupSubstitutions || [])
+            .filter((change) => change.half === half)
+            .forEach((change) => {
+                changes.push({
+                    at: halfOffset + midpoint(change.timing),
+                    run: () => {
+                        const at = halfOffset + midpoint(change.timing);
+                        change.playersOut.forEach((player) => leave(player, at, true));
+                        change.playersIn.forEach((player) => enter(player, at, true));
+                    }
+                });
+            });
+
+        (match.disciplinaryEvents || [])
+            .filter((event) => event.type === 'red-card' && Number.isFinite(event.timing?.seconds)
+                && event.timing.seconds >= halfStart && event.timing.seconds <= halfEnd)
+            .forEach((event) => {
+                changes.push({
+                    at: event.timing.seconds,
+                    run: () => leave(event.player, event.timing.seconds, false)
+                });
+            });
+
+        changes.sort((a, b) => a.at - b.at).forEach((change) => change.run());
+    };
 
     Object.values(match.lineups.firstHalf).flat().forEach((player) => enter(player, 0));
-
-    match.substitutions
-        .filter((substitution) => substitution.half === 1)
-        .sort((a, b) => a.timing.observedStart - b.timing.observedStart)
-        .forEach((substitution) => {
-            const estimatedSecond = (substitution.timing.observedStart + substitution.timing.observedEnd) / 2;
-            leave(substitution.playerOut, estimatedSecond, true);
-            enter(substitution.playerIn, estimatedSecond);
-            ensure(substitution.playerIn).estimated = true;
-        });
+    processHalfChanges(1);
 
     const secondHalfPlayers = new Set(Object.values(match.lineups.secondHalf).flat());
     [...active.keys()].filter((player) => !secondHalfPlayers.has(player)).forEach((player) => leave(player, firstHalfSeconds, false));
@@ -1696,15 +2873,7 @@ function deriveLeagueMatchParticipation(match, includeIntervals = false) {
         if (!active.has(player)) enter(player, firstHalfSeconds);
     });
 
-    match.substitutions
-        .filter((substitution) => substitution.half === 2)
-        .sort((a, b) => a.timing.observedStart - b.timing.observedStart)
-        .forEach((substitution) => {
-            const estimatedSecond = firstHalfSeconds + (substitution.timing.observedStart + substitution.timing.observedEnd) / 2;
-            leave(substitution.playerOut, estimatedSecond, true);
-            enter(substitution.playerIn, estimatedSecond);
-            ensure(substitution.playerIn).estimated = true;
-        });
+    processHalfChanges(2);
 
     [...active.keys()].forEach((player) => leave(player, participationBoundary, durationIncomplete, durationIncomplete));
     return [...participation.values()];
@@ -2032,8 +3201,6 @@ function deriveLeagueMatchEvents(match) {
                 stableOrder: index
             };
         }
-        // Goal clocks were not supplied. Sequence-only values preserve adjudicated
-        // scoring order and configured event grouping without presenting invented times.
         const goalOrdering = half === 1 ? match.timelineOrdering?.firstHalfGoals : match.timelineOrdering?.secondHalfGoals;
         const sequenceSortValue = goalOrdering === 'after-observed-changes'
             ? (half === 1 ? firstHalfSeconds : observedMatchBoundary) - 1 + goalHalfSequence[half] / 1000
@@ -2042,14 +3209,15 @@ function deriveLeagueMatchEvents(match) {
             ...event,
             half,
             eventType: event.type === 'own-goal' ? 'own-goal' : 'goal',
-            displayTime: `${half}H � time not recorded`,
+            displayTime: `${half}H - time not recorded`,
             sortValue: sequenceSortValue,
             sortBasis: 'recorded-scoring-sequence',
             sourceOrder: index,
             stableOrder: index
         };
     });
-    const substitutionEvents = match.substitutions.map((substitution, index) => {
+
+    const substitutionEvents = (match.substitutions || []).map((substitution, index) => {
         if (substitution.timing.type === 'halftime') {
             return {
                 ...substitution,
@@ -2082,6 +3250,34 @@ function deriveLeagueMatchEvents(match) {
         };
     });
 
+    const groupSubstitutionEvents = (match.groupSubstitutions || []).map((change, index) => {
+        const midpoint = (change.timing.observedStart + change.timing.observedEnd) / 2;
+        const halfOffset = change.half === 2 ? firstHalfSeconds : 0;
+        return {
+            ...change,
+            eventType: 'group-substitution',
+            displayTime: change.timing.timelineDisplay,
+            detailTime: `Observed ${change.timing.display.replace(/ \((1H|2H)\)$/, ' $1')}`,
+            sortValue: halfOffset + midpoint,
+            sortBasis: 'shared-observed-range',
+            timingUncertain: true,
+            groupKey: `group-sub:${change.half}:${change.timing.observedStart}:${change.timing.observedEnd}`,
+            stableOrder: match.scoringEvents.length + substitutionEvents.length + index
+        };
+    });
+
+    const disciplinaryEvents = (match.disciplinaryEvents || []).map((event, index) => ({
+        ...event,
+        eventType: event.type,
+        displayTime: event.timing?.display || 'Card',
+        detailTime: event.timing?.display || '',
+        sortValue: event.timing?.seconds ?? observedMatchBoundary,
+        sortBasis: event.timing?.type === 'supplied-clock' ? 'authoritative-supplied-display-clock' : 'recorded-disciplinary-event',
+        timingUncertain: false,
+        groupKey: `disciplinary:${index}`,
+        stableOrder: match.scoringEvents.length + substitutionEvents.length + groupSubstitutionEvents.length + index
+    }));
+
     const halftimeChangeEvents = (match.halftimeChanges || []).map((change, index) => ({
         ...change,
         eventType: 'halftime-change',
@@ -2090,9 +3286,10 @@ function deriveLeagueMatchEvents(match) {
         sortValue: firstHalfSeconds,
         sortBasis: 'halftime',
         groupKey: 'halftime-lineup-changes',
-        stableOrder: match.scoringEvents.length + match.substitutions.length + index
+        stableOrder: match.scoringEvents.length + substitutionEvents.length + groupSubstitutionEvents.length + disciplinaryEvents.length + index
     }));
-    return [...goalEvents, ...substitutionEvents, ...halftimeChangeEvents]
+
+    return [...goalEvents, ...substitutionEvents, ...groupSubstitutionEvents, ...disciplinaryEvents, ...halftimeChangeEvents]
         .sort((a, b) => b.sortValue - a.sortValue || a.stableOrder - b.stableOrder || a.eventType.localeCompare(b.eventType));
 }
 
@@ -2396,15 +3593,22 @@ function renderLeagueSubstitutions(season, match) {
                 ${(match.halftimeChanges || []).map((change) => `
                     <div class="league-substitution">
                         <span class="league-sub-time">HT</span>
-                        <span><strong>${escapeLeagueText(change.playersIn.join(', '))} in</strong> � ${escapeLeagueText(change.playersOut.join(', '))} out</span>
-                        <small>${escapeLeagueText(teamsById.get(change.teamId).name)} � halftime lineup change</small>
+                        <span><strong>${escapeLeagueText(change.playersIn.join(', '))} in</strong> - ${escapeLeagueText(change.playersOut.join(', '))} out</span>
+                        <small>${escapeLeagueText(teamsById.get(change.teamId).name)} - halftime lineup change</small>
                     </div>
                 `).join('')}
-                ${match.substitutions.map((substitution) => `
+                ${(match.substitutions || []).map((substitution) => `
                     <div class="league-substitution">
                         <span class="league-sub-time">${escapeLeagueText(substitution.timing.display)}</span>
-                        <span><strong>${escapeLeagueText(substitution.playerIn)} ?</strong> for ${escapeLeagueText(substitution.playerOut)} ?</span>
-                        <small>${escapeLeagueText(teamsById.get(substitution.teamId).name)}${substitution.timing.type === 'observed-interval' ? ` � midpoint ${escapeLeagueText(substitution.timing.approximateDisplay)} used only for estimated playing time` : ' � halftime change'}</small>
+                        <span><strong>${escapeLeagueText(substitution.playerIn)} in</strong> for ${escapeLeagueText(substitution.playerOut)}</span>
+                        <small>${escapeLeagueText(teamsById.get(substitution.teamId).name)}${substitution.timing.type === 'observed-interval' ? ` - midpoint ${escapeLeagueText(substitution.timing.approximateDisplay)} used only for estimated playing time` : ' - halftime change'}</small>
+                    </div>
+                `).join('')}
+                ${(match.groupSubstitutions || []).map((change) => `
+                    <div class="league-substitution">
+                        <span class="league-sub-time">${escapeLeagueText(change.timing.display)}</span>
+                        <span><strong>${escapeLeagueText(change.playersIn.join(', '))} in</strong> for ${escapeLeagueText(change.playersOut.join(', '))}</span>
+                        <small>${escapeLeagueText(teamsById.get(change.teamId).name)} - pairings within this observed change are not adjudicated</small>
                     </div>
                 `).join('')}
             </div>
@@ -2477,18 +3681,31 @@ function renderLeagueEventTimeline(season, match) {
     const renderEvent = (event, team) => {
         const isGoal = event.eventType === 'goal';
         const isOwnGoal = event.eventType === 'own-goal';
+        const isRedCard = event.eventType === 'red-card';
+        const isGroupSubstitution = event.eventType === 'group-substitution';
         const isHalftimeChange = event.eventType === 'halftime-change';
-        const type = isGoal ? 'Goal' : isOwnGoal ? 'Own goal' : isHalftimeChange ? 'Halftime change' : 'Substitution';
+        const type = isGoal ? 'Goal'
+            : isOwnGoal ? 'Own goal'
+                : isRedCard ? 'Red card'
+                    : isGroupSubstitution ? 'Substitution'
+                        : isHalftimeChange ? 'Halftime change'
+                            : 'Substitution';
         const headline = isGoal
             ? `${event.player} scores!`
             : isOwnGoal
                 ? `${event.player} own goal`
-                : isHalftimeChange
-                    ? `${event.playersIn.join(', ')} in; ${event.playersOut.join(', ')} out`
-                : `${event.playerIn} in, ${event.playerOut} out`;
+                : isRedCard
+                    ? `${event.player} sent off`
+                    : isGroupSubstitution
+                        ? `${event.playersIn.join(', ')} in; ${event.playersOut.join(', ')} out`
+                        : isHalftimeChange
+                            ? `${event.playersIn.join(', ')} in; ${event.playersOut.join(', ')} out`
+                            : `${event.playerIn} in, ${event.playerOut} out`;
         const detail = isGoal || isOwnGoal
-            ? `${event.assist ? `Assist by ${event.assist} � ` : ''}${isOwnGoal && event.benefitsTeamId ? `Benefits ${teamsById.get(event.benefitsTeamId).name} � ` : ''}${event.score}${event.mercyRuleMatchEnd ? ' � Mercy-rule match end' : ''}`
-            : event.detailTime;
+            ? `${event.assist ? `Assist by ${event.assist} - ` : ''}${isOwnGoal && event.benefitsTeamId ? `Benefits ${teamsById.get(event.benefitsTeamId).name} - ` : ''}${event.score}${event.mercyRuleMatchEnd ? ' - Mercy-rule match end' : ''}`
+            : isRedCard
+                ? 'Red card'
+                : event.detailTime;
         return `<article class="league-timeline-event league-timeline-event-${event.eventType}">
             <span class="league-timeline-event-meta"><span class="league-timeline-team">${escapeLeagueText(team.shortName)}</span><span>${type}</span></span>
             <strong>${escapeLeagueText(headline)}</strong>
