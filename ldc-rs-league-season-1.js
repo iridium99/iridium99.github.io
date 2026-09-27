@@ -1,4 +1,4 @@
-const LEAGUE_TEAM_POWER_MODEL_VERSION = 1;
+﻿const LEAGUE_TEAM_POWER_MODEL_VERSION = 1;
 const LEAGUE_PLAYER_POWER_MODEL_VERSION = 1;
 
 const ldcRsLeagueSeason1 = {
@@ -790,7 +790,416 @@ const ldcRsLeagueSeason1 = {
                 { player: 'GK', teamId: 'hax-united', half: 2, status: 'goalkeeper', cleanSheetEligible: false },
                 { player: 'Szcesny', teamId: 'hax-united', half: 2, status: 'goalkeeper', cleanSheetEligible: false }
             ]
-        }
+        },
+        {
+            "id": "match-5-og-fc-v-huqqa",
+            "homeTeamId": "og-fc",
+            "awayTeamId": "huqqa",
+            "homeGoals": 0,
+            "awayGoals": 2,
+            "duration": {
+                "totalSeconds": 960,
+                "endTimeKnown": true,
+                "halves": [
+                    {
+                        "half": 1,
+                        "seconds": 485,
+                        "display": "8:05",
+                        "endTimeKnown": true
+                    },
+                    {
+                        "half": 2,
+                        "seconds": 475,
+                        "display": "7:55",
+                        "endTimeKnown": true
+                    }
+                ]
+            },
+            "conclusion": {
+                "type": "full-time",
+                "score": "0?2"
+            },
+            "mvp": "ollhurse",
+            "cleanSheetHalves": [
+                {
+                    "player": "Lena",
+                    "value": 2
+                },
+                {
+                    "player": "Lookman",
+                    "value": 1
+                }
+            ],
+            "scoringEvents": [
+                {
+                    "score": "0?1",
+                    "type": "goal",
+                    "player": "ollhurse",
+                    "assist": "Kimmich.",
+                    "timing": {
+                        "type": "supplied-clock",
+                        "display": "11:30",
+                        "seconds": 690
+                    }
+                },
+                {
+                    "score": "0?2",
+                    "type": "goal",
+                    "player": "grmii",
+                    "assist": "ollhurse",
+                    "timing": {
+                        "type": "supplied-clock",
+                        "display": "13:51",
+                        "seconds": 831
+                    }
+                }
+            ],
+            "disciplinaryEvents": [
+                {
+                    "type": "red-card",
+                    "player": "tsukuyomi.",
+                    "timing": {
+                        "type": "supplied-clock",
+                        "display": "13:52",
+                        "seconds": 832
+                    }
+                }
+            ],
+            "halves": [
+                {
+                    "label": "First half",
+                    "sourceGameTime": "8:05",
+                    "homeGoals": 0,
+                    "awayGoals": 0,
+                    "teamStats": {
+                        "og-fc": {
+                            "possession": 50.9,
+                            "kicks": 117,
+                            "passes": 50,
+                            "shotsOnGoal": 1
+                        },
+                        "huqqa": {
+                            "possession": 49.1,
+                            "kicks": 121,
+                            "passes": 53,
+                            "shotsOnGoal": 6
+                        }
+                    },
+                    "playerStats": {
+                        "og-fc": [
+                            {
+                                "player": "Dyna",
+                                "kicks": 13,
+                                "passes": 5,
+                                "shotsOnGoal": 0
+                            },
+                            {
+                                "player": "d?ner",
+                                "kicks": 13,
+                                "passes": 4,
+                                "shotsOnGoal": 0
+                            },
+                            {
+                                "player": "Lookman",
+                                "kicks": 29,
+                                "passes": 14,
+                                "shotsOnGoal": 0
+                            },
+                            {
+                                "player": "Maks Redondo",
+                                "kicks": 13,
+                                "passes": 6,
+                                "shotsOnGoal": 0
+                            },
+                            {
+                                "player": "ToughBaby",
+                                "kicks": 33,
+                                "passes": 15,
+                                "shotsOnGoal": 1
+                            },
+                            {
+                                "player": "Mbappe",
+                                "kicks": 16,
+                                "passes": 6,
+                                "shotsOnGoal": 0,
+                                "goals": 2
+                            }
+                        ],
+                        "huqqa": [
+                            {
+                                "player": "Lena",
+                                "kicks": 26,
+                                "passes": 14,
+                                "shotsOnGoal": 0
+                            },
+                            {
+                                "player": "Perkz shitty pc",
+                                "kicks": 29,
+                                "passes": 11,
+                                "shotsOnGoal": 1
+                            },
+                            {
+                                "player": "grmii",
+                                "kicks": 23,
+                                "passes": 11,
+                                "shotsOnGoal": 1
+                            },
+                            {
+                                "player": "Razor",
+                                "kicks": 10,
+                                "passes": 3,
+                                "shotsOnGoal": 0
+                            },
+                            {
+                                "player": "ollhurse",
+                                "kicks": 15,
+                                "passes": 7,
+                                "shotsOnGoal": 3
+                            },
+                            {
+                                "player": "Mesut Ozil",
+                                "kicks": 18,
+                                "passes": 7,
+                                "shotsOnGoal": 1
+                            }
+                        ]
+                    }
+                },
+                {
+                    "label": "Second half",
+                    "sourceGameTime": "7:55",
+                    "homeGoals": 2,
+                    "awayGoals": 0,
+                    "teamStats": {
+                        "og-fc": {
+                            "possession": 45.2,
+                            "kicks": 121,
+                            "passes": 54,
+                            "shotsOnGoal": 0
+                        },
+                        "huqqa": {
+                            "possession": 54.8,
+                            "kicks": 141,
+                            "passes": 71,
+                            "shotsOnGoal": 4
+                        }
+                    },
+                    "playerStats": {
+                        "og-fc": [
+                            {
+                                "player": "Mbappe",
+                                "kicks": 14,
+                                "passes": 5,
+                                "shotsOnGoal": 0
+                            },
+                            {
+                                "player": "ToughBaby",
+                                "kicks": 26,
+                                "passes": 15,
+                                "shotsOnGoal": 0
+                            },
+                            {
+                                "player": "Maks Redondo",
+                                "kicks": 13,
+                                "passes": 4,
+                                "shotsOnGoal": 0
+                            },
+                            {
+                                "player": "Lookman",
+                                "kicks": 28,
+                                "passes": 17,
+                                "shotsOnGoal": 0
+                            },
+                            {
+                                "player": "d?ner",
+                                "kicks": 21,
+                                "passes": 6,
+                                "shotsOnGoal": 0
+                            },
+                            {
+                                "player": "Dyna",
+                                "kicks": 19,
+                                "passes": 7,
+                                "shotsOnGoal": 0
+                            }
+                        ],
+                        "huqqa": [
+                            {
+                                "player": "Perkz shitty pc",
+                                "kicks": 26,
+                                "passes": 14,
+                                "shotsOnGoal": 0
+                            },
+                            {
+                                "player": "grmii",
+                                "kicks": 25,
+                                "passes": 9,
+                                "shotsOnGoal": 1,
+                                "goals": 1
+                            },
+                            {
+                                "player": "ollhurse",
+                                "kicks": 14,
+                                "passes": 5,
+                                "shotsOnGoal": 2,
+                                "goals": 1,
+                                "assists": 1
+                            },
+                            {
+                                "player": "Mesut Ozil",
+                                "kicks": 21,
+                                "passes": 12,
+                                "shotsOnGoal": 0
+                            },
+                            {
+                                "player": "Kimmich.",
+                                "kicks": 21,
+                                "passes": 13,
+                                "shotsOnGoal": 1,
+                                "assists": 1
+                            },
+                            {
+                                "player": "Lena",
+                                "kicks": 30,
+                                "passes": 16,
+                                "shotsOnGoal": 0
+                            },
+                            {
+                                "player": "Razor",
+                                "kicks": 1,
+                                "passes": 1,
+                                "shotsOnGoal": 0
+                            },
+                            {
+                                "player": "Bellinghimothy",
+                                "kicks": 3,
+                                "passes": 1,
+                                "shotsOnGoal": 0
+                            }
+                        ]
+                    }
+                }
+            ],
+            "lineups": {
+                "firstHalf": {
+                    "og-fc": [
+                        "Lookman",
+                        "Dyna",
+                        "d?ner",
+                        "Maks Redondo",
+                        "ToughBaby",
+                        "Mbappe"
+                    ],
+                    "huqqa": [
+                        "Lena",
+                        "Razor",
+                        "Perkz shitty pc",
+                        "grmii",
+                        "ollhurse",
+                        "Mesut Ozil"
+                    ]
+                },
+                "secondHalf": {
+                    "og-fc": [
+                        "Lookman",
+                        "Dyna",
+                        "d?ner",
+                        "Maks Redondo",
+                        "ToughBaby",
+                        "Mbappe"
+                    ],
+                    "huqqa": [
+                        "Lena",
+                        "Kimmich.",
+                        "Perkz shitty pc",
+                        "grmii",
+                        "ollhurse",
+                        "Mesut Ozil"
+                    ]
+                }
+            },
+            "substitutions": [
+                {
+                    "teamId": "huqqa",
+                    "half": "halftime",
+                    "playerIn": "Kimmich.",
+                    "playerOut": "Razor",
+                    "timing": {
+                        "type": "halftime",
+                        "display": "Halftime"
+                    }
+                },
+                {
+                    "teamId": "huqqa",
+                    "half": 2,
+                    "playerIn": "Razor",
+                    "playerOut": "ollhurse",
+                    "timing": {
+                        "type": "observed-interval",
+                        "observedStart": 408.1,
+                        "observedEnd": 416.833,
+                        "display": "06:48.100?06:56.833 (2H)",
+                        "timelineDisplay": "6:48?6:57 2H",
+                        "estimated": true
+                    }
+                },
+                {
+                    "teamId": "huqqa",
+                    "half": 2,
+                    "playerIn": "Bellinghimothy",
+                    "playerOut": "Mesut Ozil",
+                    "timing": {
+                        "type": "observed-interval",
+                        "observedStart": 408.1,
+                        "observedEnd": 416.833,
+                        "display": "06:48.100?06:56.833 (2H)",
+                        "timelineDisplay": "6:48?6:57 2H",
+                        "estimated": true
+                    }
+                }
+            ],
+            "goalkeepers": {
+                "firstHalf": {
+                    "og-fc": "Lookman",
+                    "huqqa": "Lena"
+                },
+                "secondHalf": {
+                    "og-fc": "Lookman",
+                    "huqqa": "Lena"
+                }
+            },
+            "goalkeeperAssignments": [
+                {
+                    "player": "Lookman",
+                    "teamId": "og-fc",
+                    "half": 1,
+                    "status": "goalkeeper",
+                    "cleanSheetEligible": true
+                },
+                {
+                    "player": "Lookman",
+                    "teamId": "og-fc",
+                    "half": 2,
+                    "status": "goalkeeper",
+                    "cleanSheetEligible": false,
+                    "goalsConceded": 2
+                },
+                {
+                    "player": "Lena",
+                    "teamId": "huqqa",
+                    "half": 1,
+                    "status": "goalkeeper",
+                    "cleanSheetEligible": true
+                },
+                {
+                    "player": "Lena",
+                    "teamId": "huqqa",
+                    "half": 2,
+                    "status": "goalkeeper",
+                    "cleanSheetEligible": true
+                }
+            ]
+        },
     ]
 };
 

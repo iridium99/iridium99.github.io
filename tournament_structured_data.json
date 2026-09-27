@@ -454,21 +454,21 @@
         "team": "France",
         "halvesRecorded": 8,
         "passes": 320,
-        "possessionPercent": 378.0,
+        "possessionPercent": 378,
         "shotsOnGoal": 20
       },
       {
         "team": "England",
         "halvesRecorded": 8,
         "passes": 525,
-        "possessionPercent": 408.0,
+        "possessionPercent": 408,
         "shotsOnGoal": 34
       },
       {
         "team": "Poland",
         "halvesRecorded": 6,
         "passes": 343,
-        "possessionPercent": 320.0,
+        "possessionPercent": 320,
         "shotsOnGoal": 34
       }
     ]
@@ -4473,8 +4473,8 @@
         }
       ],
       "stats": {
-        "possessionA": 52.0,
-        "possessionB": 48.0,
+        "possessionA": 52,
+        "possessionB": 48,
         "kicksA": 120,
         "kicksB": 106,
         "passesA": 53,
@@ -5091,8 +5091,8 @@
         }
       ],
       "stats": {
-        "possessionA": 58.0,
-        "possessionB": 42.0,
+        "possessionA": 58,
+        "possessionB": 42,
         "kicksA": 125,
         "kicksB": 95,
         "passesA": 66,
@@ -5377,8 +5377,8 @@
       "gameTime": "8:02",
       "goals": [],
       "stats": {
-        "possessionA": 48.0,
-        "possessionB": 52.0,
+        "possessionA": 48,
+        "possessionB": 52,
         "kicksA": 114,
         "kicksB": 128,
         "passesA": 53,
@@ -5672,8 +5672,8 @@
         }
       ],
       "stats": {
-        "possessionA": 53.0,
-        "possessionB": 47.0,
+        "possessionA": 53,
+        "possessionB": 47,
         "kicksA": 113,
         "kicksB": 102,
         "passesA": 57,
@@ -5802,8 +5802,8 @@
       "gameTime": "7:59",
       "goals": [],
       "stats": {
-        "possessionA": 53.0,
-        "possessionB": 47.0,
+        "possessionA": 53,
+        "possessionB": 47,
         "kicksA": 122,
         "kicksB": 94,
         "passesA": 56,
@@ -6911,8 +6911,8 @@
       "gameTime": "8:46",
       "goals": [],
       "stats": {
-        "possessionA": 48.0,
-        "possessionB": 52.0,
+        "possessionA": 48,
+        "possessionB": 52,
         "kicksA": 119,
         "kicksB": 142,
         "passesA": 49,
@@ -7349,20 +7349,132 @@
         "shotsB": 4
       },
       "players": [
-        { "name": "YAYA", "team": "Egypt", "goals": 0, "assists": 0, "kicks": 7, "passes": 2, "shots": 1 },
-        { "name": "Ryzen", "team": "Egypt", "goals": 0, "assists": 0, "kicks": 8, "passes": 5, "shots": 0 },
-        { "name": "ShadiOzz's PC", "team": "Egypt", "goals": 0, "assists": 0, "kicks": 24, "passes": 8, "shots": 0 },
-        { "name": "Virgil Van Dijk", "team": "Egypt", "goals": 0, "assists": 0, "kicks": 9, "passes": 0, "shots": 0 },
-        { "name": "R.Gullit", "team": "Egypt", "goals": 0, "assists": 0, "kicks": 15, "passes": 7, "shots": 0 },
-        { "name": "ToughBaby", "team": "Egypt", "goals": 0, "assists": 0, "kicks": 23, "passes": 14, "shots": 1 },
-        { "name": "A7mdBibo", "team": "Egypt", "goals": 0, "assists": 0, "kicks": 24, "passes": 9, "shots": 1 },
-        { "name": "BurakT09", "team": "Germany", "goals": 0, "assists": 0, "kicks": 1, "passes": 0, "shots": 0 },
-        { "name": "Misimaro", "team": "Germany", "goals": 0, "assists": 0, "kicks": 19, "passes": 7, "shots": 2 },
-        { "name": "drkuu", "team": "Germany", "goals": 0, "assists": 0, "kicks": 26, "passes": 12, "shots": 0 },
-        { "name": "SamueleRicci", "team": "Germany", "goals": 0, "assists": 0, "kicks": 20, "passes": 10, "shots": 1 },
-        { "name": "P", "team": "Germany", "goals": 1, "assists": 0, "kicks": 35, "passes": 13, "shots": 1 },
-        { "name": "Karl", "team": "Germany", "goals": 0, "assists": 1, "kicks": 14, "passes": 10, "shots": 0 },
-        { "name": "Naeh", "team": "Germany", "goals": 0, "assists": 0, "kicks": 9, "passes": 6, "shots": 0 }
+        {
+          "name": "YAYA",
+          "team": "Egypt",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 7,
+          "passes": 2,
+          "shots": 1
+        },
+        {
+          "name": "Ryzen",
+          "team": "Egypt",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 8,
+          "passes": 5,
+          "shots": 0
+        },
+        {
+          "name": "ShadiOzz's PC",
+          "team": "Egypt",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 24,
+          "passes": 8,
+          "shots": 0
+        },
+        {
+          "name": "Virgil Van Dijk",
+          "team": "Egypt",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 9,
+          "passes": 0,
+          "shots": 0
+        },
+        {
+          "name": "R.Gullit",
+          "team": "Egypt",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 15,
+          "passes": 7,
+          "shots": 0
+        },
+        {
+          "name": "ToughBaby",
+          "team": "Egypt",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 23,
+          "passes": 14,
+          "shots": 1
+        },
+        {
+          "name": "A7mdBibo",
+          "team": "Egypt",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 24,
+          "passes": 9,
+          "shots": 1
+        },
+        {
+          "name": "BurakT09",
+          "team": "Germany",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 1,
+          "passes": 0,
+          "shots": 0
+        },
+        {
+          "name": "Misimaro",
+          "team": "Germany",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 19,
+          "passes": 7,
+          "shots": 2
+        },
+        {
+          "name": "drkuu",
+          "team": "Germany",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 26,
+          "passes": 12,
+          "shots": 0
+        },
+        {
+          "name": "SamueleRicci",
+          "team": "Germany",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 20,
+          "passes": 10,
+          "shots": 1
+        },
+        {
+          "name": "P",
+          "team": "Germany",
+          "goals": 1,
+          "assists": 0,
+          "kicks": 35,
+          "passes": 13,
+          "shots": 1
+        },
+        {
+          "name": "Karl",
+          "team": "Germany",
+          "goals": 0,
+          "assists": 1,
+          "kicks": 14,
+          "passes": 10,
+          "shots": 0
+        },
+        {
+          "name": "Naeh",
+          "team": "Germany",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 9,
+          "passes": 6,
+          "shots": 0
+        }
       ]
     },
     {
@@ -7398,18 +7510,114 @@
         "shotsB": 4
       },
       "players": [
-        { "name": "levitan", "team": "Netherlands", "goals": 0, "assists": 0, "kicks": 13, "passes": 5, "shots": 0 },
-        { "name": "yonko", "team": "Netherlands", "goals": 0, "assists": 0, "kicks": 9, "passes": 3, "shots": 0 },
-        { "name": "Nympex", "team": "Netherlands", "goals": 0, "assists": 0, "kicks": 24, "passes": 11, "shots": 0 },
-        { "name": "poppa", "team": "Netherlands", "goals": 1, "assists": 0, "kicks": 16, "passes": 1, "shots": 1 },
-        { "name": "Shinsuke Nakamura", "team": "Netherlands", "goals": 0, "assists": 1, "kicks": 25, "passes": 13, "shots": 0 },
-        { "name": "tsukuyomi.", "team": "Netherlands", "goals": 0, "assists": 0, "kicks": 35, "passes": 14, "shots": 0 },
-        { "name": "Yoshitsune Asama", "team": "England", "goals": 0, "assists": 0, "kicks": 21, "passes": 11, "shots": 0 },
-        { "name": "atrocity exhibition", "team": "England", "goals": 0, "assists": 0, "kicks": 16, "passes": 9, "shots": 0 },
-        { "name": "cytro (injured)", "team": "England", "goals": 0, "assists": 0, "kicks": 21, "passes": 9, "shots": 1 },
-        { "name": "Berbatov", "team": "England", "goals": 0, "assists": 0, "kicks": 22, "passes": 4, "shots": 1 },
-        { "name": "Blazing", "team": "England", "goals": 0, "assists": 0, "kicks": 31, "passes": 14, "shots": 1 },
-        { "name": "SVimes", "team": "England", "goals": 0, "assists": 0, "kicks": 25, "passes": 11, "shots": 1 }
+        {
+          "name": "levitan",
+          "team": "Netherlands",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 13,
+          "passes": 5,
+          "shots": 0
+        },
+        {
+          "name": "yonko",
+          "team": "Netherlands",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 9,
+          "passes": 3,
+          "shots": 0
+        },
+        {
+          "name": "Nympex",
+          "team": "Netherlands",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 24,
+          "passes": 11,
+          "shots": 0
+        },
+        {
+          "name": "poppa",
+          "team": "Netherlands",
+          "goals": 1,
+          "assists": 0,
+          "kicks": 16,
+          "passes": 1,
+          "shots": 1
+        },
+        {
+          "name": "Shinsuke Nakamura",
+          "team": "Netherlands",
+          "goals": 0,
+          "assists": 1,
+          "kicks": 25,
+          "passes": 13,
+          "shots": 0
+        },
+        {
+          "name": "tsukuyomi.",
+          "team": "Netherlands",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 35,
+          "passes": 14,
+          "shots": 0
+        },
+        {
+          "name": "Yoshitsune Asama",
+          "team": "England",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 21,
+          "passes": 11,
+          "shots": 0
+        },
+        {
+          "name": "atrocity exhibition",
+          "team": "England",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 16,
+          "passes": 9,
+          "shots": 0
+        },
+        {
+          "name": "cytro (injured)",
+          "team": "England",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 21,
+          "passes": 9,
+          "shots": 1
+        },
+        {
+          "name": "Berbatov",
+          "team": "England",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 22,
+          "passes": 4,
+          "shots": 1
+        },
+        {
+          "name": "Blazing",
+          "team": "England",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 31,
+          "passes": 14,
+          "shots": 1
+        },
+        {
+          "name": "SVimes",
+          "team": "England",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 25,
+          "passes": 11,
+          "shots": 1
+        }
       ]
     },
     {
@@ -7445,20 +7653,132 @@
         "shotsB": 6
       },
       "players": [
-        { "name": "Luisdiaz", "team": "England", "goals": 0, "assists": 0, "kicks": 7, "passes": 3, "shots": 0 },
-        { "name": "Blazing", "team": "England", "goals": 0, "assists": 0, "kicks": 19, "passes": 12, "shots": 0 },
-        { "name": "cytro (injured)", "team": "England", "goals": 0, "assists": 0, "kicks": 18, "passes": 7, "shots": 0 },
-        { "name": "atrocity exhibition", "team": "England", "goals": 0, "assists": 0, "kicks": 21, "passes": 8, "shots": 0 },
-        { "name": "cYn", "team": "England", "goals": 0, "assists": 0, "kicks": 24, "passes": 9, "shots": 0 },
-        { "name": "Yoshitsune Asama", "team": "England", "goals": 0, "assists": 0, "kicks": 19, "passes": 9, "shots": 1 },
-        { "name": "SVimes", "team": "England", "goals": 0, "assists": 0, "kicks": 5, "passes": 4, "shots": 0 },
-        { "name": "Berbatov", "team": "England", "goals": 0, "assists": 0, "kicks": 9, "passes": 3, "shots": 0 },
-        { "name": "tsukuyomi.", "team": "Netherlands", "goals": 0, "assists": 0, "kicks": 26, "passes": 13, "shots": 0 },
-        { "name": "Shinsuke Nakamura", "team": "Netherlands", "goals": 1, "assists": 0, "kicks": 28, "passes": 11, "shots": 1 },
-        { "name": "yonko", "team": "Netherlands", "goals": 0, "assists": 0, "kicks": 21, "passes": 11, "shots": 2 },
-        { "name": "poppa", "team": "Netherlands", "goals": 0, "assists": 0, "kicks": 18, "passes": 4, "shots": 3 },
-        { "name": "Nympex", "team": "Netherlands", "goals": 0, "assists": 0, "kicks": 13, "passes": 8, "shots": 0 },
-        { "name": "levitan", "team": "Netherlands", "goals": 0, "assists": 1, "kicks": 16, "passes": 12, "shots": 0 }
+        {
+          "name": "Luisdiaz",
+          "team": "England",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 7,
+          "passes": 3,
+          "shots": 0
+        },
+        {
+          "name": "Blazing",
+          "team": "England",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 19,
+          "passes": 12,
+          "shots": 0
+        },
+        {
+          "name": "cytro (injured)",
+          "team": "England",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 18,
+          "passes": 7,
+          "shots": 0
+        },
+        {
+          "name": "atrocity exhibition",
+          "team": "England",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 21,
+          "passes": 8,
+          "shots": 0
+        },
+        {
+          "name": "cYn",
+          "team": "England",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 24,
+          "passes": 9,
+          "shots": 0
+        },
+        {
+          "name": "Yoshitsune Asama",
+          "team": "England",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 19,
+          "passes": 9,
+          "shots": 1
+        },
+        {
+          "name": "SVimes",
+          "team": "England",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 5,
+          "passes": 4,
+          "shots": 0
+        },
+        {
+          "name": "Berbatov",
+          "team": "England",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 9,
+          "passes": 3,
+          "shots": 0
+        },
+        {
+          "name": "tsukuyomi.",
+          "team": "Netherlands",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 26,
+          "passes": 13,
+          "shots": 0
+        },
+        {
+          "name": "Shinsuke Nakamura",
+          "team": "Netherlands",
+          "goals": 1,
+          "assists": 0,
+          "kicks": 28,
+          "passes": 11,
+          "shots": 1
+        },
+        {
+          "name": "yonko",
+          "team": "Netherlands",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 21,
+          "passes": 11,
+          "shots": 2
+        },
+        {
+          "name": "poppa",
+          "team": "Netherlands",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 18,
+          "passes": 4,
+          "shots": 3
+        },
+        {
+          "name": "Nympex",
+          "team": "Netherlands",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 13,
+          "passes": 8,
+          "shots": 0
+        },
+        {
+          "name": "levitan",
+          "team": "Netherlands",
+          "goals": 0,
+          "assists": 1,
+          "kicks": 16,
+          "passes": 12,
+          "shots": 0
+        }
       ]
     },
     {
@@ -7494,18 +7814,114 @@
         "shotsB": 0
       },
       "players": [
-        { "name": "Blazing", "team": "England", "goals": 0, "assists": 1, "kicks": 37, "passes": 19, "shots": 0 },
-        { "name": "oikawa better", "team": "England", "goals": 2, "assists": 0, "kicks": 17, "passes": 10, "shots": 2 },
-        { "name": "Berbatov", "team": "England", "goals": 0, "assists": 1, "kicks": 25, "passes": 10, "shots": 1 },
-        { "name": "evilpedri", "team": "England", "goals": 0, "assists": 0, "kicks": 21, "passes": 13, "shots": 0 },
-        { "name": "Luisdiaz", "team": "England", "goals": 0, "assists": 0, "kicks": 10, "passes": 4, "shots": 1 },
-        { "name": "Arsha en PC", "team": "England", "goals": 0, "assists": 0, "kicks": 17, "passes": 5, "shots": 2 },
-        { "name": "A7mdBibo", "team": "Egypt", "goals": 0, "assists": 0, "kicks": 18, "passes": 6, "shots": 0 },
-        { "name": "ToughBaby", "team": "Egypt", "goals": 0, "assists": 0, "kicks": 22, "passes": 6, "shots": 0 },
-        { "name": "ShadiOzz's PC", "team": "Egypt", "goals": 0, "assists": 0, "kicks": 10, "passes": 7, "shots": 0 },
-        { "name": "Ryzen", "team": "Egypt", "goals": 0, "assists": 0, "kicks": 11, "passes": 2, "shots": 0 },
-        { "name": "R.Gullit", "team": "Egypt", "goals": 0, "assists": 0, "kicks": 23, "passes": 5, "shots": 0 },
-        { "name": "M77 (PRIME) (CB)", "team": "Egypt", "goals": 0, "assists": 0, "kicks": 8, "passes": 3, "shots": 0 }
+        {
+          "name": "Blazing",
+          "team": "England",
+          "goals": 0,
+          "assists": 1,
+          "kicks": 37,
+          "passes": 19,
+          "shots": 0
+        },
+        {
+          "name": "oikawa better",
+          "team": "England",
+          "goals": 2,
+          "assists": 0,
+          "kicks": 17,
+          "passes": 10,
+          "shots": 2
+        },
+        {
+          "name": "Berbatov",
+          "team": "England",
+          "goals": 0,
+          "assists": 1,
+          "kicks": 25,
+          "passes": 10,
+          "shots": 1
+        },
+        {
+          "name": "evilpedri",
+          "team": "England",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 21,
+          "passes": 13,
+          "shots": 0
+        },
+        {
+          "name": "Luisdiaz",
+          "team": "England",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 10,
+          "passes": 4,
+          "shots": 1
+        },
+        {
+          "name": "Arsha en PC",
+          "team": "England",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 17,
+          "passes": 5,
+          "shots": 2
+        },
+        {
+          "name": "A7mdBibo",
+          "team": "Egypt",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 18,
+          "passes": 6,
+          "shots": 0
+        },
+        {
+          "name": "ToughBaby",
+          "team": "Egypt",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 22,
+          "passes": 6,
+          "shots": 0
+        },
+        {
+          "name": "ShadiOzz's PC",
+          "team": "Egypt",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 10,
+          "passes": 7,
+          "shots": 0
+        },
+        {
+          "name": "Ryzen",
+          "team": "Egypt",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 11,
+          "passes": 2,
+          "shots": 0
+        },
+        {
+          "name": "R.Gullit",
+          "team": "Egypt",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 23,
+          "passes": 5,
+          "shots": 0
+        },
+        {
+          "name": "M77 (PRIME) (CB)",
+          "team": "Egypt",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 8,
+          "passes": 3,
+          "shots": 0
+        }
       ]
     },
     {
@@ -7541,19 +7957,123 @@
         "shotsB": 5
       },
       "players": [
-        { "name": "M77 (PRIME) (CB)", "team": "Egypt", "goals": 0, "assists": 0, "kicks": 13, "passes": 7, "shots": 0 },
-        { "name": "R.Gullit", "team": "Egypt", "goals": 0, "assists": 0, "kicks": 13, "passes": 5, "shots": 0 },
-        { "name": "Ryzen", "team": "Egypt", "goals": 0, "assists": 0, "kicks": 18, "passes": 7, "shots": 3 },
-        { "name": "ShadiOzz's PC", "team": "Egypt", "goals": 0, "assists": 0, "kicks": 20, "passes": 8, "shots": 0 },
-        { "name": "ToughBaby", "team": "Egypt", "goals": 0, "assists": 0, "kicks": 22, "passes": 11, "shots": 0 },
-        { "name": "A7mdBibo", "team": "Egypt", "goals": 0, "assists": 0, "kicks": 41, "passes": 17, "shots": 0 },
-        { "name": "Berbatov", "team": "England", "goals": 1, "assists": 0, "kicks": 12, "passes": 5, "shots": 1 },
-        { "name": "evilpedri", "team": "England", "goals": 0, "assists": 0, "kicks": 18, "passes": 7, "shots": 0 },
-        { "name": "atrocity exhibition", "team": "England", "goals": 0, "assists": 1, "kicks": 21, "passes": 8, "shots": 0 },
-        { "name": "Arsha en PC", "team": "England", "goals": 0, "assists": 0, "kicks": 16, "passes": 4, "shots": 1 },
-        { "name": "oikawa better", "team": "England", "goals": 1, "assists": 1, "kicks": 19, "passes": 10, "shots": 1 },
-        { "name": "Blazing", "team": "England", "goals": 0, "assists": 0, "kicks": 26, "passes": 8, "shots": 1 },
-        { "name": "Luisdiaz", "team": "England", "goals": 0, "assists": 0, "kicks": 9, "passes": 6, "shots": 1 }
+        {
+          "name": "M77 (PRIME) (CB)",
+          "team": "Egypt",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 13,
+          "passes": 7,
+          "shots": 0
+        },
+        {
+          "name": "R.Gullit",
+          "team": "Egypt",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 13,
+          "passes": 5,
+          "shots": 0
+        },
+        {
+          "name": "Ryzen",
+          "team": "Egypt",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 18,
+          "passes": 7,
+          "shots": 3
+        },
+        {
+          "name": "ShadiOzz's PC",
+          "team": "Egypt",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 20,
+          "passes": 8,
+          "shots": 0
+        },
+        {
+          "name": "ToughBaby",
+          "team": "Egypt",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 22,
+          "passes": 11,
+          "shots": 0
+        },
+        {
+          "name": "A7mdBibo",
+          "team": "Egypt",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 41,
+          "passes": 17,
+          "shots": 0
+        },
+        {
+          "name": "Berbatov",
+          "team": "England",
+          "goals": 1,
+          "assists": 0,
+          "kicks": 12,
+          "passes": 5,
+          "shots": 1
+        },
+        {
+          "name": "evilpedri",
+          "team": "England",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 18,
+          "passes": 7,
+          "shots": 0
+        },
+        {
+          "name": "atrocity exhibition",
+          "team": "England",
+          "goals": 0,
+          "assists": 1,
+          "kicks": 21,
+          "passes": 8,
+          "shots": 0
+        },
+        {
+          "name": "Arsha en PC",
+          "team": "England",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 16,
+          "passes": 4,
+          "shots": 1
+        },
+        {
+          "name": "oikawa better",
+          "team": "England",
+          "goals": 1,
+          "assists": 1,
+          "kicks": 19,
+          "passes": 10,
+          "shots": 1
+        },
+        {
+          "name": "Blazing",
+          "team": "England",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 26,
+          "passes": 8,
+          "shots": 1
+        },
+        {
+          "name": "Luisdiaz",
+          "team": "England",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 9,
+          "passes": 6,
+          "shots": 1
+        }
       ]
     },
     {
@@ -7576,18 +8096,114 @@
         "shotsB": 0
       },
       "players": [
-        { "name": "Nympex", "team": "Netherlands", "goals": 0, "assists": 0, "kicks": 9, "passes": 6, "shots": 0 },
-        { "name": "poppa", "team": "Netherlands", "goals": 0, "assists": 0, "kicks": 26, "passes": 8, "shots": 0 },
-        { "name": "yonko", "team": "Netherlands", "goals": 0, "assists": 0, "kicks": 18, "passes": 6, "shots": 1 },
-        { "name": "Isagi Yoichi", "team": "Netherlands", "goals": 0, "assists": 0, "kicks": 23, "passes": 15, "shots": 1 },
-        { "name": "Shinsuke Nakamura", "team": "Netherlands", "goals": 0, "assists": 0, "kicks": 26, "passes": 13, "shots": 2 },
-        { "name": "tsukuyomi.", "team": "Netherlands", "goals": 0, "assists": 0, "kicks": 39, "passes": 21, "shots": 1 },
-        { "name": "Misimaro", "team": "Germany", "goals": 0, "assists": 0, "kicks": 13, "passes": 3, "shots": 0 },
-        { "name": "Refix", "team": "Germany", "goals": 0, "assists": 0, "kicks": 16, "passes": 7, "shots": 0 },
-        { "name": "SamueleRicci", "team": "Germany", "goals": 0, "assists": 0, "kicks": 15, "passes": 4, "shots": 0 },
-        { "name": "Karl", "team": "Germany", "goals": 0, "assists": 0, "kicks": 10, "passes": 1, "shots": 0 },
-        { "name": "Perkz", "team": "Germany", "goals": 0, "assists": 0, "kicks": 21, "passes": 7, "shots": 0 },
-        { "name": "drkuu", "team": "Germany", "goals": 0, "assists": 0, "kicks": 28, "passes": 11, "shots": 0 }
+        {
+          "name": "Nympex",
+          "team": "Netherlands",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 9,
+          "passes": 6,
+          "shots": 0
+        },
+        {
+          "name": "poppa",
+          "team": "Netherlands",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 26,
+          "passes": 8,
+          "shots": 0
+        },
+        {
+          "name": "yonko",
+          "team": "Netherlands",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 18,
+          "passes": 6,
+          "shots": 1
+        },
+        {
+          "name": "Isagi Yoichi",
+          "team": "Netherlands",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 23,
+          "passes": 15,
+          "shots": 1
+        },
+        {
+          "name": "Shinsuke Nakamura",
+          "team": "Netherlands",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 26,
+          "passes": 13,
+          "shots": 2
+        },
+        {
+          "name": "tsukuyomi.",
+          "team": "Netherlands",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 39,
+          "passes": 21,
+          "shots": 1
+        },
+        {
+          "name": "Misimaro",
+          "team": "Germany",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 13,
+          "passes": 3,
+          "shots": 0
+        },
+        {
+          "name": "Refix",
+          "team": "Germany",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 16,
+          "passes": 7,
+          "shots": 0
+        },
+        {
+          "name": "SamueleRicci",
+          "team": "Germany",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 15,
+          "passes": 4,
+          "shots": 0
+        },
+        {
+          "name": "Karl",
+          "team": "Germany",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 10,
+          "passes": 1,
+          "shots": 0
+        },
+        {
+          "name": "Perkz",
+          "team": "Germany",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 21,
+          "passes": 7,
+          "shots": 0
+        },
+        {
+          "name": "drkuu",
+          "team": "Germany",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 28,
+          "passes": 11,
+          "shots": 0
+        }
       ]
     },
     {
@@ -7610,243 +8226,36 @@
         "shotsB": 7
       },
       "players": [
-        { "name": "Refix", "team": "Germany", "goals": 0, "assists": 0, "kicks": 20, "passes": 9, "shots": 0 },
-        { "name": "SamueleRicci", "team": "Germany", "goals": 0, "assists": 0, "kicks": 20, "passes": 7, "shots": 0 },
-        { "name": "drkuu", "team": "Germany", "goals": 0, "assists": 0, "kicks": 20, "passes": 4, "shots": 0 },
-        { "name": "Karl", "team": "Germany", "goals": 0, "assists": 0, "kicks": 1, "passes": 1, "shots": 0 },
-        { "name": "Perkz", "team": "Germany", "goals": 0, "assists": 0, "kicks": 30, "passes": 17, "shots": 0 },
-        { "name": "Misimaro", "team": "Germany", "goals": 0, "assists": 0, "kicks": 19, "passes": 3, "shots": 0 },
-        { "name": "Naeh", "team": "Germany", "goals": 0, "assists": 0, "kicks": 5, "passes": 1, "shots": 0 },
-        { "name": "tsukuyomi.", "team": "Netherlands", "goals": 0, "assists": 0, "kicks": 37, "passes": 19, "shots": 0 },
-        { "name": "Shinsuke Nakamura", "team": "Netherlands", "goals": 0, "assists": 0, "kicks": 32, "passes": 14, "shots": 2 },
-        { "name": "Isagi Yoichi", "team": "Netherlands", "goals": 0, "assists": 0, "kicks": 19, "passes": 10, "shots": 2 },
-        { "name": "yonko", "team": "Netherlands", "goals": 0, "assists": 0, "kicks": 17, "passes": 6, "shots": 1 },
-        { "name": "poppa", "team": "Netherlands", "goals": 0, "assists": 0, "kicks": 15, "passes": 5, "shots": 2 },
-        { "name": "Nympex", "team": "Netherlands", "goals": 0, "assists": 0, "kicks": 8, "passes": 8, "shots": 0 }
-      ]
-    },
-    {
-      "matchNumber": 31,
-      "halfNumber": 1,
-      "teamA": "OG FC",
-      "teamB": "HUQQA",
-      "scoreA": 0,
-      "scoreB": 0,
-      "gameTime": "8:05",
-      "goals": [],
-      "stats": {
-        "possessionA": 50.9,
-        "possessionB": 49.1,
-        "kicksA": 117,
-        "kicksB": 121,
-        "passesA": 50,
-        "passesB": 53,
-        "shotsA": 1,
-        "shotsB": 6
-      },
-      "players": [
         {
-          "name": "Dyna",
-          "team": "OG FC",
+          "name": "Refix",
+          "team": "Germany",
           "goals": 0,
           "assists": 0,
-          "kicks": 13,
-          "passes": 5,
+          "kicks": 20,
+          "passes": 9,
           "shots": 0
         },
         {
-          "name": "Lookman",
-          "team": "OG FC",
+          "name": "SamueleRicci",
+          "team": "Germany",
           "goals": 0,
           "assists": 0,
-          "kicks": 29,
-          "passes": 14,
+          "kicks": 20,
+          "passes": 7,
           "shots": 0
         },
         {
-          "name": "d?ner",
-          "team": "OG FC",
+          "name": "drkuu",
+          "team": "Germany",
           "goals": 0,
           "assists": 0,
-          "kicks": 13,
+          "kicks": 20,
           "passes": 4,
           "shots": 0
         },
         {
-          "name": "Maks Redondo",
-          "team": "OG FC",
-          "goals": 0,
-          "assists": 0,
-          "kicks": 13,
-          "passes": 6,
-          "shots": 0
-        },
-        {
-          "name": "ToughBaby",
-          "team": "OG FC",
-          "goals": 0,
-          "assists": 0,
-          "kicks": 33,
-          "passes": 15,
-          "shots": 1
-        },
-        {
-          "name": "II Mbappe II",
-          "team": "OG FC",
-          "goals": 0,
-          "assists": 0,
-          "kicks": 16,
-          "passes": 6,
-          "shots": 0
-        },
-        {
-          "name": "lena",
-          "team": "HUQQA",
-          "goals": 0,
-          "assists": 0,
-          "kicks": 26,
-          "passes": 14,
-          "shots": 0
-        },
-        {
-          "name": "Perkz shitty pc",
-          "team": "HUQQA",
-          "goals": 0,
-          "assists": 0,
-          "kicks": 29,
-          "passes": 11,
-          "shots": 1
-        },
-        {
-          "name": "grmii",
-          "team": "HUQQA",
-          "goals": 0,
-          "assists": 0,
-          "kicks": 23,
-          "passes": 11,
-          "shots": 1
-        },
-        {
-          "name": "Razor",
-          "team": "HUQQA",
-          "goals": 0,
-          "assists": 0,
-          "kicks": 10,
-          "passes": 3,
-          "shots": 0
-        },
-        {
-          "name": "ollhurse",
-          "team": "HUQQA",
-          "goals": 0,
-          "assists": 0,
-          "kicks": 15,
-          "passes": 7,
-          "shots": 3
-        },
-        {
-          "name": "Mesut Ozil",
-          "team": "HUQQA",
-          "goals": 0,
-          "assists": 0,
-          "kicks": 18,
-          "passes": 7,
-          "shots": 1
-        }
-      ]
-    },
-    {
-      "matchNumber": 31,
-      "halfNumber": 2,
-      "teamA": "HUQQA",
-      "teamB": "OG FC",
-      "scoreA": 2,
-      "scoreB": 0,
-      "gameTime": "7:55",
-      "goals": [
-        {
-          "score": "1:0",
-          "scorer": "ollhurse",
-          "assist": "Kimmich.",
-          "ownGoal": false,
-          "time": "11:30"
-        },
-        {
-          "score": "2:0",
-          "scorer": "grmii",
-          "assist": "ollhurse",
-          "ownGoal": false,
-          "time": "13:51"
-        }
-      ],
-      "stats": {
-        "possessionA": 54.8,
-        "possessionB": 45.2,
-        "kicksA": 141,
-        "kicksB": 121,
-        "passesA": 71,
-        "passesB": 54,
-        "shotsA": 4,
-        "shotsB": 0
-      },
-      "players": [
-        {
-          "name": "Perkz shitty pc",
-          "team": "HUQQA",
-          "goals": 0,
-          "assists": 0,
-          "kicks": 26,
-          "passes": 14,
-          "shots": 0
-        },
-        {
-          "name": "grmii",
-          "team": "HUQQA",
-          "goals": 1,
-          "assists": 0,
-          "kicks": 25,
-          "passes": 9,
-          "shots": 1
-        },
-        {
-          "name": "ollhurse",
-          "team": "HUQQA",
-          "goals": 1,
-          "assists": 1,
-          "kicks": 14,
-          "passes": 5,
-          "shots": 2
-        },
-        {
-          "name": "Mesut Ozil",
-          "team": "HUQQA",
-          "goals": 0,
-          "assists": 0,
-          "kicks": 21,
-          "passes": 12,
-          "shots": 0
-        },
-        {
-          "name": "Kimmich.",
-          "team": "HUQQA",
-          "goals": 0,
-          "assists": 1,
-          "kicks": 21,
-          "passes": 13,
-          "shots": 1
-        },
-        {
-          "name": "lena",
-          "team": "HUQQA",
-          "goals": 0,
-          "assists": 0,
-          "kicks": 30,
-          "passes": 16,
-          "shots": 0
-        },
-        {
-          "name": "Razor",
-          "team": "HUQQA",
+          "name": "Karl",
+          "team": "Germany",
           "goals": 0,
           "assists": 0,
           "kicks": 1,
@@ -7854,70 +8263,87 @@
           "shots": 0
         },
         {
-          "name": "Bellinghimothy",
-          "team": "HUQQA",
+          "name": "Perkz",
+          "team": "Germany",
           "goals": 0,
           "assists": 0,
-          "kicks": 3,
-          "passes": 1,
-          "shots": 0
-        },
-        {
-          "name": "II Mbappe II",
-          "team": "OG FC",
-          "goals": 0,
-          "assists": 0,
-          "kicks": 14,
-          "passes": 5,
-          "shots": 0
-        },
-        {
-          "name": "ToughBaby",
-          "team": "OG FC",
-          "goals": 0,
-          "assists": 0,
-          "kicks": 26,
-          "passes": 15,
-          "shots": 0
-        },
-        {
-          "name": "Maks Redondo",
-          "team": "OG FC",
-          "goals": 0,
-          "assists": 0,
-          "kicks": 13,
-          "passes": 4,
-          "shots": 0
-        },
-        {
-          "name": "Lookman",
-          "team": "OG FC",
-          "goals": 0,
-          "assists": 0,
-          "kicks": 28,
+          "kicks": 30,
           "passes": 17,
           "shots": 0
         },
         {
-          "name": "d?ner",
-          "team": "OG FC",
-          "goals": 0,
-          "assists": 0,
-          "kicks": 21,
-          "passes": 6,
-          "shots": 0
-        },
-        {
-          "name": "Dyna",
-          "team": "OG FC",
+          "name": "Misimaro",
+          "team": "Germany",
           "goals": 0,
           "assists": 0,
           "kicks": 19,
-          "passes": 7,
+          "passes": 3,
+          "shots": 0
+        },
+        {
+          "name": "Naeh",
+          "team": "Germany",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 5,
+          "passes": 1,
+          "shots": 0
+        },
+        {
+          "name": "tsukuyomi.",
+          "team": "Netherlands",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 37,
+          "passes": 19,
+          "shots": 0
+        },
+        {
+          "name": "Shinsuke Nakamura",
+          "team": "Netherlands",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 32,
+          "passes": 14,
+          "shots": 2
+        },
+        {
+          "name": "Isagi Yoichi",
+          "team": "Netherlands",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 19,
+          "passes": 10,
+          "shots": 2
+        },
+        {
+          "name": "yonko",
+          "team": "Netherlands",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 17,
+          "passes": 6,
+          "shots": 1
+        },
+        {
+          "name": "poppa",
+          "team": "Netherlands",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 15,
+          "passes": 5,
+          "shots": 2
+        },
+        {
+          "name": "Nympex",
+          "team": "Netherlands",
+          "goals": 0,
+          "assists": 0,
+          "kicks": 8,
+          "passes": 8,
           "shots": 0
         }
-      ],
-      "mvp": "ollhurse"
+      ]
     }
   ]
 }

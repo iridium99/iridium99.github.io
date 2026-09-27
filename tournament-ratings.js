@@ -1,4 +1,4 @@
-(() => {
+﻿(() => {
   const SEED_URL = 'tournament_structured_data.json';
   const LIVE_EVENTS_KEY = 'ldc-rs-legends-tournament-live-events';
   const SOFT_CAP_RATING = 90;
@@ -409,8 +409,7 @@
       pitarchpitbull: 'Pitarch',
       virgilvandijk: 'VVD',
       yeet: 'YEET',
-      ryzen: 'Ryzen',
-      latisty: 'lena'
+      ryzen: 'Ryzen'
     };
 
     Object.keys(aliases).forEach(raw => map.set(normalizeName(raw), aliases[raw]));
