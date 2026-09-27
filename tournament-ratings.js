@@ -409,7 +409,8 @@
       pitarchpitbull: 'Pitarch',
       virgilvandijk: 'VVD',
       yeet: 'YEET',
-      ryzen: 'Ryzen'
+      ryzen: 'Ryzen',
+      latisty: 'lena'
     };
 
     Object.keys(aliases).forEach(raw => map.set(normalizeName(raw), aliases[raw]));
