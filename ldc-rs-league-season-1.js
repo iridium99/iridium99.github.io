@@ -820,6 +820,12 @@ const ldcRsLeagueSeason1 = {
                 "type": "full-time",
                 "score": "0-2"
             },
+            "recording": {
+                "provider": "youtube",
+                "url": "https://youtu.be/Cx9PEr-1mcw",
+                "videoId": "Cx9PEr-1mcw",
+                "thumbnail": "https://i.ytimg.com/vi/Cx9PEr-1mcw/hqdefault.jpg"
+            },
             "mvp": "Ollhurse",
             "cleanSheetHalves": [
                 {
@@ -1454,6 +1460,12 @@ const ldcRsLeagueSeason1 = {
             "conclusion": {
                 "type": "full-time",
                 "score": "2-1"
+            },
+            "recording": {
+                "provider": "youtube",
+                "url": "https://youtu.be/8x0-KUaAqdE",
+                "videoId": "8x0-KUaAqdE",
+                "thumbnail": "https://i.ytimg.com/vi/8x0-KUaAqdE/hqdefault.jpg"
             },
             "mvp": "Mbappe",
             "cleanSheetHalves": [
@@ -2140,6 +2152,12 @@ const ldcRsLeagueSeason1 = {
             "conclusion": {
                 "type": "full-time",
                 "score": "1-0"
+            },
+            "recording": {
+                "provider": "youtube",
+                "url": "https://youtu.be/Tb_yxmMXon8",
+                "videoId": "Tb_yxmMXon8",
+                "thumbnail": "https://i.ytimg.com/vi/Tb_yxmMXon8/hqdefault.jpg"
             },
             "mvp": "Lena",
             "cleanSheetHalves": [
